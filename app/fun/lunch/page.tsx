@@ -123,22 +123,22 @@ export default function LunchPage() {
             <rect x="0" y="0" width="10" height="10" fill="#f25022"/><rect x="12" y="0" width="10" height="10" fill="#7fba00"/>
             <rect x="0" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
           </svg>
-          <span style={{ color: '#0078D4', fontSize: '0.82rem', fontWeight: 600 }}>FuN fUn</span>
-          <span style={{ color: '#a19f9d', fontSize: '0.82rem', margin: '0 0.2rem' }}>›</span>
-          <span style={{ color: '#323130', fontSize: '0.82rem', fontWeight: 600 }}>점심메뉴 결정기</span>
+          <span style={{ color: '#0078D4', fontSize: '0.98rem', fontWeight: 600 }}>FuN fUn</span>
+          <span style={{ color: '#a19f9d', fontSize: '0.98rem', margin: '0 0.2rem' }}>›</span>
+          <span style={{ color: '#323130', fontSize: '0.98rem', fontWeight: 600 }}>점심메뉴 결정기</span>
         </div>
-        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.78rem' }}
+        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>메인 채팅</button>
       </nav>
 
       {/* ── Hero ── */}
       <div style={{ background: 'linear-gradient(135deg, #002b00 0%, #107c10 100%)', padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '1.75rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>🍱</div>
+        <div style={{ fontSize: '2.1rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>🍱</div>
         <div>
-          <p style={{ color: '#a3e4a3', fontSize: '0.62rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>랜덤 · 점심메뉴</p>
-          <h1 style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>점심메뉴 결정기</h1>
-          <p style={{ color: '#bbf7d0', margin: 0, fontSize: '0.72rem' }}>오늘 뭐 먹을지 룰렛이 결정해드립니다!</p>
+          <p style={{ color: '#a3e4a3', fontSize: '0.74rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>랜덤 · 점심메뉴</p>
+          <h1 style={{ color: 'white', fontSize: '1.32rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>점심메뉴 결정기</h1>
+          <p style={{ color: '#bbf7d0', margin: 0, fontSize: '0.86rem' }}>오늘 뭐 먹을지 룰렛이 결정해드립니다!</p>
         </div>
       </div>
 
@@ -178,7 +178,7 @@ export default function LunchPage() {
                 color: spinning ? '#a19f9d' : 'white',
                 border: `1px solid ${spinning ? '#edebe9' : '#0078D4'}`,
                 borderRadius: '2px',
-                fontSize: '0.88rem', fontWeight: 600,
+                fontSize: '1.06rem', fontWeight: 600,
                 cursor: spinning ? 'not-allowed' : 'pointer',
                 transition: 'all 0.12s',
               }}
@@ -196,10 +196,10 @@ export default function LunchPage() {
               borderLeft: '4px solid #107c10',
               textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.75rem',
             }}>
-              <span style={{ fontSize: '1.35rem' }}>🍽️</span>
+              <span style={{ fontSize: '1.62rem' }}>🍽️</span>
               <div>
-                <div style={{ fontSize: '0.65rem', color: '#605e5c', fontWeight: 600, marginBottom: '0.15rem', textTransform: 'uppercase', letterSpacing: '1px' }}>오늘 점심은...</div>
-                <div style={{ fontSize: '1.3rem', fontWeight: 700, color: '#107c10' }}>{result}</div>
+                <div style={{ fontSize: '0.78rem', color: '#605e5c', fontWeight: 600, marginBottom: '0.15rem', textTransform: 'uppercase', letterSpacing: '1px' }}>오늘 점심은...</div>
+                <div style={{ fontSize: '1.56rem', fontWeight: 700, color: '#107c10' }}>{result}</div>
               </div>
             </div>
           )}
@@ -207,7 +207,7 @@ export default function LunchPage() {
 
         {/* 항목 관리 */}
         <div style={{ background: 'white', border: '1px solid #edebe9', padding: '1.1rem 1.25rem' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#323130', marginBottom: '0.75rem' }}>
+          <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#323130', marginBottom: '0.75rem' }}>
             메뉴 목록 관리 <span style={{ color: '#a19f9d', fontWeight: 400 }}>(최대 8개)</span>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.75rem' }}>
@@ -217,12 +217,12 @@ export default function LunchPage() {
                 padding: '0.25rem 0.5rem 0.25rem 0.75rem',
                 background: `${COLORS[i % COLORS.length]}15`,
                 border: `1px solid ${COLORS[i % COLORS.length]}40`,
-                fontSize: '0.8rem', color: '#323130',
+                fontSize: '0.96rem', color: '#323130',
               }}>
                 {item}
                 <button
                   onClick={() => setItems(items.filter((_, j) => j !== i))}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#a19f9d', fontSize: '0.85rem', padding: '0 2px', lineHeight: 1 }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#a19f9d', fontSize: '1.02rem', padding: '0 2px', lineHeight: 1 }}
                 >✕</button>
               </div>
             ))}
@@ -234,13 +234,13 @@ export default function LunchPage() {
                 onChange={e => setNewItem(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && addItem()}
                 placeholder="새 메뉴 추가"
-                style={{ flex: 1, padding: '0.45rem 0.65rem', border: '1px solid #8a8886', borderRadius: '2px', fontSize: '0.85rem', outline: 'none' }}
+                style={{ flex: 1, padding: '0.45rem 0.65rem', border: '1px solid #8a8886', borderRadius: '2px', fontSize: '1.02rem', outline: 'none' }}
                 onFocus={e => e.currentTarget.style.borderColor = '#0078D4'}
                 onBlur={e => e.currentTarget.style.borderColor = '#8a8886'}
               />
               <button
                 onClick={addItem}
-                style={{ padding: '0.45rem 0.85rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '2px', cursor: 'pointer', fontWeight: 700, fontSize: '0.88rem' }}
+                style={{ padding: '0.45rem 0.85rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '2px', cursor: 'pointer', fontWeight: 700, fontSize: '1.06rem' }}
                 onMouseEnter={e => e.currentTarget.style.background = '#106ebe'}
                 onMouseLeave={e => e.currentTarget.style.background = '#0078D4'}
               >+</button>
@@ -248,7 +248,7 @@ export default function LunchPage() {
           )}
           <button
             onClick={() => setItems(DEFAULT_ITEMS)}
-            style={{ width: '100%', padding: '0.45rem', background: 'transparent', color: '#a19f9d', border: '1px solid #edebe9', borderRadius: '2px', cursor: 'pointer', fontSize: '0.75rem' }}
+            style={{ width: '100%', padding: '0.45rem', background: 'transparent', color: '#a19f9d', border: '1px solid #edebe9', borderRadius: '2px', cursor: 'pointer', fontSize: '0.9rem' }}
             onMouseEnter={e => { e.currentTarget.style.background = '#f3f2f1'; e.currentTarget.style.color = '#605e5c'; }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#a19f9d'; }}
           >기본값으로 초기화</button>

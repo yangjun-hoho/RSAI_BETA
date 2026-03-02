@@ -156,23 +156,23 @@ export default function DicePage() {
             <rect x="0" y="0" width="10" height="10" fill="#f25022"/><rect x="12" y="0" width="10" height="10" fill="#7fba00"/>
             <rect x="0" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
           </svg>
-          <span style={{ color: '#0078D4', fontSize: '0.82rem', fontWeight: 600 }}>FuN fUn</span>
-          <span style={{ color: '#a19f9d', fontSize: '0.82rem', margin: '0 0.2rem' }}>›</span>
-          <span style={{ color: '#323130', fontSize: '0.82rem', fontWeight: 600 }}>주사위 굴리기</span>
+          <span style={{ color: '#0078D4', fontSize: '0.98rem', fontWeight: 600 }}>FuN fUn</span>
+          <span style={{ color: '#a19f9d', fontSize: '0.98rem', margin: '0 0.2rem' }}>›</span>
+          <span style={{ color: '#323130', fontSize: '0.98rem', fontWeight: 600 }}>주사위 굴리기</span>
         </div>
         <button onClick={() => router.push('/')}
-          style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.78rem' }}
+          style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>메인 채팅</button>
       </nav>
 
       {/* Hero */}
       <div style={{ background: 'linear-gradient(135deg, #003966 0%, #0078D4 100%)', padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '1.75rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>🎲</div>
+        <div style={{ fontSize: '2.1rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>🎲</div>
         <div>
-          <p style={{ color: '#a8d4f5', fontSize: '0.62rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>랜덤 · 주사위</p>
-          <h1 style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>주사위 굴리기</h1>
-          <p style={{ color: '#c7e3f7', margin: 0, fontSize: '0.72rem' }}>공정한 결정을 위한 주사위!</p>
+          <p style={{ color: '#a8d4f5', fontSize: '0.74rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>랜덤 · 주사위</p>
+          <h1 style={{ color: 'white', fontSize: '1.32rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>주사위 굴리기</h1>
+          <p style={{ color: '#c7e3f7', margin: 0, fontSize: '0.86rem' }}>공정한 결정을 위한 주사위!</p>
         </div>
       </div>
 
@@ -181,7 +181,7 @@ export default function DicePage() {
 
         {/* 주사위 수 */}
         <div style={{ background: 'white', border: '1px solid #edebe9', padding: '1rem 1.25rem' }}>
-          <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#323130', marginBottom: '0.6rem' }}>주사위 수</div>
+          <div style={{ fontSize: '0.94rem', fontWeight: 700, color: '#323130', marginBottom: '0.6rem' }}>주사위 수</div>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             {[1, 2].map(n => (
               <button key={n} onClick={() => updateCount(n)}
@@ -192,7 +192,7 @@ export default function DicePage() {
                   border: `1px solid ${count === n ? '#0078D4' : '#8a8886'}`,
                   borderRadius: '2px', cursor: 'pointer',
                   fontWeight: count === n ? 700 : 400,
-                  fontSize: '0.88rem', transition: 'all 0.12s',
+                  fontSize: '1.06rem', transition: 'all 0.12s',
                 }}
               >{n}개</button>
             ))}
@@ -241,9 +241,9 @@ export default function DicePage() {
               transition: 'all 0.3s',
               borderRadius: '2px',
             }}>
-              <span style={{ fontSize: '0.78rem', color: '#605e5c' }}>합계</span>
-              <strong style={{ fontSize: '2rem', color: '#0078D4', fontWeight: 900, lineHeight: 1 }}>{total}</strong>
-              <span style={{ fontSize: '0.72rem', color: '#605e5c' }}>평균 {(total / count).toFixed(1)}</span>
+              <span style={{ fontSize: '0.94rem', color: '#605e5c' }}>합계</span>
+              <strong style={{ fontSize: '2.4rem', color: '#0078D4', fontWeight: 900, lineHeight: 1 }}>{total}</strong>
+              <span style={{ fontSize: '0.86rem', color: '#605e5c' }}>평균 {(total / count).toFixed(1)}</span>
             </div>
           )}
 
@@ -258,7 +258,7 @@ export default function DicePage() {
                 color: diceState === 'rolling' ? '#a19f9d' : 'white',
                 border: `2px solid ${diceState === 'rolling' ? '#edebe9' : '#0078D4'}`,
                 borderRadius: '3px',
-                fontSize: '0.95rem', fontWeight: 700,
+                fontSize: '1.14rem', fontWeight: 700,
                 cursor: diceState === 'rolling' ? 'not-allowed' : 'pointer',
                 transition: 'all 0.15s',
                 letterSpacing: '0.4px',
@@ -274,7 +274,7 @@ export default function DicePage() {
         {/* 기록 */}
         {history.length > 0 && (
           <div style={{ background: 'white', border: '1px solid #edebe9', padding: '1rem 1.25rem' }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#323130', marginBottom: '0.6rem' }}>최근 기록</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#323130', marginBottom: '0.6rem' }}>최근 기록</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
               {history.map((h, i) => (
                 <div key={i} style={{
@@ -285,7 +285,7 @@ export default function DicePage() {
                   border: `1px solid ${i === 0 ? '#bfdbfe' : 'transparent'}`,
                   transition: 'all 0.2s',
                 }}>
-                  <span style={{ fontSize: '0.7rem', color: '#a19f9d', width: '1.2rem', flexShrink: 0 }}>#{i + 1}</span>
+                  <span style={{ fontSize: '0.84rem', color: '#a19f9d', width: '1.2rem', flexShrink: 0 }}>#{i + 1}</span>
                   <div style={{ display: 'flex', gap: '0.3rem' }}>
                     {h.vals.map((v, j) => (
                       <span key={j} style={{
@@ -293,12 +293,12 @@ export default function DicePage() {
                         background: COLORS[j] + '18',
                         border: `1px solid ${COLORS[j]}55`,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: '0.78rem', fontWeight: 700, color: COLORS[j],
+                        fontSize: '0.94rem', fontWeight: 700, color: COLORS[j],
                       }}>{v}</span>
                     ))}
                   </div>
                   {h.vals.length > 1 && (
-                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: i === 0 ? '#0078D4' : '#605e5c', marginLeft: 'auto' }}>
+                    <span style={{ fontSize: '0.96rem', fontWeight: 700, color: i === 0 ? '#0078D4' : '#605e5c', marginLeft: 'auto' }}>
                       합 {h.sum}
                     </span>
                   )}

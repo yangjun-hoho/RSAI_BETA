@@ -65,25 +65,25 @@ export default function BalancePage() {
             <rect x="0" y="0" width="10" height="10" fill="#f25022"/><rect x="12" y="0" width="10" height="10" fill="#7fba00"/>
             <rect x="0" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
           </svg>
-          <span style={{ color: '#0078D4', fontSize: '0.82rem', fontWeight: 600 }}>FuN fUn</span>
-          <span style={{ color: '#a19f9d', fontSize: '0.82rem', margin: '0 0.2rem' }}>›</span>
-          <span style={{ color: '#323130', fontSize: '0.82rem', fontWeight: 600 }}>밸런스 게임</span>
+          <span style={{ color: '#0078D4', fontSize: '0.98rem', fontWeight: 600 }}>FuN fUn</span>
+          <span style={{ color: '#a19f9d', fontSize: '0.98rem', margin: '0 0.2rem' }}>›</span>
+          <span style={{ color: '#323130', fontSize: '0.98rem', fontWeight: 600 }}>밸런스 게임</span>
         </div>
         {!done && (
-          <span style={{ color: '#605e5c', fontSize: '0.78rem', fontWeight: 600, marginRight: '1rem' }}>{idx + 1} / {QUESTIONS.length}</span>
+          <span style={{ color: '#605e5c', fontSize: '0.94rem', fontWeight: 600, marginRight: '1rem' }}>{idx + 1} / {QUESTIONS.length}</span>
         )}
-        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.78rem' }}
+        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>메인 채팅</button>
       </nav>
 
       {/* ── Hero ── */}
       <div style={{ background: 'linear-gradient(135deg, #1a0a3d 0%, #744da9 100%)', padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '1.75rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>⚖️</div>
+        <div style={{ fontSize: '2.1rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>⚖️</div>
         <div>
-          <p style={{ color: '#d8b4fe', fontSize: '0.62rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>선택 · 밸런스게임</p>
-          <h1 style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>공무원 밸런스 게임</h1>
-          <p style={{ color: '#c4b5fd', margin: 0, fontSize: '0.72rem' }}>공무원만 이해하는 고난이도 선택!</p>
+          <p style={{ color: '#d8b4fe', fontSize: '0.74rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>선택 · 밸런스게임</p>
+          <h1 style={{ color: 'white', fontSize: '1.32rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>공무원 밸런스 게임</h1>
+          <p style={{ color: '#c4b5fd', margin: 0, fontSize: '0.86rem' }}>공무원만 이해하는 고난이도 선택!</p>
         </div>
       </div>
 
@@ -95,8 +95,8 @@ export default function BalancePage() {
             {/* 진행 바 */}
             <div style={{ background: 'white', border: '1px solid #edebe9', padding: '0.85rem 1.25rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                <span style={{ fontSize: '0.72rem', color: '#605e5c', fontWeight: 600 }}>Q{idx + 1}</span>
-                <span style={{ fontSize: '0.72rem', color: COLOR_A, fontWeight: 600 }}>{Math.round((idx / QUESTIONS.length) * 100)}% 완료</span>
+                <span style={{ fontSize: '0.86rem', color: '#605e5c', fontWeight: 600 }}>Q{idx + 1}</span>
+                <span style={{ fontSize: '0.86rem', color: COLOR_A, fontWeight: 600 }}>{Math.round((idx / QUESTIONS.length) * 100)}% 완료</span>
               </div>
               <div style={{ height: '4px', background: '#f3f2f1', overflow: 'hidden' }}>
                 <div style={{ height: '100%', width: `${((idx) / QUESTIONS.length) * 100}%`, background: COLOR_A, transition: 'width 0.35s' }} />
@@ -105,7 +105,7 @@ export default function BalancePage() {
 
             {/* 질문 */}
             <div style={{ background: 'white', border: '1px solid #edebe9', padding: '2rem 1.5rem' }}>
-              <h2 style={{ textAlign: 'center', fontSize: '1.05rem', fontWeight: 700, color: '#323130', marginBottom: '1.75rem', lineHeight: 1.55 }}>
+              <h2 style={{ textAlign: 'center', fontSize: '1.26rem', fontWeight: 700, color: '#323130', marginBottom: '1.75rem', lineHeight: 1.55 }}>
                 ⚖️ {q.q}
               </h2>
 
@@ -128,7 +128,7 @@ export default function BalancePage() {
                           background: isChosen ? `${optColor}0d` : otherChosen ? '#faf9f8' : 'white',
                           color: otherChosen ? '#a19f9d' : '#323130',
                           cursor: selected ? 'default' : 'pointer',
-                          fontSize: '0.88rem', fontWeight: isChosen ? 600 : 400, textAlign: 'left', transition: 'all 0.15s',
+                          fontSize: '1.06rem', fontWeight: isChosen ? 600 : 400, textAlign: 'left', transition: 'all 0.15s',
                           opacity: otherChosen ? 0.55 : 1,
                           borderRadius: '2px',
                         }}
@@ -140,14 +140,14 @@ export default function BalancePage() {
                           width: '22px', height: '22px',
                           background: isChosen ? optColor : '#f3f2f1',
                           color: isChosen ? 'white' : '#605e5c',
-                          borderRadius: '2px', fontSize: '0.72rem', fontWeight: 700, marginRight: '0.75rem',
+                          borderRadius: '2px', fontSize: '0.86rem', fontWeight: 700, marginRight: '0.75rem',
                           transition: 'all 0.15s', flexShrink: 0,
                         }}>{opt.toUpperCase()}</span>
                         {text}
                       </button>
                       {selected && (
                         <div style={{ marginTop: '0.3rem', padding: '0 0.25rem' }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#605e5c', marginBottom: '0.2rem' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', color: '#605e5c', marginBottom: '0.2rem' }}>
                             <span>{opt === 'a' ? '나도 A' : '나도 B'}</span>
                             <span style={{ fontWeight: 700, color: optColor }}>{pct}%</span>
                           </div>
@@ -166,8 +166,8 @@ export default function BalancePage() {
           <>
             {/* 완료 */}
             <div style={{ background: 'white', border: '1px solid #edebe9', padding: '2rem 1.5rem', textAlign: 'center' }}>
-              <div style={{ fontSize: '3.5rem', marginBottom: '0.5rem' }}>🎊</div>
-              <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#323130', marginBottom: '1.5rem' }}>게임 완료!</h2>
+              <div style={{ fontSize: '4.2rem', marginBottom: '0.5rem' }}>🎊</div>
+              <h2 style={{ fontSize: '1.56rem', fontWeight: 700, color: '#323130', marginBottom: '1.5rem' }}>게임 완료!</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginBottom: '1.5rem', textAlign: 'left' }}>
                 {QUESTIONS.map((question, i) => (
                   <div key={i} style={{
@@ -175,13 +175,13 @@ export default function BalancePage() {
                     padding: '0.55rem 0.85rem',
                     background: userChoices[i] === 'a' ? `${COLOR_A}0a` : `${COLOR_B}0a`,
                     border: `1px solid ${userChoices[i] === 'a' ? COLOR_A : COLOR_B}30`,
-                    fontSize: '0.8rem', borderRadius: '2px',
+                    fontSize: '0.96rem', borderRadius: '2px',
                   }}>
                     <span style={{
                       padding: '0.18rem 0.5rem',
                       background: userChoices[i] === 'a' ? COLOR_A : COLOR_B,
                       color: 'white', borderRadius: '2px',
-                      fontWeight: 700, flexShrink: 0, fontSize: '0.7rem',
+                      fontWeight: 700, flexShrink: 0, fontSize: '0.84rem',
                     }}>{(userChoices[i] || '?').toUpperCase()}</span>
                     <span style={{ color: '#323130', lineHeight: 1.4 }}>{userChoices[i] === 'a' ? question.a : question.b}</span>
                   </div>
@@ -189,7 +189,7 @@ export default function BalancePage() {
               </div>
               <button
                 onClick={reset}
-                style={{ padding: '0.55rem 1.75rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '2px', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600 }}
+                style={{ padding: '0.55rem 1.75rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '2px', cursor: 'pointer', fontSize: '0.98rem', fontWeight: 600 }}
                 onMouseEnter={e => e.currentTarget.style.background = '#106ebe'}
                 onMouseLeave={e => e.currentTarget.style.background = '#0078D4'}
               >다시 하기 🎮</button>

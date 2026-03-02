@@ -182,22 +182,22 @@ export default function FortunePage() {
             <rect x="0" y="0" width="10" height="10" fill="#f25022"/><rect x="12" y="0" width="10" height="10" fill="#7fba00"/>
             <rect x="0" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
           </svg>
-          <span style={{ color: '#0078D4', fontSize: '0.82rem', fontWeight: 600 }}>FuN fUn</span>
-          <span style={{ color: '#a19f9d', fontSize: '0.82rem', margin: '0 0.2rem' }}>›</span>
-          <span style={{ color: '#323130', fontSize: '0.82rem', fontWeight: 600 }}>오늘의 운세</span>
+          <span style={{ color: '#0078D4', fontSize: '0.98rem', fontWeight: 600 }}>FuN fUn</span>
+          <span style={{ color: '#a19f9d', fontSize: '0.98rem', margin: '0 0.2rem' }}>›</span>
+          <span style={{ color: '#323130', fontSize: '0.98rem', fontWeight: 600 }}>오늘의 운세</span>
         </div>
-        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.78rem' }}
+        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>메인 채팅</button>
       </nav>
 
       {/* ── Hero ── */}
       <div style={{ background: 'linear-gradient(135deg, #2a0a5e 0%, #744da9 100%)', padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '1.75rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>🔮</div>
+        <div style={{ fontSize: '2.1rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>🔮</div>
         <div>
-          <p style={{ color: '#d8b4fe', fontSize: '0.62rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>운세 · 오늘의운세</p>
-          <h1 style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>오늘의 업무 운세</h1>
-          <p style={{ color: '#c4b5fd', margin: 0, fontSize: '0.72rem' }}>{dateStr} {dayStr}</p>
+          <p style={{ color: '#d8b4fe', fontSize: '0.74rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>운세 · 오늘의운세</p>
+          <h1 style={{ color: 'white', fontSize: '1.32rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>오늘의 업무 운세</h1>
+          <p style={{ color: '#c4b5fd', margin: 0, fontSize: '0.86rem' }}>{dateStr} {dayStr}</p>
         </div>
       </div>
 
@@ -206,8 +206,8 @@ export default function FortunePage() {
 
         {/* 오늘의 한 마디 */}
         <div style={{ background: '#2a0a5e', border: '1px solid #744da9', padding: '1.25rem 1.5rem' }}>
-          <div style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '2px', color: '#c4b5fd', marginBottom: '0.5rem', textTransform: 'uppercase' }}>🔮 오늘의 한 마디</div>
-          <p style={{ margin: 0, fontSize: '0.95rem', fontWeight: 600, lineHeight: 1.7, color: 'white' }}>
+          <div style={{ fontSize: '0.78rem', fontWeight: 600, letterSpacing: '2px', color: '#c4b5fd', marginBottom: '0.5rem', textTransform: 'uppercase' }}>🔮 오늘의 한 마디</div>
+          <p style={{ margin: 0, fontSize: '1.14rem', fontWeight: 600, lineHeight: 1.7, color: 'white' }}>
             &ldquo;{f.quote}&rdquo;
           </p>
         </div>
@@ -215,22 +215,22 @@ export default function FortunePage() {
         {/* 종합 운세 */}
         <div style={{ background: 'white', border: '1px solid #edebe9', padding: '1.1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
           <div style={{ textAlign: 'center', flexShrink: 0 }}>
-            <div style={{ fontSize: '2.5rem', lineHeight: 1, marginBottom: '0.25rem' }}>🔮</div>
+            <div style={{ fontSize: '3rem', lineHeight: 1, marginBottom: '0.25rem' }}>🔮</div>
             <Stars n={Math.round(avgStars)} />
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '0.65rem', color: '#605e5c', fontWeight: 600, marginBottom: '0.15rem', textTransform: 'uppercase', letterSpacing: '1px' }}>종합 운세</div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: '#323130', marginBottom: '0.4rem' }}>{overallLabel}</div>
+            <div style={{ fontSize: '0.78rem', color: '#605e5c', fontWeight: 600, marginBottom: '0.15rem', textTransform: 'uppercase', letterSpacing: '1px' }}>종합 운세</div>
+            <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#323130', marginBottom: '0.4rem' }}>{overallLabel}</div>
             <div style={{ height: '4px', background: '#f3f2f1', overflow: 'hidden' }}>
               <div style={{ height: '100%', width: `${(avgStars / 5) * 100}%`, background: '#744da9' }} />
             </div>
-            <div style={{ fontSize: '0.68rem', color: '#605e5c', marginTop: '0.3rem' }}>{avgStars.toFixed(1)} / 5.0</div>
+            <div style={{ fontSize: '0.82rem', color: '#605e5c', marginTop: '0.3rem' }}>{avgStars.toFixed(1)} / 5.0</div>
           </div>
         </div>
 
         {/* 행운 요소 */}
         <div style={{ background: 'white', border: '1px solid #edebe9', padding: '1rem 1.25rem' }}>
-          <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#323130', marginBottom: '0.75rem' }}>🍀 오늘의 행운 요소</div>
+          <div style={{ fontSize: '0.86rem', fontWeight: 700, color: '#323130', marginBottom: '0.75rem' }}>🍀 오늘의 행운 요소</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '1px', background: '#edebe9', border: '1px solid #edebe9' }}>
             {[
               { label: '행운 색', value: f.luckyColor, color: '#744da9' },
@@ -239,8 +239,8 @@ export default function FortunePage() {
               { label: '행운 방향', value: f.luckyDir, color: '#ca5010' },
             ].map(item => (
               <div key={item.label} style={{ background: 'white', padding: '0.75rem 0.5rem', textAlign: 'center' }}>
-                <div style={{ fontSize: '0.6rem', color: '#605e5c', fontWeight: 600, marginBottom: '0.25rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</div>
-                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: item.color, lineHeight: 1.4 }}>{item.value}</div>
+                <div style={{ fontSize: '0.72rem', color: '#605e5c', fontWeight: 600, marginBottom: '0.25rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: item.color, lineHeight: 1.4 }}>{item.value}</div>
               </div>
             ))}
           </div>
@@ -252,19 +252,19 @@ export default function FortunePage() {
             <div key={c.label} style={{ background: 'white', padding: '1rem 1.15rem', borderTop: `3px solid ${c.color}` }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <span style={{ fontSize: '1rem' }}>{c.emoji}</span>
-                  <span style={{ fontWeight: 700, color: '#323130', fontSize: '0.82rem' }}>{c.label}</span>
+                  <span style={{ fontSize: '1.2rem' }}>{c.emoji}</span>
+                  <span style={{ fontWeight: 700, color: '#323130', fontSize: '0.98rem' }}>{c.label}</span>
                 </div>
                 <Stars n={c.data.stars} size="0.72rem" />
               </div>
-              <p style={{ margin: 0, fontSize: '0.75rem', color: '#605e5c', lineHeight: 1.6 }}>{c.data.msg}</p>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: '#605e5c', lineHeight: 1.6 }}>{c.data.msg}</p>
             </div>
           ))}
         </div>
 
         {/* 시간대별 운세 */}
         <div style={{ background: 'white', border: '1px solid #edebe9', padding: '1.1rem 1.25rem' }}>
-          <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#323130', marginBottom: '1rem' }}>⏱️ 시간대별 운세</div>
+          <div style={{ fontSize: '0.86rem', fontWeight: 700, color: '#323130', marginBottom: '1rem' }}>⏱️ 시간대별 운세</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
             {[
               { time: '오전', sub: '09:00~12:00', icon: '🌅', msg: f.morning,   color: '#ca5010' },
@@ -279,7 +279,7 @@ export default function FortunePage() {
                     borderTop: `3px solid ${item.color}`,
                     background: 'white',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '0.85rem', flexShrink: 0,
+                    fontSize: '1.02rem', flexShrink: 0,
                   }}>{item.icon}</div>
                   {i < arr.length - 1 && (
                     <div style={{ width: '2px', flex: 1, minHeight: '16px', background: '#edebe9', margin: '4px 0' }} />
@@ -287,10 +287,10 @@ export default function FortunePage() {
                 </div>
                 <div style={{ flex: 1, paddingTop: '3px' }}>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginBottom: '0.3rem' }}>
-                    <span style={{ fontWeight: 700, fontSize: '0.82rem', color: item.color }}>{item.time}</span>
-                    <span style={{ fontSize: '0.65rem', color: '#a19f9d' }}>{item.sub}</span>
+                    <span style={{ fontWeight: 700, fontSize: '0.98rem', color: item.color }}>{item.time}</span>
+                    <span style={{ fontSize: '0.78rem', color: '#a19f9d' }}>{item.sub}</span>
                   </div>
-                  <p style={{ margin: 0, fontSize: '0.78rem', color: '#605e5c', lineHeight: 1.6 }}>{item.msg}</p>
+                  <p style={{ margin: 0, fontSize: '0.94rem', color: '#605e5c', lineHeight: 1.6 }}>{item.msg}</p>
                 </div>
               </div>
             ))}
@@ -299,15 +299,15 @@ export default function FortunePage() {
 
         {/* 주의 사항 */}
         <div style={{ background: 'white', border: '1px solid #edebe9', borderLeft: '4px solid #ca5010', padding: '1rem 1.25rem', display: 'flex', gap: '0.85rem', alignItems: 'flex-start' }}>
-          <div style={{ fontSize: '1.3rem', flexShrink: 0 }}>{f.caution.icon}</div>
+          <div style={{ fontSize: '1.56rem', flexShrink: 0 }}>{f.caution.icon}</div>
           <div>
-            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#323130', marginBottom: '0.3rem', textTransform: 'uppercase', letterSpacing: '1px' }}>⚠️ 오늘의 주의 사항</div>
-            <p style={{ margin: 0, fontSize: '0.8rem', color: '#605e5c', lineHeight: 1.65 }}>{f.caution.msg}</p>
+            <div style={{ fontSize: '0.86rem', fontWeight: 700, color: '#323130', marginBottom: '0.3rem', textTransform: 'uppercase', letterSpacing: '1px' }}>⚠️ 오늘의 주의 사항</div>
+            <p style={{ margin: 0, fontSize: '0.96rem', color: '#605e5c', lineHeight: 1.65 }}>{f.caution.msg}</p>
           </div>
         </div>
 
         {/* 푸터 */}
-        <div style={{ background: 'white', border: '1px solid #edebe9', padding: '0.75rem 1.25rem', textAlign: 'center', color: '#a19f9d', fontSize: '0.7rem' }}>
+        <div style={{ background: 'white', border: '1px solid #edebe9', padding: '0.75rem 1.25rem', textAlign: 'center', color: '#a19f9d', fontSize: '0.84rem' }}>
           🔮 오늘의 운세는 날짜를 기반으로 생성됩니다. 재미로만 즐겨주세요!
         </div>
       </div>

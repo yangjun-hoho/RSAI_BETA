@@ -306,28 +306,28 @@ export default function LadderPage() {
             <rect x="0" y="0" width="10" height="10" fill="#f25022"/><rect x="12" y="0" width="10" height="10" fill="#7fba00"/>
             <rect x="0" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
           </svg>
-          <span style={{ color: '#0078D4', fontSize: '0.82rem', fontWeight: 600 }}>FuN fUn</span>
-          <span style={{ color: '#a19f9d', fontSize: '0.82rem', margin: '0 0.2rem' }}>›</span>
-          <span style={{ color: '#323130', fontSize: '0.82rem', fontWeight: 600 }}>사다리 게임</span>
+          <span style={{ color: '#0078D4', fontSize: '0.98rem', fontWeight: 600 }}>FuN fUn</span>
+          <span style={{ color: '#a19f9d', fontSize: '0.98rem', margin: '0 0.2rem' }}>›</span>
+          <span style={{ color: '#323130', fontSize: '0.98rem', fontWeight: 600 }}>사다리 게임</span>
         </div>
         {step !== 'setup' && (
           <button onClick={() => { if (rafRef.current) cancelAnimationFrame(rafRef.current); setStep('setup'); setAnimating(null); }}
-            style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.78rem', marginRight: '0.5rem' }}
+            style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem', marginRight: '0.5rem' }}
             onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>다시 설정</button>
         )}
-        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.78rem' }}
+        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>메인 채팅</button>
       </nav>
 
       {/* ── Hero ── */}
       <div style={{ background: 'linear-gradient(135deg, #3d1a00 0%, #ca5010 100%)', padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '1.75rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>🪜</div>
+        <div style={{ fontSize: '2.1rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>🪜</div>
         <div>
-          <p style={{ color: '#fed7aa', fontSize: '0.62rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>랜덤 · 사다리게임</p>
-          <h1 style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>사다리 게임</h1>
-          <p style={{ color: '#fdba74', margin: 0, fontSize: '0.72rem' }}>오늘 당번 공정하게 결정!</p>
+          <p style={{ color: '#fed7aa', fontSize: '0.74rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>랜덤 · 사다리게임</p>
+          <h1 style={{ color: 'white', fontSize: '1.32rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>사다리 게임</h1>
+          <p style={{ color: '#fdba74', margin: 0, fontSize: '0.86rem' }}>오늘 당번 공정하게 결정!</p>
         </div>
       </div>
 
@@ -337,12 +337,12 @@ export default function LadderPage() {
         {step === 'setup' && (
           <div style={{ background: 'white', border: '1px solid #edebe9', padding: '1.75rem 1.5rem' }}>
             <div style={{ marginBottom: '1.25rem' }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#323130', marginBottom: '0.6rem' }}>참가 인원 수</div>
+              <div style={{ fontSize: '0.94rem', fontWeight: 700, color: '#323130', marginBottom: '0.6rem' }}>참가 인원 수</div>
               <div style={{ display: 'flex', gap: '0.4rem' }}>
                 {[2, 3, 4, 5, 6].map(n => (
                   <button key={n}
                     onClick={() => { setNames(Array(n).fill('')); setDests(Array(n).fill('')); }}
-                    style={{ flex: 1, padding: '0.5rem', background: count === n ? '#0078D4' : 'transparent', color: count === n ? 'white' : '#323130', border: `1px solid ${count === n ? '#0078D4' : '#8a8886'}`, borderRadius: '2px', cursor: 'pointer', fontWeight: count === n ? 700 : 400, fontSize: '0.88rem', transition: 'all 0.12s' }}
+                    style={{ flex: 1, padding: '0.5rem', background: count === n ? '#0078D4' : 'transparent', color: count === n ? 'white' : '#323130', border: `1px solid ${count === n ? '#0078D4' : '#8a8886'}`, borderRadius: '2px', cursor: 'pointer', fontWeight: count === n ? 700 : 400, fontSize: '1.06rem', transition: 'all 0.12s' }}
                   >{n}명</button>
                 ))}
               </div>
@@ -350,23 +350,23 @@ export default function LadderPage() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.25rem' }}>
               <div>
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#605e5c', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>참가자 이름</div>
+                <div style={{ fontSize: '0.86rem', fontWeight: 700, color: '#605e5c', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>참가자 이름</div>
                 {names.map((n, i) => (
                   <input key={i} value={n}
                     onChange={e => { const a = [...names]; a[i] = e.target.value; setNames(a); }}
                     placeholder={`참가자 ${i + 1}`}
-                    style={{ width: '100%', padding: '0.45rem 0.65rem', border: '1px solid #8a8886', borderRadius: '2px', marginBottom: '0.35rem', fontSize: '0.85rem', boxSizing: 'border-box', outline: 'none' }}
+                    style={{ width: '100%', padding: '0.45rem 0.65rem', border: '1px solid #8a8886', borderRadius: '2px', marginBottom: '0.35rem', fontSize: '1.02rem', boxSizing: 'border-box', outline: 'none' }}
                     onFocus={e => e.currentTarget.style.borderColor = ACCENT}
                     onBlur={e => e.currentTarget.style.borderColor = '#8a8886'} />
                 ))}
               </div>
               <div>
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#605e5c', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>목적지 (결과)</div>
+                <div style={{ fontSize: '0.86rem', fontWeight: 700, color: '#605e5c', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>목적지 (결과)</div>
                 {dests.map((d, i) => (
                   <input key={i} value={d}
                     onChange={e => { const a = [...dests]; a[i] = e.target.value; setDests(a); }}
                     placeholder={`결과 ${i + 1}`}
-                    style={{ width: '100%', padding: '0.45rem 0.65rem', border: '1px solid #8a8886', borderRadius: '2px', marginBottom: '0.35rem', fontSize: '0.85rem', boxSizing: 'border-box', outline: 'none' }}
+                    style={{ width: '100%', padding: '0.45rem 0.65rem', border: '1px solid #8a8886', borderRadius: '2px', marginBottom: '0.35rem', fontSize: '1.02rem', boxSizing: 'border-box', outline: 'none' }}
                     onFocus={e => e.currentTarget.style.borderColor = ACCENT}
                     onBlur={e => e.currentTarget.style.borderColor = '#8a8886'} />
                 ))}
@@ -374,7 +374,7 @@ export default function LadderPage() {
             </div>
 
             <button onClick={buildGame}
-              style={{ width: '100%', padding: '0.6rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '2px', fontSize: '0.88rem', fontWeight: 600, cursor: 'pointer' }}
+              style={{ width: '100%', padding: '0.6rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '2px', fontSize: '1.06rem', fontWeight: 600, cursor: 'pointer' }}
               onMouseEnter={e => e.currentTarget.style.background = '#106ebe'}
               onMouseLeave={e => e.currentTarget.style.background = '#0078D4'}
             >사다리 생성! 🪜</button>
@@ -388,7 +388,7 @@ export default function LadderPage() {
 
             {/* 안내 문구 */}
             {animating !== null && (
-              <div style={{ textAlign: 'center', marginTop: '0.75rem', fontSize: '0.8rem', color: ACCENT, fontWeight: 600 }}>
+              <div style={{ textAlign: 'center', marginTop: '0.75rem', fontSize: '0.96rem', color: ACCENT, fontWeight: 600 }}>
                 🎯 {names[animating] || `${animating + 1}번`} 경로 이동 중...
               </div>
             )}
@@ -405,7 +405,7 @@ export default function LadderPage() {
                     border: `1px solid ${revealed[i] ? PATH_COLORS[i % PATH_COLORS.length] : animating !== null ? '#d0cece' : '#8a8886'}`,
                     borderRadius: '2px',
                     cursor: revealed[i] || animating !== null ? 'default' : 'pointer',
-                    fontWeight: 600, fontSize: '0.82rem', transition: 'all 0.12s',
+                    fontWeight: 600, fontSize: '0.98rem', transition: 'all 0.12s',
                   }}
                   onMouseEnter={e => { if (!revealed[i] && animating === null) e.currentTarget.style.background = '#f3f2f1'; }}
                   onMouseLeave={e => { if (!revealed[i] && animating === null) e.currentTarget.style.background = 'transparent'; }}
@@ -417,9 +417,9 @@ export default function LadderPage() {
 
             {step === 'result' && (
               <div style={{ marginTop: '1.25rem', padding: '1rem 1.25rem', background: '#f3f2f1', border: '1px solid #edebe9', borderLeft: `4px solid ${ACCENT}` }}>
-                <div style={{ fontWeight: 700, color: '#323130', marginBottom: '0.6rem', fontSize: '0.88rem' }}>🎉 최종 결과</div>
+                <div style={{ fontWeight: 700, color: '#323130', marginBottom: '0.6rem', fontSize: '1.06rem' }}>🎉 최종 결과</div>
                 {names.map((name, i) => (
-                  <div key={i} style={{ padding: '0.4rem 0.25rem', borderBottom: '1px solid #edebe9', fontSize: '0.88rem', color: '#323130', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div key={i} style={{ padding: '0.4rem 0.25rem', borderBottom: '1px solid #edebe9', fontSize: '1.06rem', color: '#323130', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <span style={{ fontWeight: 700, color: PATH_COLORS[i % PATH_COLORS.length] }}>{name || `${i + 1}번`}</span>
                     <span style={{ color: '#a19f9d' }}>→</span>
                     <span style={{ color: ACCENT, fontWeight: 700 }}>{dests[results[i]] || `결과 ${results[i] + 1}`}</span>

@@ -88,28 +88,28 @@ export default function StressPage() {
             <rect x="0" y="0" width="10" height="10" fill="#f25022"/><rect x="12" y="0" width="10" height="10" fill="#7fba00"/>
             <rect x="0" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
           </svg>
-          <span style={{ color: '#0078D4', fontSize: '0.82rem', fontWeight: 600 }}>FuN fUn</span>
-          <span style={{ color: '#a19f9d', fontSize: '0.82rem', margin: '0 0.2rem' }}>›</span>
-          <span style={{ color: '#323130', fontSize: '0.82rem', fontWeight: 600 }}>스트레스 해소</span>
+          <span style={{ color: '#0078D4', fontSize: '0.98rem', fontWeight: 600 }}>FuN fUn</span>
+          <span style={{ color: '#a19f9d', fontSize: '0.98rem', margin: '0 0.2rem' }}>›</span>
+          <span style={{ color: '#323130', fontSize: '0.98rem', fontWeight: 600 }}>스트레스 해소</span>
         </div>
-        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.78rem' }}
+        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>메인 채팅</button>
       </nav>
 
       {/* ── Hero ── */}
       <div style={{ background: 'linear-gradient(135deg, #1a0000 0%, #d13438 100%)', padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '1.75rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))', transform: shake ? 'scale(1.2)' : 'scale(1)', transition: 'transform 0.15s' }}>
+        <div style={{ fontSize: '2.1rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))', transform: shake ? 'scale(1.2)' : 'scale(1)', transition: 'transform 0.15s' }}>
           {level.emoji}
         </div>
         <div>
-          <p style={{ color: '#ffc8c8', fontSize: '0.62rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>게임 · 스트레스해소</p>
-          <h1 style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>스트레스 해소 버튼</h1>
-          <p style={{ color: '#ffb3b3', margin: 0, fontSize: '0.72rem' }}>누르면 스트레스가 풀린다고?! 현재 <strong style={{ color: 'white' }}>{level.label}</strong> 단계</p>
+          <p style={{ color: '#ffc8c8', fontSize: '0.74rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>게임 · 스트레스해소</p>
+          <h1 style={{ color: 'white', fontSize: '1.32rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>스트레스 해소 버튼</h1>
+          <p style={{ color: '#ffb3b3', margin: 0, fontSize: '0.86rem' }}>누르면 스트레스가 풀린다고?! 현재 <strong style={{ color: 'white' }}>{level.label}</strong> 단계</p>
         </div>
         <div style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.2)', padding: '0.3rem 0.75rem', borderRadius: '2px', textAlign: 'center', flexShrink: 0 }}>
-          <div style={{ color: 'white', fontSize: '1.1rem', fontWeight: 900, letterSpacing: '-0.5px' }}>{count.toLocaleString()}</div>
-          <div style={{ color: '#ffb3b3', fontSize: '0.58rem', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase' }}>클릭</div>
+          <div style={{ color: 'white', fontSize: '1.32rem', fontWeight: 900, letterSpacing: '-0.5px' }}>{count.toLocaleString()}</div>
+          <div style={{ color: '#ffb3b3', fontSize: '0.7rem', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase' }}>클릭</div>
         </div>
       </div>
 
@@ -120,22 +120,22 @@ export default function StressPage() {
         <div style={{ background: 'white', border: '1px solid #edebe9', padding: '1.1rem 1.25rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontSize: '1.35rem' }}>{level.emoji}</span>
+              <span style={{ fontSize: '1.62rem' }}>{level.emoji}</span>
               <div>
-                <div style={{ fontWeight: 700, color: level.color, fontSize: '0.9rem', transition: 'color 0.5s' }}>{level.label} 단계</div>
+                <div style={{ fontWeight: 700, color: level.color, fontSize: '1.08rem', transition: 'color 0.5s' }}>{level.label} 단계</div>
                 {nextLevel && (
-                  <div style={{ fontSize: '0.68rem', color: '#605e5c' }}>다음 레벨까지 {nextLevel.min - count}번</div>
+                  <div style={{ fontSize: '0.82rem', color: '#605e5c' }}>다음 레벨까지 {nextLevel.min - count}번</div>
                 )}
               </div>
             </div>
-            <div style={{ padding: '0.28rem 0.65rem', border: `1px solid ${level.color}`, borderRadius: '2px', color: level.color, fontSize: '0.72rem', fontWeight: 600, transition: 'all 0.5s' }}>
+            <div style={{ padding: '0.28rem 0.65rem', border: `1px solid ${level.color}`, borderRadius: '2px', color: level.color, fontSize: '0.86rem', fontWeight: 600, transition: 'all 0.5s' }}>
               {level.label}
             </div>
           </div>
           <div style={{ height: '4px', background: '#f3f2f1', overflow: 'hidden', marginBottom: '0.6rem' }}>
             <div style={{ height: '100%', width: `${progress}%`, background: level.color, transition: 'width 0.2s, background 0.5s' }} />
           </div>
-          <p style={{ margin: 0, fontSize: '0.8rem', color: '#605e5c' }}>{level.msg}</p>
+          <p style={{ margin: 0, fontSize: '0.96rem', color: '#605e5c' }}>{level.msg}</p>
         </div>
 
         {/* 버튼 영역 */}
@@ -143,7 +143,7 @@ export default function StressPage() {
           {particles.map(p => (
             <div key={p.id} style={{
               position: 'absolute', left: `calc(50% + ${p.x}px)`, top: `calc(50% + ${p.y}px)`,
-              fontSize: '1.5rem', pointerEvents: 'none', animation: 'float-up 0.6s ease-out forwards',
+              fontSize: '1.8rem', pointerEvents: 'none', animation: 'float-up 0.6s ease-out forwards',
               transform: 'translate(-50%, -50%)',
             }}>{p.emoji}</div>
           ))}
@@ -153,7 +153,7 @@ export default function StressPage() {
               position: 'absolute', top: '1rem', left: '50%', transform: 'translateX(-50%)',
               background: level.color, color: 'white',
               padding: '0.4rem 1.1rem', borderRadius: '2px',
-              fontSize: '0.85rem', fontWeight: 700, whiteSpace: 'nowrap',
+              fontSize: '1.02rem', fontWeight: 700, whiteSpace: 'nowrap',
               animation: 'fade-up 1.2s ease-out forwards', zIndex: 10,
             }}>{floatMsg}</div>
           )}
@@ -177,7 +177,7 @@ export default function StressPage() {
             }}
           >{level.emoji}</button>
 
-          <div style={{ marginTop: '1.5rem', fontSize: '0.82rem', color: '#605e5c' }}>
+          <div style={{ marginTop: '1.5rem', fontSize: '0.98rem', color: '#605e5c' }}>
             꾹 누르세요! 총 <strong style={{ color: level.color, fontWeight: 700 }}>{count}</strong>번 눌렀어요
           </div>
         </div>
@@ -186,7 +186,7 @@ export default function StressPage() {
           <div style={{ background: 'white', border: '1px solid #edebe9', padding: '0.75rem 1.25rem', textAlign: 'center' }}>
             <button
               onClick={() => setCount(0)}
-              style={{ padding: '0.45rem 1.5rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', fontSize: '0.78rem', color: '#605e5c' }}
+              style={{ padding: '0.45rem 1.5rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', fontSize: '0.94rem', color: '#605e5c' }}
               onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
               onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
             >스트레스 초기화 (0으로 리셋)</button>

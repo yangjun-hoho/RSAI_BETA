@@ -67,22 +67,22 @@ export default function RPSPage() {
             <rect x="0" y="0" width="10" height="10" fill="#f25022"/><rect x="12" y="0" width="10" height="10" fill="#7fba00"/>
             <rect x="0" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
           </svg>
-          <span style={{ color: '#0078D4', fontSize: '0.82rem', fontWeight: 600 }}>FuN fUn</span>
-          <span style={{ color: '#a19f9d', fontSize: '0.82rem', margin: '0 0.2rem' }}>›</span>
-          <span style={{ color: '#323130', fontSize: '0.82rem', fontWeight: 600 }}>가위바위보</span>
+          <span style={{ color: '#0078D4', fontSize: '0.98rem', fontWeight: 600 }}>FuN fUn</span>
+          <span style={{ color: '#a19f9d', fontSize: '0.98rem', margin: '0 0.2rem' }}>›</span>
+          <span style={{ color: '#323130', fontSize: '0.98rem', fontWeight: 600 }}>가위바위보</span>
         </div>
-        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.78rem' }}
+        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>메인 채팅</button>
       </nav>
 
       {/* ── Hero ── */}
       <div style={{ background: 'linear-gradient(135deg, #6b1a1a 0%, #d13438 100%)', padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '1.75rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>✂️</div>
+        <div style={{ fontSize: '2.1rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>✂️</div>
         <div>
-          <p style={{ color: '#ffc8c8', fontSize: '0.62rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>게임 · 대전</p>
-          <h1 style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>가위바위보</h1>
-          <p style={{ color: '#ffb3b3', fontSize: '0.72rem', margin: 0 }}>AI를 이겨라! 과연 가능할까?</p>
+          <p style={{ color: '#ffc8c8', fontSize: '0.74rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>게임 · 대전</p>
+          <h1 style={{ color: 'white', fontSize: '1.32rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>가위바위보</h1>
+          <p style={{ color: '#ffb3b3', fontSize: '0.86rem', margin: 0 }}>AI를 이겨라! 과연 가능할까?</p>
         </div>
       </div>
 
@@ -94,15 +94,15 @@ export default function RPSPage() {
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
             {[['승', score.win, '#107c10'], ['무', score.draw, '#ca5010'], ['패', score.lose, '#d13438']].map(([label, val, color]) => (
               <div key={label as string} style={{ flex: 1, textAlign: 'center', padding: '0.6rem 0.5rem', background: '#f3f2f1', borderTop: `3px solid ${color}` }}>
-                <div style={{ fontSize: '1.35rem', fontWeight: 700, color: color as string }}>{val as number}</div>
-                <div style={{ fontSize: '0.7rem', color: '#605e5c', fontWeight: 600 }}>{label as string}</div>
+                <div style={{ fontSize: '1.62rem', fontWeight: 700, color: color as string }}>{val as number}</div>
+                <div style={{ fontSize: '0.84rem', color: '#605e5c', fontWeight: 600 }}>{label as string}</div>
               </div>
             ))}
             <div style={{ flex: 1, textAlign: 'center', padding: '0.6rem 0.5rem', background: '#f3f2f1', borderTop: '3px solid #0078D4' }}>
-              <div style={{ fontSize: '1.35rem', fontWeight: 700, color: '#0078D4' }}>{winRate}%</div>
-              <div style={{ fontSize: '0.7rem', color: '#605e5c', fontWeight: 600 }}>승률</div>
+              <div style={{ fontSize: '1.62rem', fontWeight: 700, color: '#0078D4' }}>{winRate}%</div>
+              <div style={{ fontSize: '0.84rem', color: '#605e5c', fontWeight: 600 }}>승률</div>
             </div>
-            {total > 0 && <button onClick={() => setScore({ win: 0, lose: 0, draw: 0 })} style={{ padding: '0.45rem 0.65rem', background: 'none', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', fontSize: '0.72rem', color: '#605e5c' }}>초기화</button>}
+            {total > 0 && <button onClick={() => setScore({ win: 0, lose: 0, draw: 0 })} style={{ padding: '0.45rem 0.65rem', background: 'none', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', fontSize: '0.86rem', color: '#605e5c' }}>초기화</button>}
           </div>
         </div>
 
@@ -111,23 +111,23 @@ export default function RPSPage() {
           {/* VS */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', marginBottom: '1.5rem', minHeight: '110px' }}>
             <div style={{ textAlign: 'center', flex: 1 }}>
-              <div style={{ fontSize: '0.68rem', fontWeight: 700, letterSpacing: '1.5px', color: '#8a8886', marginBottom: '0.5rem', textTransform: 'uppercase' }}>나</div>
-              <div style={{ fontSize: '3.5rem', filter: myChoice ? 'none' : 'grayscale(1) opacity(0.2)', transform: shake && myChoice ? 'scale(1.15)' : 'scale(1)', transition: 'all 0.2s' }}>{myChoice ? CHOICES.find(c => c.id === myChoice)?.emoji : '❓'}</div>
-              {myChoice && <div style={{ fontSize: '0.78rem', color: '#323130', fontWeight: 700, marginTop: '0.35rem' }}>{CHOICES.find(c => c.id === myChoice)?.label}</div>}
+              <div style={{ fontSize: '0.82rem', fontWeight: 700, letterSpacing: '1.5px', color: '#8a8886', marginBottom: '0.5rem', textTransform: 'uppercase' }}>나</div>
+              <div style={{ fontSize: '4.2rem', filter: myChoice ? 'none' : 'grayscale(1) opacity(0.2)', transform: shake && myChoice ? 'scale(1.15)' : 'scale(1)', transition: 'all 0.2s' }}>{myChoice ? CHOICES.find(c => c.id === myChoice)?.emoji : '❓'}</div>
+              {myChoice && <div style={{ fontSize: '0.94rem', color: '#323130', fontWeight: 700, marginTop: '0.35rem' }}>{CHOICES.find(c => c.id === myChoice)?.label}</div>}
             </div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#8a8886', background: '#f3f2f1', padding: '0.4rem 0.75rem', border: '1px solid #edebe9' }}>VS</div>
+            <div style={{ fontSize: '1.02rem', fontWeight: 700, color: '#8a8886', background: '#f3f2f1', padding: '0.4rem 0.75rem', border: '1px solid #edebe9' }}>VS</div>
             <div style={{ textAlign: 'center', flex: 1 }}>
-              <div style={{ fontSize: '0.68rem', fontWeight: 700, letterSpacing: '1.5px', color: '#8a8886', marginBottom: '0.5rem', textTransform: 'uppercase' }}>AI</div>
-              <div style={{ fontSize: '3.5rem', filter: aiChoice ? 'none' : 'grayscale(1) opacity(0.2)', transition: 'all 0.2s' }}>{animating && !aiChoice ? '🎲' : aiChoice ? CHOICES.find(c => c.id === aiChoice)?.emoji : '❓'}</div>
-              {aiChoice && <div style={{ fontSize: '0.78rem', color: '#323130', fontWeight: 700, marginTop: '0.35rem' }}>{CHOICES.find(c => c.id === aiChoice)?.label}</div>}
+              <div style={{ fontSize: '0.82rem', fontWeight: 700, letterSpacing: '1.5px', color: '#8a8886', marginBottom: '0.5rem', textTransform: 'uppercase' }}>AI</div>
+              <div style={{ fontSize: '4.2rem', filter: aiChoice ? 'none' : 'grayscale(1) opacity(0.2)', transition: 'all 0.2s' }}>{animating && !aiChoice ? '🎲' : aiChoice ? CHOICES.find(c => c.id === aiChoice)?.emoji : '❓'}</div>
+              {aiChoice && <div style={{ fontSize: '0.94rem', color: '#323130', fontWeight: 700, marginTop: '0.35rem' }}>{CHOICES.find(c => c.id === aiChoice)?.label}</div>}
             </div>
           </div>
 
           {/* 결과 */}
           {result && !animating && (
             <div style={{ padding: '0.85rem 1.25rem', background: resultConfig[result].bg, border: `1px solid ${resultConfig[result].color}40`, marginBottom: '1.25rem', borderLeft: `4px solid ${resultConfig[result].color}` }}>
-              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: resultConfig[result].color }}>{resultConfig[result].label}</div>
-              <div style={{ fontSize: '0.78rem', color: '#605e5c', marginTop: '0.2rem' }}>AI: &ldquo;{aiComment}&rdquo;</div>
+              <div style={{ fontSize: '1.32rem', fontWeight: 700, color: resultConfig[result].color }}>{resultConfig[result].label}</div>
+              <div style={{ fontSize: '0.94rem', color: '#605e5c', marginTop: '0.2rem' }}>AI: &ldquo;{aiComment}&rdquo;</div>
             </div>
           )}
 
@@ -135,18 +135,18 @@ export default function RPSPage() {
           <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', marginBottom: result ? '1rem' : 0 }}>
             {CHOICES.map(c => (
               <button key={c.id} onClick={() => play(c.id)} disabled={animating}
-                style={{ flex: 1, padding: '1rem 0.5rem', background: myChoice === c.id && result ? resultConfig[result!]?.bg : 'white', border: `1.5px solid ${myChoice === c.id ? '#d13438' : '#edebe9'}`, cursor: animating ? 'not-allowed' : 'pointer', fontSize: '2.25rem', transition: 'all 0.12s' }}
+                style={{ flex: 1, padding: '1rem 0.5rem', background: myChoice === c.id && result ? resultConfig[result!]?.bg : 'white', border: `1.5px solid ${myChoice === c.id ? '#d13438' : '#edebe9'}`, cursor: animating ? 'not-allowed' : 'pointer', fontSize: '2.7rem', transition: 'all 0.12s' }}
                 onMouseEnter={e => { if (!animating) { e.currentTarget.style.background = '#f3f2f1'; e.currentTarget.style.borderColor = '#d13438'; } }}
                 onMouseLeave={e => { e.currentTarget.style.background = myChoice === c.id && result ? resultConfig[result!]?.bg : 'white'; e.currentTarget.style.borderColor = myChoice === c.id ? '#d13438' : '#edebe9'; }}
               >
                 {c.emoji}
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#323130', marginTop: '0.3rem' }}>{c.label}</div>
+                <div style={{ fontSize: '0.86rem', fontWeight: 700, color: '#323130', marginTop: '0.3rem' }}>{c.label}</div>
               </button>
             ))}
           </div>
 
           {result && (
-            <button onClick={reset} style={{ padding: '0.55rem 1.75rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '2px', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600 }}
+            <button onClick={reset} style={{ padding: '0.55rem 1.75rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '2px', cursor: 'pointer', fontSize: '0.98rem', fontWeight: 600 }}
               onMouseEnter={e => e.currentTarget.style.background = '#106ebe'}
               onMouseLeave={e => e.currentTarget.style.background = '#0078D4'}>다시 하기</button>
           )}

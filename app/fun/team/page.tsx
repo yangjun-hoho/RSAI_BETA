@@ -60,25 +60,25 @@ export default function TeamPage() {
             <rect x="0" y="0" width="10" height="10" fill="#f25022"/><rect x="12" y="0" width="10" height="10" fill="#7fba00"/>
             <rect x="0" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
           </svg>
-          <span style={{ color: '#0078D4', fontSize: '0.82rem', fontWeight: 600 }}>FuN fUn</span>
-          <span style={{ color: '#a19f9d', fontSize: '0.82rem', margin: '0 0.2rem' }}>›</span>
-          <span style={{ color: '#323130', fontSize: '0.82rem', fontWeight: 600 }}>팀 랜덤 배정기</span>
+          <span style={{ color: '#0078D4', fontSize: '0.98rem', fontWeight: 600 }}>FuN fUn</span>
+          <span style={{ color: '#a19f9d', fontSize: '0.98rem', margin: '0 0.2rem' }}>›</span>
+          <span style={{ color: '#323130', fontSize: '0.98rem', fontWeight: 600 }}>팀 랜덤 배정기</span>
         </div>
         {names.length > 0 && (
-          <span style={{ color: '#605e5c', fontSize: '0.78rem', fontWeight: 600, marginRight: '1rem' }}>{names.length}명</span>
+          <span style={{ color: '#605e5c', fontSize: '0.94rem', fontWeight: 600, marginRight: '1rem' }}>{names.length}명</span>
         )}
-        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.78rem' }}
+        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>메인 채팅</button>
       </nav>
 
       {/* ── Hero ── */}
       <div style={{ background: 'linear-gradient(135deg, #003344 0%, #008272 100%)', padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '1.75rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>👥</div>
+        <div style={{ fontSize: '2.1rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>👥</div>
         <div>
-          <p style={{ color: '#99e6de', fontSize: '0.62rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>랜덤 · 팀배정</p>
-          <h1 style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>팀 랜덤 배정기</h1>
-          <p style={{ color: '#b3f0ea', margin: 0, fontSize: '0.72rem' }}>눈치 없이 공정하게 팀을 나눠드립니다!</p>
+          <p style={{ color: '#99e6de', fontSize: '0.74rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>랜덤 · 팀배정</p>
+          <h1 style={{ color: 'white', fontSize: '1.32rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>팀 랜덤 배정기</h1>
+          <p style={{ color: '#b3f0ea', margin: 0, fontSize: '0.86rem' }}>눈치 없이 공정하게 팀을 나눠드립니다!</p>
         </div>
       </div>
 
@@ -87,9 +87,9 @@ export default function TeamPage() {
 
         {/* 입력 카드 */}
         <div style={{ background: 'white', border: '1px solid #edebe9', padding: '1.5rem' }}>
-          <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#323130', marginBottom: '0.5rem' }}>
+          <label style={{ display: 'block', fontSize: '0.94rem', fontWeight: 700, color: '#323130', marginBottom: '0.5rem' }}>
             참가자 이름 입력
-            <span style={{ color: '#a19f9d', fontWeight: 400, fontSize: '0.72rem', marginLeft: '0.5rem' }}>(한 줄에 한 명)</span>
+            <span style={{ color: '#a19f9d', fontWeight: 400, fontSize: '0.86rem', marginLeft: '0.5rem' }}>(한 줄에 한 명)</span>
           </label>
           <textarea
             value={input}
@@ -99,18 +99,18 @@ export default function TeamPage() {
             style={{
               width: '100%', padding: '0.65rem 0.75rem',
               border: '1px solid #8a8886', borderRadius: '2px',
-              fontSize: '0.88rem', resize: 'vertical', boxSizing: 'border-box',
+              fontSize: '1.06rem', resize: 'vertical', boxSizing: 'border-box',
               fontFamily: MS_FONT, lineHeight: 1.6, outline: 'none',
               transition: 'border-color 0.12s', color: '#323130',
             }}
             onFocus={e => e.currentTarget.style.borderColor = '#0078D4'}
             onBlur={e => e.currentTarget.style.borderColor = '#8a8886'}
           />
-          <div style={{ fontSize: '0.72rem', color: '#a19f9d', marginTop: '0.3rem' }}>현재 {names.length}명 입력됨</div>
+          <div style={{ fontSize: '0.86rem', color: '#a19f9d', marginTop: '0.3rem' }}>현재 {names.length}명 입력됨</div>
 
           {/* 팀 수 선택 */}
           <div style={{ marginTop: '1rem' }}>
-            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#323130', marginBottom: '0.5rem' }}>팀 수</label>
+            <label style={{ display: 'block', fontSize: '0.94rem', fontWeight: 700, color: '#323130', marginBottom: '0.5rem' }}>팀 수</label>
             <div style={{ display: 'flex', gap: '0.4rem' }}>
               {[2, 3, 4, 5, 6].map(n => (
                 <button
@@ -123,7 +123,7 @@ export default function TeamPage() {
                     border: `1px solid ${teamCount === n ? '#0078D4' : '#8a8886'}`,
                     borderRadius: '2px',
                     cursor: 'pointer', fontWeight: teamCount === n ? 700 : 400,
-                    fontSize: '0.88rem', transition: 'all 0.12s',
+                    fontSize: '1.06rem', transition: 'all 0.12s',
                   }}
                 >{n}팀</button>
               ))}
@@ -139,7 +139,7 @@ export default function TeamPage() {
               color: names.length < teamCount ? '#a19f9d' : 'white',
               border: `1px solid ${names.length < teamCount ? '#edebe9' : '#0078D4'}`,
               borderRadius: '2px',
-              fontSize: '0.88rem', fontWeight: 600,
+              fontSize: '1.06rem', fontWeight: 600,
               cursor: names.length < teamCount ? 'not-allowed' : 'pointer',
               transition: 'all 0.12s',
             }}
@@ -168,10 +168,10 @@ export default function TeamPage() {
                       width: '26px', height: '26px',
                       background: TEAM_COLORS[ti],
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      color: 'white', fontWeight: 700, fontSize: '0.82rem',
+                      color: 'white', fontWeight: 700, fontSize: '0.98rem',
                     }}>{ti + 1}</div>
-                    <span style={{ fontWeight: 700, fontSize: '0.92rem', color: TEAM_COLORS[ti] }}>{ti + 1}팀</span>
-                    <span style={{ fontSize: '0.72rem', color: '#a19f9d' }}>({team.length}명)</span>
+                    <span style={{ fontWeight: 700, fontSize: '1.1rem', color: TEAM_COLORS[ti] }}>{ti + 1}팀</span>
+                    <span style={{ fontSize: '0.86rem', color: '#a19f9d' }}>({team.length}명)</span>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                     {team.map((name, ni) => (
@@ -180,9 +180,9 @@ export default function TeamPage() {
                         padding: '0.35rem 0.6rem',
                         background: `${TEAM_COLORS[ti]}0d`,
                         border: `1px solid ${TEAM_COLORS[ti]}25`,
-                        fontSize: '0.85rem', color: '#323130',
+                        fontSize: '1.02rem', color: '#323130',
                       }}>
-                        <span style={{ color: TEAM_COLORS[ti], fontWeight: 700, fontSize: '0.7rem' }}>{ni + 1}.</span>
+                        <span style={{ color: TEAM_COLORS[ti], fontWeight: 700, fontSize: '0.84rem' }}>{ni + 1}.</span>
                         {name}
                       </div>
                     ))}
@@ -195,7 +195,7 @@ export default function TeamPage() {
               <div style={{ background: 'white', border: '1px solid #edebe9', padding: '0.75rem 1.25rem', textAlign: 'center' }}>
                 <button
                   onClick={makeTeams}
-                  style={{ padding: '0.45rem 1.5rem', background: 'transparent', color: '#0078D4', border: '1px solid #0078D4', borderRadius: '2px', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600 }}
+                  style={{ padding: '0.45rem 1.5rem', background: 'transparent', color: '#0078D4', border: '1px solid #0078D4', borderRadius: '2px', cursor: 'pointer', fontSize: '0.98rem', fontWeight: 600 }}
                   onMouseEnter={e => e.currentTarget.style.background = '#0078D408'}
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                 >🔀 다시 배정하기</button>

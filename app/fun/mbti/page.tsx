@@ -240,25 +240,25 @@ export default function MBTIPage() {
             <rect x="0" y="0" width="10" height="10" fill="#f25022"/><rect x="12" y="0" width="10" height="10" fill="#7fba00"/>
             <rect x="0" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
           </svg>
-          <span style={{ color: '#0078D4', fontSize: '0.82rem', fontWeight: 600 }}>FuN fUn</span>
-          <span style={{ color: '#a19f9d', fontSize: '0.82rem', margin: '0 0.2rem' }}>›</span>
-          <span style={{ color: '#323130', fontSize: '0.82rem', fontWeight: 600 }}>MBTI 성격 유형 검사</span>
+          <span style={{ color: '#0078D4', fontSize: '0.98rem', fontWeight: 600 }}>FuN fUn</span>
+          <span style={{ color: '#a19f9d', fontSize: '0.98rem', margin: '0 0.2rem' }}>›</span>
+          <span style={{ color: '#323130', fontSize: '0.98rem', fontWeight: 600 }}>MBTI 성격 유형 검사</span>
         </div>
         {!done && (
-          <span style={{ color: '#605e5c', fontSize: '0.78rem', fontWeight: 600, marginRight: '1rem' }}>{current + 1} / {QUESTIONS.length}</span>
+          <span style={{ color: '#605e5c', fontSize: '0.94rem', fontWeight: 600, marginRight: '1rem' }}>{current + 1} / {QUESTIONS.length}</span>
         )}
-        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.78rem' }}
+        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>메인 채팅</button>
       </nav>
 
       {/* Hero */}
       <div style={{ background: 'linear-gradient(135deg, #003366 0%, #0078D4 100%)', padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '1.75rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>🧠</div>
+        <div style={{ fontSize: '2.1rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>🧠</div>
         <div>
-          <p style={{ color: '#a8d4f5', fontSize: '0.62rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>MBTI · 성격 유형 검사</p>
-          <h1 style={{ color: 'white', fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>MBTI 성격 유형 검사</h1>
-          <p style={{ color: '#c7e3f7', margin: 0, fontSize: '0.72rem' }}>5단계 척도 · 20문항 · 전문적 유형 분석</p>
+          <p style={{ color: '#a8d4f5', fontSize: '0.74rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>MBTI · 성격 유형 검사</p>
+          <h1 style={{ color: 'white', fontSize: '1.32rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>MBTI 성격 유형 검사</h1>
+          <p style={{ color: '#c7e3f7', margin: 0, fontSize: '0.86rem' }}>5단계 척도 · 20문항 · 전문적 유형 분석</p>
         </div>
       </div>
 
@@ -269,10 +269,10 @@ export default function MBTIPage() {
             {/* 진행 바 */}
             <div style={{ background: 'white', border: '1px solid #edebe9', borderBottom: 'none', padding: '0.85rem 1.25rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ padding: '0.15rem 0.6rem', background: `${dim.color}12`, color: dim.color, border: `1px solid ${dim.color}30`, fontSize: '0.72rem', fontWeight: 700 }}>
+                <span style={{ padding: '0.15rem 0.6rem', background: `${dim.color}12`, color: dim.color, border: `1px solid ${dim.color}30`, fontSize: '0.86rem', fontWeight: 700 }}>
                   {DIM_META[q?.dim ?? 'EI'].aFull.split(' ')[0]} · {DIM_META[q?.dim ?? 'EI'].bFull.split(' ')[0]}
                 </span>
-                <span style={{ fontSize: '0.72rem', color: dim.color, fontWeight: 600 }}>{Math.round(progress)}% 완료</span>
+                <span style={{ fontSize: '0.86rem', color: dim.color, fontWeight: 600 }}>{Math.round(progress)}% 완료</span>
               </div>
               <div style={{ height: '4px', background: '#f3f2f1', overflow: 'hidden' }}>
                 <div style={{ height: '100%', width: `${progress}%`, background: dim.color, transition: 'width 0.4s ease' }} />
@@ -284,18 +284,18 @@ export default function MBTIPage() {
 
               {/* 안내 (첫 질문에만) */}
               {current === 0 && (
-                <div style={{ background: '#f0f6ff', border: '1px solid #cce0ff', padding: '0.6rem 0.9rem', marginBottom: '1.5rem', fontSize: '0.75rem', color: '#004c9e', lineHeight: 1.5 }}>
+                <div style={{ background: '#f0f6ff', border: '1px solid #cce0ff', padding: '0.6rem 0.9rem', marginBottom: '1.5rem', fontSize: '0.9rem', color: '#004c9e', lineHeight: 1.5 }}>
                   💡 각 문항에서 <strong>A 성향에 가까울수록 왼쪽</strong>, <strong>B 성향에 가까울수록 오른쪽</strong>을 선택하세요. 선택하면 다음 문항으로 자동 이동합니다.
                 </div>
               )}
 
-              <p style={{ margin: '0 0 2rem 0', fontWeight: 700, color: '#323130', fontSize: '1.05rem', lineHeight: 1.65, textAlign: 'center' }}>
+              <p style={{ margin: '0 0 2rem 0', fontWeight: 700, color: '#323130', fontSize: '1.26rem', lineHeight: 1.65, textAlign: 'center' }}>
                 {q.q}
               </p>
 
               {/* A 선택지 */}
-              <div style={{ padding: '0.75rem 1rem', background: '#f8faff', border: '1px solid #d0e4ff', marginBottom: '1.25rem', fontSize: '0.85rem', color: '#003a8c', lineHeight: 1.55, borderRadius: '2px' }}>
-                <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#0078D4', display: 'block', marginBottom: '0.2rem' }}>A</span>
+              <div style={{ padding: '0.75rem 1rem', background: '#f8faff', border: '1px solid #d0e4ff', marginBottom: '1.25rem', fontSize: '1.02rem', color: '#003a8c', lineHeight: 1.55, borderRadius: '2px' }}>
+                <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#0078D4', display: 'block', marginBottom: '0.2rem' }}>A</span>
                 {q.a}
               </div>
 
@@ -346,7 +346,7 @@ export default function MBTIPage() {
                 </div>
                 <div style={{ display: 'flex', gap: '0', width: '100%', maxWidth: '270px' }}>
                   {SCALE_LABELS.map((label, i) => (
-                    <div key={i} style={{ flex: 1, textAlign: 'center', fontSize: '0.62rem', color: '#a19f9d', lineHeight: 1.3, padding: '0 0.1rem' }}>
+                    <div key={i} style={{ flex: 1, textAlign: 'center', fontSize: '0.74rem', color: '#a19f9d', lineHeight: 1.3, padding: '0 0.1rem' }}>
                       {label}
                     </div>
                   ))}
@@ -354,8 +354,8 @@ export default function MBTIPage() {
               </div>
 
               {/* B 선택지 */}
-              <div style={{ padding: '0.75rem 1rem', background: '#fff8f8', border: '1px solid #ffd0d0', marginBottom: '1.5rem', fontSize: '0.85rem', color: '#8c0000', lineHeight: 1.55, borderRadius: '2px' }}>
-                <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#d13438', display: 'block', marginBottom: '0.2rem' }}>B</span>
+              <div style={{ padding: '0.75rem 1rem', background: '#fff8f8', border: '1px solid #ffd0d0', marginBottom: '1.5rem', fontSize: '1.02rem', color: '#8c0000', lineHeight: 1.55, borderRadius: '2px' }}>
+                <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#d13438', display: 'block', marginBottom: '0.2rem' }}>B</span>
                 {q.b}
               </div>
 
@@ -363,7 +363,7 @@ export default function MBTIPage() {
               {current > 0 && (
                 <button
                   onClick={goBack}
-                  style={{ padding: '0.45rem 1.1rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', fontSize: '0.78rem', color: '#605e5c' }}
+                  style={{ padding: '0.45rem 1.1rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', fontSize: '0.94rem', color: '#605e5c' }}
                   onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                 >← 이전 문항으로</button>
@@ -376,17 +376,17 @@ export default function MBTIPage() {
 
             {/* 타입 헤더 */}
             <div style={{ background: 'white', border: '1px solid #edebe9', borderBottom: 'none', padding: '2.5rem 2rem 1.5rem', textAlign: 'center' }}>
-              <div style={{ fontSize: '4rem', marginBottom: '0.75rem' }}>{res.emoji}</div>
-              <div style={{ display: 'inline-block', padding: '0.4rem 1.75rem', background: '#0078D4', color: 'white', fontSize: '1.8rem', fontWeight: 700, marginBottom: '0.75rem', letterSpacing: '3px' }}>
+              <div style={{ fontSize: '4.8rem', marginBottom: '0.75rem' }}>{res.emoji}</div>
+              <div style={{ display: 'inline-block', padding: '0.4rem 1.75rem', background: '#0078D4', color: 'white', fontSize: '2.16rem', fontWeight: 700, marginBottom: '0.75rem', letterSpacing: '3px' }}>
                 {mbti.type}
               </div>
-              <div style={{ fontSize: '0.78rem', color: '#a19f9d', marginBottom: '0.35rem' }}>{res.en}</div>
-              <h2 style={{ margin: '0', fontSize: '1.25rem', fontWeight: 700, color: '#323130' }}>{res.name}</h2>
+              <div style={{ fontSize: '0.94rem', color: '#a19f9d', marginBottom: '0.35rem' }}>{res.en}</div>
+              <h2 style={{ margin: '0', fontSize: '1.5rem', fontWeight: 700, color: '#323130' }}>{res.name}</h2>
             </div>
 
             {/* 차원별 비율 */}
             <div style={{ background: 'white', border: '1px solid #edebe9', borderBottom: 'none', padding: '1.25rem 1.75rem' }}>
-              <h3 style={{ margin: '0 0 1rem 0', fontSize: '0.78rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>성격 차원 분석</h3>
+              <h3 style={{ margin: '0 0 1rem 0', fontSize: '0.94rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>성격 차원 분석</h3>
               {(['EI', 'SN', 'TF', 'JP'] as Dim[]).map(d => {
                 const info = mbti.info[d];
                 const isA = info.dominant === DIM_META[d].a;
@@ -395,14 +395,14 @@ export default function MBTIPage() {
                   <div key={d} style={{ marginBottom: '1rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: info.color, padding: '0.1rem 0.4rem', background: `${info.color}12`, border: `1px solid ${info.color}30` }}>
+                        <span style={{ fontSize: '0.96rem', fontWeight: 700, color: info.color, padding: '0.1rem 0.4rem', background: `${info.color}12`, border: `1px solid ${info.color}30` }}>
                           {info.dominant}
                         </span>
-                        <span style={{ fontSize: '0.78rem', color: '#323130', fontWeight: 500 }}>
+                        <span style={{ fontSize: '0.94rem', color: '#323130', fontWeight: 500 }}>
                           {isA ? info.aLabel : info.bLabel}
                         </span>
                       </div>
-                      <span style={{ fontSize: '0.75rem', color: info.color, fontWeight: 600 }}>{pct}%</span>
+                      <span style={{ fontSize: '0.9rem', color: info.color, fontWeight: 600 }}>{pct}%</span>
                     </div>
                     <div style={{ height: '6px', background: '#f3f2f1', borderRadius: '3px', overflow: 'hidden' }}>
                       <div style={{
@@ -414,8 +414,8 @@ export default function MBTIPage() {
                       }} />
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.2rem' }}>
-                      <span style={{ fontSize: '0.65rem', color: '#a19f9d' }}>{DIM_META[d].aFull}</span>
-                      <span style={{ fontSize: '0.65rem', color: '#a19f9d' }}>{DIM_META[d].bFull}</span>
+                      <span style={{ fontSize: '0.78rem', color: '#a19f9d' }}>{DIM_META[d].aFull}</span>
+                      <span style={{ fontSize: '0.78rem', color: '#a19f9d' }}>{DIM_META[d].bFull}</span>
                     </div>
                   </div>
                 );
@@ -424,18 +424,18 @@ export default function MBTIPage() {
 
             {/* 핵심 성격 */}
             <div style={{ background: 'white', border: '1px solid #edebe9', borderBottom: 'none', padding: '1.25rem 1.75rem' }}>
-              <h3 style={{ margin: '0 0 0.75rem 0', fontSize: '0.78rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>핵심 성격</h3>
-              <p style={{ margin: 0, fontSize: '0.9rem', color: '#323130', lineHeight: 1.8 }}>{res.core}</p>
+              <h3 style={{ margin: '0 0 0.75rem 0', fontSize: '0.94rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>핵심 성격</h3>
+              <p style={{ margin: 0, fontSize: '1.08rem', color: '#323130', lineHeight: 1.8 }}>{res.core}</p>
             </div>
 
             {/* 강점 */}
             <div style={{ background: 'white', border: '1px solid #edebe9', borderBottom: 'none', padding: '1.25rem 1.75rem' }}>
-              <h3 style={{ margin: '0 0 0.75rem 0', fontSize: '0.78rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>주요 강점</h3>
+              <h3 style={{ margin: '0 0 0.75rem 0', fontSize: '0.94rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>주요 강점</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {res.strengths.map((s, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>
-                    <span style={{ color: '#107c10', fontWeight: 700, fontSize: '0.85rem', flexShrink: 0 }}>✓</span>
-                    <span style={{ fontSize: '0.875rem', color: '#323130', lineHeight: 1.55 }}>{s}</span>
+                    <span style={{ color: '#107c10', fontWeight: 700, fontSize: '1.02rem', flexShrink: 0 }}>✓</span>
+                    <span style={{ fontSize: '1.05rem', color: '#323130', lineHeight: 1.55 }}>{s}</span>
                   </div>
                 ))}
               </div>
@@ -443,27 +443,27 @@ export default function MBTIPage() {
 
             {/* 성장 포인트 */}
             <div style={{ background: 'white', border: '1px solid #edebe9', borderBottom: 'none', padding: '1.25rem 1.75rem', borderLeft: '4px solid #ca5010' }}>
-              <h3 style={{ margin: '0 0 0.6rem 0', fontSize: '0.78rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>성장 포인트</h3>
-              <p style={{ margin: 0, fontSize: '0.875rem', color: '#323130', lineHeight: 1.7 }}>{res.growth}</p>
+              <h3 style={{ margin: '0 0 0.6rem 0', fontSize: '0.94rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>성장 포인트</h3>
+              <p style={{ margin: 0, fontSize: '1.05rem', color: '#323130', lineHeight: 1.7 }}>{res.growth}</p>
             </div>
 
             {/* 업무 스타일 */}
             <div style={{ background: 'white', border: '1px solid #edebe9', padding: '1.25rem 1.75rem' }}>
-              <h3 style={{ margin: '0 0 0.6rem 0', fontSize: '0.78rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>업무 스타일</h3>
-              <p style={{ margin: 0, fontSize: '0.875rem', color: '#323130', lineHeight: 1.7 }}>{res.work}</p>
+              <h3 style={{ margin: '0 0 0.6rem 0', fontSize: '0.94rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>업무 스타일</h3>
+              <p style={{ margin: 0, fontSize: '1.05rem', color: '#323130', lineHeight: 1.7 }}>{res.work}</p>
             </div>
 
             {/* 버튼 */}
             <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
               <button
                 onClick={reset}
-                style={{ flex: 1, padding: '0.65rem', background: 'transparent', color: '#0078D4', border: '1px solid #0078D4', borderRadius: '2px', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
+                style={{ flex: 1, padding: '0.65rem', background: 'transparent', color: '#0078D4', border: '1px solid #0078D4', borderRadius: '2px', fontSize: '1.02rem', fontWeight: 600, cursor: 'pointer' }}
                 onMouseEnter={e => e.currentTarget.style.background = '#0078D408'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
               >다시 검사하기</button>
               <button
                 onClick={() => router.push('/fun')}
-                style={{ flex: 1, padding: '0.65rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '2px', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
+                style={{ flex: 1, padding: '0.65rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '2px', fontSize: '1.02rem', fontWeight: 600, cursor: 'pointer' }}
                 onMouseEnter={e => e.currentTarget.style.background = '#106ebe'}
                 onMouseLeave={e => e.currentTarget.style.background = '#0078D4'}
               >FuN fUn 홈</button>
