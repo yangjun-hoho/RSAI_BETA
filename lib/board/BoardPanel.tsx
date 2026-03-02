@@ -9,7 +9,7 @@ interface Me { id: number; nickname: string; role: string; }
 
 type RightPanel = 'empty' | 'detail' | 'write';
 
-export default function BoardPanel() {
+export default function BoardPanel({ onBack }: { onBack?: () => void }) {
   const [me, setMe] = useState<Me | null>(null);
 
   // 좌측: 목록
@@ -240,6 +240,18 @@ export default function BoardPanel() {
 
       {/* ── 우측: 상세 / 글쓰기 / 빈 상태 ── */}
       <div style={{ flex: '0 0 60%', width: '60%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+
+        {/* 메인 채팅 버튼 (항상 표시) */}
+        {onBack && (
+          <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e9e9e7', background: 'white', flexShrink: 0, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+            <button
+              onClick={onBack}
+              style={{ padding: '0.28rem 0.65rem', background: 'white', border: '1px solid #e9e9e7', borderRadius: '7px', fontSize: '0.78rem', color: '#37352f', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+            >
+              ← 메인 채팅으로
+            </button>
+          </div>
+        )}
 
         {/* 글쓰기 폼 */}
         {rightPanel === 'write' && (

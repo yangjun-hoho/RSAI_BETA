@@ -352,7 +352,7 @@ export default function Home() {
           <TemplateView onClose={() => setActiveMode(null)} />
         ) : activeMode === 'board' ? (
           <div style={{ flex: 1, display: 'flex', overflow: 'hidden', height: '100%' }}>
-            <BoardPanel />
+            <BoardPanel onBack={() => setActiveMode(null)} />
           </div>
         ) : (
           <>

@@ -23,13 +23,7 @@ export default function FunPage() {
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f0f9ff 0%, #fdf4ff 50%, #fff7ed 100%)', padding: '2rem 1rem' }}>
       {/* 상단 버튼 바 */}
-      <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-        <button
-          onClick={() => router.back()}
-          style={{ padding: '0.5rem 1rem', background: 'white', border: '1px solid #e5e7eb', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', color: '#374151', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-        >
-          ← 돌아가기
-        </button>
+      <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem' }}>
         <button
           onClick={() => router.push('/')}
           style={{ padding: '0.5rem 1rem', background: 'white', border: '1px solid #e5e7eb', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', color: '#374151', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
