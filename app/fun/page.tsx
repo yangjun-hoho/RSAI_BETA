@@ -33,7 +33,7 @@ const PLANETS_CFG = [
 
 export default function FunPage() {
   const router = useRouter();
-  const [dark, setDark]   = useState(false);
+  const [dark, setDark]   = useState(true);
   const [ready, setReady] = useState(false);
 
   const canvasRef  = useRef<HTMLCanvasElement>(null);
@@ -77,7 +77,7 @@ export default function FunPage() {
   /* ── 다크 모드 우주 캔버스 ── */
   useEffect(() => {
     cancelAnimationFrame(animRef.current);
-    if (!dark) return;
+    if (!dark || !ready) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -234,7 +234,7 @@ export default function FunPage() {
 
     animRef.current = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(animRef.current);
-  }, [dark]);
+  }, [dark, ready]);
 
   if (!ready) return null;
 
