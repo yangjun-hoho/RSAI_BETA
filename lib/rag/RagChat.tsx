@@ -146,13 +146,43 @@ export default function RagChat({ categoryId, onBack }: Props) {
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           뒤로
         </button>
-        <span style={{ fontSize: '20px' }}>{category.icon}</span>
+        {category.icon.startsWith('/')
+          ? <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: category.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <img src={category.icon} width={20} height={20} alt="" style={{ display: 'block', opacity: 0.8 }} />
+            </div>
+          : <span style={{ fontSize: '20px' }}>{category.icon}</span>}
         <div>
           <span style={{ fontSize: '15px', fontWeight: 700, color: '#111827' }}>{category.name} RAG</span>
           <span style={{ fontSize: '11px', color: '#9ca3af', marginLeft: '8px' }}>문서 기반 AI 답변</span>
         </div>
-        <div style={{ marginLeft: 'auto', padding: '3px 10px', borderRadius: '20px', background: category.color + '18', color: category.color, fontSize: '11px', fontWeight: 600 }}>
-          {docNames.length}개 문서 등록됨
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ padding: '3px 10px', borderRadius: '20px', background: category.color + '18', color: category.color, fontSize: '11px', fontWeight: 600 }}>
+            {docNames.length}개 문서 등록됨
+          </span>
+          <button
+            onClick={() => {
+              const w = 480, h = 720;
+              const left = Math.max(0, window.screen.width - w - 20);
+              const top = Math.max(0, window.screen.height - h - 60);
+              window.open(
+                `/popup-chat/${categoryId}`,
+                `rag-popup-${categoryId}`,
+                `width=${w},height=${h},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=no,resizable=yes`
+              );
+            }}
+            title="팝업 창으로 열기"
+            style={{
+              display: 'flex', alignItems: 'center', gap: '4px',
+              padding: '4px 10px', fontSize: '12px', fontWeight: 600,
+              background: '#f3f4f6', color: '#374151', border: 'none',
+              borderRadius: '7px', cursor: 'pointer', transition: 'background 0.15s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#e5e7eb'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#f3f4f6'; }}
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            팝업으로 열기
+          </button>
         </div>
       </div>
 

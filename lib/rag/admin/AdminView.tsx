@@ -79,33 +79,35 @@ export default function AdminView({ onBack }: Props) {
 
       {/* 본문: 좌우 분할 */}
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-        {/* 좌측: 카테고리 목록 */}
-        <div style={{ width: '200px', flexShrink: 0, borderRight: '1px solid #e5e7eb', background: 'white', overflowY: 'auto', padding: '12px 8px', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ fontSize: '11px', fontWeight: 600, color: '#9ca3af', padding: '4px 8px', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>카테고리</div>
+        {/* 좌측: 카테고리 목록 (비율 2) */}
+        <div style={{ flex: 2, minWidth: 0, borderRight: '1px solid #e5e7eb', background: 'white', overflowY: 'auto', padding: '16px 12px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ fontSize: '12px', fontWeight: 700, color: '#9ca3af', padding: '4px 10px', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>카테고리</div>
 
           {/* 카테고리 버튼 목록 */}
           <div style={{ flex: 1 }}>
             {categories.length === 0 && !showForm && (
-              <div style={{ padding: '12px 8px', fontSize: '12px', color: '#9ca3af', lineHeight: 1.5 }}>
+              <div style={{ padding: '16px 10px', fontSize: '13px', color: '#9ca3af', lineHeight: 1.6 }}>
                 카테고리가 없습니다.<br />아래 버튼으로 추가해주세요.
               </div>
             )}
             {categories.map(cat => (
-              <div key={cat.id} style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '2px' }}>
+              <div key={cat.id} style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
                 <button
                   onClick={() => { setSelectedId(cat.id); setDeleteError(''); }}
                   style={{
-                    flex: 1, display: 'flex', alignItems: 'center', gap: '8px',
-                    padding: '8px 10px', borderRadius: '7px', border: 'none', cursor: 'pointer',
+                    flex: 1, display: 'flex', alignItems: 'center', gap: '10px',
+                    padding: '10px 12px', borderRadius: '9px', border: 'none', cursor: 'pointer',
                     background: selectedId === cat.id ? cat.color + '18' : 'transparent',
                     color: selectedId === cat.id ? cat.color : '#374151',
                     fontWeight: selectedId === cat.id ? 700 : 400,
-                    fontSize: '13px', textAlign: 'left', transition: 'all 0.15s',
+                    fontSize: '14px', textAlign: 'left', transition: 'all 0.15s',
                   }}
                   onMouseEnter={e => { if (selectedId !== cat.id) e.currentTarget.style.background = '#f9fafb'; }}
                   onMouseLeave={e => { if (selectedId !== cat.id) e.currentTarget.style.background = 'transparent'; }}
                 >
-                  <span style={{ fontSize: '15px' }}>{cat.icon}</span>
+                  {cat.icon.startsWith('/')
+                    ? <img src={cat.icon} width={22} height={22} alt="" style={{ display: 'block', opacity: 0.75, flexShrink: 0 }} />
+                    : <span style={{ fontSize: '18px', flexShrink: 0 }}>{cat.icon}</span>}
                   <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{cat.name}</span>
                 </button>
                 {/* 삭제 버튼 */}
@@ -113,7 +115,7 @@ export default function AdminView({ onBack }: Props) {
                   onClick={() => handleDelete(cat.id)}
                   disabled={deletingId === cat.id}
                   title="카테고리 삭제"
-                  style={{ padding: '4px 5px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#d1d5db', borderRadius: '4px', flexShrink: 0, fontSize: '12px' }}
+                  style={{ padding: '6px 7px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#d1d5db', borderRadius: '6px', flexShrink: 0, fontSize: '14px' }}
                   onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = '#fef2f2'; }}
                   onMouseLeave={e => { e.currentTarget.style.color = '#d1d5db'; e.currentTarget.style.background = 'transparent'; }}
                 >
@@ -125,13 +127,13 @@ export default function AdminView({ onBack }: Props) {
 
           {/* 삭제 오류 메시지 */}
           {deleteError && (
-            <div style={{ padding: '6px 8px', fontSize: '11px', color: '#ef4444', background: '#fef2f2', borderRadius: '6px', margin: '4px 0' }}>
+            <div style={{ padding: '8px 10px', fontSize: '12px', color: '#ef4444', background: '#fef2f2', borderRadius: '7px', margin: '6px 0' }}>
               {deleteError}
             </div>
           )}
 
           {/* 카테고리 추가 폼 or 버튼 */}
-          <div style={{ marginTop: '8px', borderTop: '1px solid #f3f4f6', paddingTop: '8px' }}>
+          <div style={{ marginTop: '12px', borderTop: '1px solid #f3f4f6', paddingTop: '12px' }}>
             {showForm ? (
               <CategoryForm
                 onCreated={() => { setShowForm(false); loadCategories(); }}
@@ -140,33 +142,35 @@ export default function AdminView({ onBack }: Props) {
             ) : (
               <button
                 onClick={() => { setShowForm(true); setDeleteError(''); }}
-                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px', padding: '7px', border: '1.5px dashed #d1d5db', borderRadius: '7px', background: 'transparent', cursor: 'pointer', color: '#6b7280', fontSize: '12px', fontWeight: 600 }}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '10px', border: '1.5px dashed #d1d5db', borderRadius: '9px', background: 'transparent', cursor: 'pointer', color: '#6b7280', fontSize: '13px', fontWeight: 600 }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.color = '#3b82f6'; e.currentTarget.style.background = '#eff6ff'; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = '#d1d5db'; e.currentTarget.style.color = '#6b7280'; e.currentTarget.style.background = 'transparent'; }}
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
                 카테고리 추가
               </button>
             )}
           </div>
         </div>
 
-        {/* 우측: 문서 관리 */}
-        {selected ? (
-          <DocumentManager
-            key={selected.id}
-            categoryId={selected.id}
-            categoryName={selected.name}
-            categoryColor={selected.color}
-          />
-        ) : (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#9ca3af', gap: '8px' }}>
-            <div style={{ fontSize: '32px' }}>📂</div>
-            <div style={{ fontSize: '13px' }}>
-              {categories.length === 0 ? '카테고리를 먼저 추가해주세요' : '카테고리를 선택해주세요'}
+        {/* 우측: 문서 관리 (비율 3) */}
+        <div style={{ flex: 3, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          {selected ? (
+            <DocumentManager
+              key={selected.id}
+              categoryId={selected.id}
+              categoryName={selected.name}
+              categoryColor={selected.color}
+            />
+          ) : (
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#9ca3af', gap: '8px' }}>
+              <div style={{ fontSize: '32px' }}>📂</div>
+              <div style={{ fontSize: '13px' }}>
+                {categories.length === 0 ? '카테고리를 먼저 추가해주세요' : '카테고리를 선택해주세요'}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

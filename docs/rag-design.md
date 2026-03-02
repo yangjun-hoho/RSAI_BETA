@@ -1,7 +1,30 @@
 # RAG 시스템 설계 문서
 
-> 최초 작성: 2026-02-25 / 최종 업데이트: 2026-02-25
+> 최초 작성: 2026-02-25 / 최종 업데이트: 2026-03-02
 > 프로젝트: rsai_ver1 (Next.js 16 App Router)
+
+---
+
+## 0. 최종 목표 (Vision)
+
+> **"담당자가 자기 업무를 하면서, 해당 분야 RAG 챗봇을 팝업 창 하나로 띄워두고 실시간으로 질의응답할 수 있는 환경"**
+
+RAG 시스템의 궁극적 활용 형태는 전체 웹 페이지가 아닌 **경량 팝업 창**이다.
+
+### 핵심 시나리오
+
+| 상황 | 팝업 챗봇 |
+|------|-----------|
+| 야간 당직 중 | `당직 업무 매뉴얼` 팝업을 띄우고 상황 발생 시 즉시 질문 |
+| 민원 응대 중 | `정보공개 처리 절차` 팝업으로 법령 근거 즉시 확인 |
+| 예산 편성 작업 중 | `예산 지침` 팝업으로 지출 기준 조회 |
+| 회의 자료 작성 중 | `보조금 규정` 팝업으로 지원 요건 확인 |
+
+### 구현 원칙
+- 웹 전체 페이지를 대체하지 않음 → **별도 팝업 창** (`window.open`)
+- 팝업은 최소 UI만 포함 (사이드바·헤더 없음)
+- 각 카테고리마다 독립된 팝업 URL: `/popup-chat/[categoryId]`
+- 내부망 환경에서 여러 탭/창 동시 사용 가능
 
 ---
 
@@ -11,13 +34,16 @@
 
 **카테고리는 완전 동적**: `categories.ts` 파일 없이 관리자 UI에서 생성/삭제. 코드 수정·재배포 없이 운영 중 카테고리 관리 가능.
 
-### 진입 방식
-- 사이드바 도구 메뉴에 **'Rag'** 버튼 추가
-- 클릭 시 메인 채팅 영역이 RAG 전용 화면으로 전환 (템플릿과 동일 패턴)
+### 진입 방식 (2가지)
+
+1. **메인 웹앱 내 전환**: 사이드바 [Rag] 버튼 → 갤러리 → 카드 선택 → 채팅
+2. **독립 팝업 창**: 갤러리 카드에서 [팝업으로 열기] 버튼 → `window.open('/popup-chat/[categoryId]')`
 
 ---
 
 ## 2. 화면 흐름
+
+### 2-1. 메인 웹앱 흐름
 
 ```
 사이드바 [Rag] 버튼 클릭
@@ -27,34 +53,57 @@
        └─ view: 'admin'    → AdminView    (문서 업로드/관리)
 ```
 
-### 2-1. 갤러리 화면 (landing)
+### 2-2. 팝업 창 흐름
+
+```
+RagGallery 카드에서 [팝업으로 열기] 클릭
+  └→ window.open('/popup-chat/{categoryId}', '_blank', 'width=480,height=720,...')
+       └→ PopupChatPage (app/popup-chat/[categoryId]/page.tsx)
+            └→ PopupChat 컴포넌트 (경량 채팅 UI)
+```
+
+---
+
+## 3. 갤러리 화면 (landing)
 
 ```
 ┌─────────────────────────────────────────────────────┐
 │  🧠 RAG 지식 검색                    [관리자] [홈]  │
 ├─────────────────────────────────────────────────────┤
 │                                                     │
-│   ┌───────────┐  ┌───────────┐  ┌───────────┐       │
-│   │  📋      │  │  🐾       │  │  💰      │      │
-│   │  정보공개 │  │  동물복지 │  │  보조금   │       │
-│   │           │  │           │  │           │       │
-│   │  문서 12  │  │  문서 8   │  │  문서 5   │       │
-│   └───────────┘  └───────────┘  └───────────┘       │
+│   ┌───────────────┐  ┌───────────────┐              │
+│   │  📋           │  │  🐾           │              │
+│   │  정보공개     │  │  동물복지     │              │
+│   │               │  │               │              │
+│   │  문서 12개    │  │  문서 8개     │              │
+│   │               │  │               │              │
+│   │ [채팅 열기]   │  │ [채팅 열기]   │              │
+│   │ [팝업으로 ↗] │  │ [팝업으로 ↗] │              │
+│   └───────────────┘  └───────────────┘              │
 │                                                     │
-│   카드를 선택하면 해당 카테고리의 문서를 기반으로    │
-│   AI가 답변합니다.                                   │
+│   카드의 [팝업으로 ↗] 버튼을 누르면                 │
+│   별도 창에서 해당 챗봇을 사용할 수 있습니다.        │
 └─────────────────────────────────────────────────────┘
 ```
 
-### 2-2. 채팅 화면
+### 카드 버튼 동작
+
+| 버튼 | 동작 |
+|------|------|
+| [채팅 열기] | 메인 앱 내 `view: 'chat'`으로 전환 |
+| [팝업으로 ↗] | `window.open('/popup-chat/{id}', ...)` |
+
+---
+
+## 4. 채팅 화면 (메인 웹앱)
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  [← 뒤로]  🐾 동물복지 RAG                          │
+│  [← 뒤로]  🐾 동물복지 RAG          [팝업으로 ↗]   │
 ├───────────────────────┬─────────────────────────────┤
-│  📌 시스템 소개      │  💬 AI 답변                 │
+│  📌 시스템 소개       │  💬 AI 답변                 │
 │  이 카테고리는 동물   │                              │
-│  복지 관련 법령 및    │  Q: 반려동물 학대 신고는?     
+│  복지 관련 법령 및    │  Q: 반려동물 학대 신고는?    │
 │  정책 문서를 기반으로 │                              │
 │  답변합니다.          │  A: 동물보호법 제8조에 따르  │
 │  ─────────────────    │  면... [스트리밍 중]         │
@@ -65,7 +114,70 @@
 └───────────────────────┴─────────────────────────────┘
 ```
 
-### 2-3. 관리자 화면
+> 헤더 우측에 [팝업으로 ↗] 버튼 → 채팅 도중에도 팝업 전환 가능
+
+---
+
+## 5. 팝업 채팅 화면 (독립 창)
+
+```
+┌─────────────────────────────────┐  ← 480px 내외
+│  🐾 동물복지                [×] │  ← 카테고리명 + 닫기
+├─────────────────────────────────┤
+│                                 │
+│  ┌─────────────────────────┐    │
+│  │  A: 동물보호법 제8조에  │    │
+│  │  따르면 반려동물 학대를 │    │
+│  │  목격했을 때는...       │    │
+│  └─────────────────────────┘    │
+│                                 │
+│  ┌─────────────────────────┐    │
+│  │  Q: 신고 후 처리 기간은?│    │
+│  └─────────────────────────┘    │
+│                                 │
+│  ┌─────────────────────────┐    │
+│  │  A: 처리 기간은...      │    │
+│  └─────────────────────────┘    │
+│                                 │
+│  📚 참고문서 [동물보호법.pdf]   │
+│                                 │
+├─────────────────────────────────┤
+│  [질문을 입력하세요...    ] [↑] │
+└─────────────────────────────────┘
+```
+
+### 팝업 창 사양
+
+| 항목 | 값 |
+|------|-----|
+| 너비 | 480px |
+| 높이 | 720px |
+| 위치 | `left`, `top` (화면 우하단 기본) |
+| 툴바 | 없음 (`toolbar=no,menubar=no`) |
+| 리사이즈 | 가능 (`resizable=yes`) |
+| URL | `/popup-chat/{categoryId}` |
+
+### window.open 호출 예시
+
+```typescript
+function openPopupChat(categoryId: string, categoryName: string) {
+  const w = 480, h = 720;
+  const left = window.screen.width - w - 20;
+  const top  = window.screen.height - h - 60;
+  window.open(
+    `/popup-chat/${categoryId}`,
+    `rag-popup-${categoryId}`,   // 같은 카테고리는 같은 창 재사용
+    `width=${w},height=${h},left=${left},top=${top},` +
+    `toolbar=no,menubar=no,scrollbars=no,resizable=yes`
+  );
+}
+```
+
+> `window.open`의 두 번째 인자를 카테고리 ID로 고정하면, 같은 카테고리 팝업이 이미 열려있을 때 새 창을 열지 않고 기존 창으로 포커스 이동
+
+---
+
+## 6. 관리자 화면
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -100,7 +212,7 @@
 
 ---
 
-## 3. 기술 스택
+## 7. 기술 스택
 
 | 역할 | 기술 | 비고 |
 |------|------|------|
@@ -112,10 +224,11 @@
 | 스트리밍 | SSE (ReadableStream) | 기존 채팅과 동일 패턴 |
 | 파일 파싱 | `pdf-parse`, `mammoth` | 이미 설치됨 |
 | LLM | OpenAI GPT-4o-mini | RAG 컨텍스트 포함 답변 |
+| 팝업 창 | `window.open` | 동일 카테고리 창 재사용 |
 
 ---
 
-## 4. 파일 구조
+## 8. 파일 구조
 
 ```
 app/
@@ -125,13 +238,18 @@ app/
 │       ├── categories/route.ts     ← GET: 목록 / POST: 생성 / DELETE: 삭제
 │       ├── upload/route.ts         ← POST: 파일 업로드 → 청킹 → 임베딩 → 저장
 │       └── documents/route.ts      ← GET: 문서 목록 / DELETE: 문서 삭제
+│
+├── popup-chat/                     ← 팝업 전용 라우트 (새로 추가)
+│   └── [categoryId]/
+│       └── page.tsx                ← 경량 팝업 페이지 (헤더/사이드바 없음)
 
 lib/rag/
 ├── db.ts                           ← SQLite 초기화 + CRUD 헬퍼 (카테고리 CRUD 포함)
 ├── vectorCache.ts                  ← 서버 메모리 벡터 캐시
 ├── RagView.tsx                     ← 진입점 (gallery/chat/admin 상태 관리)
-├── RagGallery.tsx                  ← 카테고리 카드 갤러리 (API fetch)
-├── RagChat.tsx                     ← 좌우 분할 채팅 화면 (API fetch)
+├── RagGallery.tsx                  ← 카테고리 카드 갤러리 (팝업 버튼 포함)
+├── RagChat.tsx                     ← 좌우 분할 채팅 화면
+├── PopupChat.tsx                   ← 팝업 전용 경량 채팅 컴포넌트 (새로 추가)
 └── admin/
     ├── AdminView.tsx               ← 관리자 레이아웃 + 카테고리 CRUD
     ├── CategoryForm.tsx            ← 카테고리 생성 폼 (이름/이모지/색상/설명)
@@ -146,7 +264,7 @@ data/                               ← gitignore
 
 ---
 
-## 5. DB 스키마
+## 9. DB 스키마
 
 ```sql
 -- 카테고리 (관리자 UI에서 동적으로 생성/삭제 — 코드에 하드코딩 없음)
@@ -189,7 +307,7 @@ CREATE INDEX idx_documents_category ON documents(category_id);
 
 ---
 
-## 6. API 설계
+## 10. API 설계
 
 ### POST `/api/rag/query` — RAG 쿼리 (SSE)
 
@@ -204,6 +322,8 @@ CREATE INDEX idx_documents_category ON documents(category_id);
   ]
 }
 ```
+
+> 메인 웹앱과 팝업 창이 **동일한 API 엔드포인트** 사용 (팝업 전용 API 불필요)
 
 **처리 흐름:**
 1. 질문을 `text-embedding-3-small`로 임베딩
@@ -245,34 +365,6 @@ categoryId: string
 ```json
 { "documentId": "uuid", "status": "processing" }
 ```
-
----
-
-### GET `/api/rag/admin/documents?categoryId=animal-welfare`
-
-**Response:**
-```json
-{
-  "documents": [
-    {
-      "id": "uuid",
-      "originalName": "동물보호법.pdf",
-      "fileSize": 102400,
-      "status": "done",
-      "chunkCount": 324,
-      "createdAt": "2026-02-25T10:00:00Z"
-    }
-  ]
-}
-```
-
----
-
-### DELETE `/api/rag/admin/documents?id={documentId}`
-
-- DB에서 document + 관련 chunks 삭제 (CASCADE)
-- 원본 파일 삭제
-- 벡터 캐시 무효화
 
 ---
 
@@ -338,7 +430,49 @@ categoryId: string
 
 ---
 
-## 7. 카테고리 관리 방법
+## 11. 팝업 페이지 구현 (`app/popup-chat/[categoryId]/page.tsx`)
+
+```typescript
+// 팝업 전용 페이지 — Next.js layout 적용 제외 (별도 layout.tsx 또는 루트 layout에서 분기)
+// 헤더, 사이드바, 네비게이션 없음
+
+export default async function PopupChatPage({
+  params
+}: {
+  params: Promise<{ categoryId: string }>
+}) {
+  const { categoryId } = await params;
+  // 카테고리 정보를 서버에서 조회해서 전달
+  return <PopupChat categoryId={categoryId} />;
+}
+```
+
+### PopupChat 컴포넌트 (`lib/rag/PopupChat.tsx`)
+
+- `RagChat.tsx`와 동일한 SSE 스트리밍 로직 공유
+- 좌측 문서 목록 패널 없음 (채팅 영역만)
+- 최소 스타일: 흰 배경, 카테고리명 헤더, 입력창
+- 대화 이력은 `useState`로 관리 (창 닫으면 초기화)
+
+### 팝업 레이아웃 분리
+
+```typescript
+// app/popup-chat/layout.tsx
+// 루트 layout의 사이드바/헤더를 포함하지 않는 별도 레이아웃
+export default function PopupLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="ko">
+      <body style={{ margin: 0, fontFamily: 'system-ui' }}>
+        {children}
+      </body>
+    </html>
+  );
+}
+```
+
+---
+
+## 12. 카테고리 관리 방법
 
 **코드 수정 없이 관리자 UI에서 바로 추가/삭제 가능.**
 
@@ -346,7 +480,7 @@ categoryId: string
 1. 사이드바 → Rag → [관리자] 클릭
 2. 좌측 하단 **[+ 카테고리 추가]** 버튼 클릭
 3. 이름, 아이콘(이모지), 색상(8종 프리셋), 시스템 소개 입력
-4. [저장] → 즉시 갤러리에 카드 표시
+4. [저장] → 즉시 갤러리에 카드 표시 + 팝업 URL 자동 활성화
 
 ### 색상 프리셋
 
@@ -367,11 +501,12 @@ categoryId: string
 
 ### 카테고리 ID
 - 서버에서 `crypto.randomUUID()` 자동 생성
-- 변경 불가 (문서/청크의 외래키로 사용됨)
+- 팝업 URL: `/popup-chat/{UUID}` 형태로 고정
+- 변경 불가 (문서/청크/팝업 URL의 외래키로 사용됨)
 
 ---
 
-## 8. 벡터 캐시 전략
+## 13. 벡터 캐시 전략
 
 ```typescript
 // lib/rag/vectorCache.ts
@@ -404,7 +539,7 @@ export async function getCategoryVectors(categoryId: string): Promise<CacheEntry
 
 ---
 
-## 9. 청킹 전략
+## 14. 청킹 전략
 
 ```
 원본 텍스트
@@ -416,7 +551,7 @@ export async function getCategoryVectors(categoryId: string): Promise<CacheEntry
 
 ---
 
-## 10. 시스템 프롬프트 (RAG)
+## 15. 시스템 프롬프트 (RAG)
 
 ```
 당신은 {categoryName} 전문 AI 상담사입니다.
@@ -433,7 +568,7 @@ export async function getCategoryVectors(categoryId: string): Promise<CacheEntry
 
 ---
 
-## 11. 사이드바 연동
+## 16. 사이드바 연동
 
 ```typescript
 // lib/chat/Sidebar.tsx
@@ -456,7 +591,7 @@ export const TOOLS: Tool[] = [
 
 ---
 
-## 12. 구현 순서 (완료)
+## 17. 구현 단계
 
 | 단계 | 내용 | 파일 | 상태 |
 |------|------|------|------|
@@ -469,10 +604,14 @@ export const TOOLS: Tool[] = [
 | 7 | 갤러리 + 진입점 | `lib/rag/RagView.tsx`, `RagGallery.tsx` | ✅ |
 | 8 | 사이드바 연동 | `Sidebar.tsx`, `page.tsx` | ✅ |
 | 9 | 카테고리 동적화 (categories.ts 제거) | `db.ts`, `AdminView.tsx`, `CategoryForm.tsx` | ✅ |
+| 10 | 갤러리에 [팝업으로 ↗] 버튼 추가 | `RagGallery.tsx` | 예정 |
+| 11 | 팝업 전용 레이아웃 | `app/popup-chat/layout.tsx` | 예정 |
+| 12 | PopupChat 컴포넌트 | `lib/rag/PopupChat.tsx` | 예정 |
+| 13 | 팝업 페이지 라우트 | `app/popup-chat/[categoryId]/page.tsx` | 예정 |
 
 ---
 
-## 13. 주의사항 / 제약
+## 18. 주의사항 / 제약
 
 - `better-sqlite3`는 네이티브 모듈 → `serverExternalPackages`에 추가 필요
 - 파일 업로드는 Next.js 기본 4MB 제한 → `next.config.ts`에서 `api.bodyParser` 설정 필요 (또는 `formData` 사용)
@@ -481,10 +620,12 @@ export const TOOLS: Tool[] = [
 - OpenAI 임베딩 비용: `text-embedding-3-small` 기준 $0.02 / 1M tokens (매우 저렴)
 - 카테고리 삭제 시 문서/청크는 자동 삭제되지 않음 → 문서를 먼저 삭제해야 카테고리 삭제 가능
 - 카테고리 ID는 UUID → 업로드 파일 경로가 `data/uploads/rag/{UUID}/` 형태
+- **팝업 창**: 내부망(인트라넷) 환경에서는 `window.open` 팝업 차단 설정 여부 사전 확인 필요
+- **팝업 레이아웃**: `app/popup-chat/layout.tsx`를 반드시 분리해야 루트 layout의 사이드바·헤더가 팝업에 들어오지 않음
 
 ---
 
-## 14. 저장 구조
+## 19. 저장 구조
 
 ### 문서 업로드 → 저장 흐름
 
@@ -507,60 +648,9 @@ export const TOOLS: Tool[] = [
        ▼  SQLite INSERT
 ```
 
-### 실제 DB 저장 예시
-
-**documents 테이블 행:**
-
-| 컬럼 | 값 |
-|------|-----|
-| id | `"a1b2c3d4-..."` (UUID) |
-| category_id | `"animal-welfare"` |
-| original_name | `"동물보호법.pdf"` |
-| file_path | `"data/uploads/rag/animal-welfare/a1b2c3d4-동물보호법.pdf"` |
-| file_size | `32768` |
-| status | `"done"` |
-| chunk_count | `58` |
-| created_at | `"2026-02-25 10:30:00"` |
-
-**chunks 테이블 행 (1개 청크):**
-
-| 컬럼 | 값 |
-|------|-----|
-| id | `"e5f6g7h8-..."` (UUID) |
-| document_id | `"a1b2c3d4-..."` |
-| category_id | `"animal-welfare"` |
-| chunk_index | `3` |
-| chunk_text | `"제8조(동물학대 등의 금지) ① 누구든지 동물에 대하여 다음 각 호의 행위를 하여서는 아니 된다. 1. 목을 매다는 등의 잔인한 방법으로 죽이는 행위 2. 노상 등 공개된 장소에서 죽이거나..."` |
-| embedding | `"[0.0123, -0.0456, 0.0789, ..., 0.0234]"` (1,536개 float, JSON 문자열) |
-| created_at | `"2026-02-25 10:30:45"` |
-
-### 메모리 벡터 캐시 구조
-
-서버 첫 질문 시 DB → 메모리 로드, 이후 요청은 메모리에서 직접 조회:
-
-```typescript
-// 카테고리 'animal-welfare' 로드 후 캐시 상태
-cache = Map {
-  "animal-welfare" => [
-    {
-      embedding: [0.0123, -0.0456, 0.0789, ...],  // number[] (1,536)
-      chunkText: "제8조(동물학대 등의 금지) ...",
-      documentId: "a1b2c3d4-...",
-      documentName: "동물보호법.pdf",
-      chunkIndex: 3
-    },
-    // ... 나머지 청크들 (총 58개 * 문서 수)
-  ]
-}
-```
-
-> 문서 추가/삭제 시 `invalidateCache(categoryId)` 호출 → 다음 질문 때 DB에서 재로드
-
 ---
 
-## 15. 질문 시 검색 과정
-
-### 전체 흐름
+## 20. 질문 시 검색 과정
 
 ```
 사용자: "반려동물 학대 신고 방법은?"
@@ -579,40 +669,11 @@ cache = Map {
     ...c,
     score: cosineSimilarity(queryEmbedding, c.embedding)
   }))
-  → scores: [0.82, 0.71, 0.45, 0.91, 0.63, 0.78, ...]
         │
         ▼  Step 4: Top-5 정렬 추출
-  .sort((a, b) => b.score - a.score)
-  .slice(0, 5)
-  → topChunks: [
-      { score: 0.91, docName: "동물보호법.pdf",     chunkText: "제8조(동물학대)..." },
-      { score: 0.82, docName: "동물보호법.pdf",     chunkText: "신고·접수 절차..." },
-      { score: 0.78, docName: "복지지침2024.docx", chunkText: "신고센터 운영..." },
-      { score: 0.71, docName: "동물보호법.pdf",     chunkText: "관할 기관 안내..." },
-      { score: 0.63, docName: "반려동물정책.pdf",   chunkText: "동물보호 단체..." },
-    ]
+  .sort((a, b) => b.score - a.score).slice(0, 5)
         │
-        ▼  Step 5: 컨텍스트 구성
-  context = `
-    [1] (출처: 동물보호법.pdf)
-    제8조(동물학대 등의 금지) ...
-
-    [2] (출처: 동물보호법.pdf)
-    신고·접수 절차에 관하여 ...
-
-    [3] (출처: 복지지침2024.docx)
-    신고센터 운영 안내 ...
-    ...
-  `
-        │
-        ▼  Step 6: GPT-4o-mini 호출 (SSE 스트리밍)
-  messages: [
-    { role: "system", content: "당신은 동물복지 전문 AI... [참고문서]\n{context}" },
-    { role: "user",   content: "반려동물 학대 신고 방법은?" }
-  ]
-        │
-        ▼  Step 7: SSE 스트리밍 응답 전송
-  → 청크 단위 실시간 전송 → 완료 후 sources 전송
+        ▼  Step 5: 컨텍스트 구성 → GPT-4o-mini 호출 (SSE 스트리밍)
 ```
 
 ### 코사인 유사도 계산 (JS 구현)
@@ -630,83 +691,3 @@ function cosineSimilarity(a: number[], b: number[]): number {
 // 반환값 범위: -1 ~ 1  (1에 가까울수록 유사)
 // 실제 유사 청크: 보통 0.7 이상
 ```
-
----
-
-## 16. 답변 출력 예시
-
-### SSE 스트림 이벤트 순서
-
-```
-# 1. 텍스트 청크 (실시간, 여러 번)
-data: {"type":"chunk","content":"동물보호법 제"}
-data: {"type":"chunk","content":"8조에 따르면, 반려"}
-data: {"type":"chunk","content":"동물 학대를 목격했을 때는"}
-...
-data: {"type":"chunk","content":" 즉시 관할 지자체 또는 동물보호 신고센터(1577-0954)에 신고하실 수 있습니다.\n\n"}
-data: {"type":"chunk","content":"**신고 방법:**\n1. 전화 신고: ..."}
-...
-
-# 2. 출처 문서 (스트리밍 완료 후 1회)
-data: {
-  "type": "sources",
-  "sources": [
-    {
-      "index": 1,
-      "docName": "동물보호법.pdf",
-      "chunk": "제8조(동물학대 등의 금지) ① 누구든지 동물에 대하여 다음 각 호의 행위를 하여서는 아니 된다. 1. 목을 매다는 등의 잔인한 방법으로 죽이는 행위..."
-    },
-    {
-      "index": 2,
-      "docName": "복지지침2024.docx",
-      "chunk": "신고센터 운영 안내: 동물보호 신고전화 1577-0954는 연중무휴 24시간 운영되며, 긴급한 경우 경찰(112) 또는 소방(119)에 신고할 수 있습니다..."
-    },
-    ...
-  ]
-}
-
-# 3. 완료 신호 (1회)
-data: {"type":"done"}
-```
-
-### UI 렌더링 결과
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                                                                  │
-│  ┌───────────────────────────────────────────────────────────┐  │
-│  │  동물보호법 제8조에 따르면, 반려동물 학대를 목격했을 때  │  │
-│  │  는 즉시 관할 지자체 또는 동물보호 신고센터(1577-0954)에 │  │
-│  │  신고하실 수 있습니다.                                    │  │
-│  │                                                           │  │
-│  │  **신고 방법:**                                           │  │
-│  │  1. 전화 신고: 동물보호 신고전화 1577-0954               │  │
-│  │  2. 온라인: 동물보호관리시스템(APMS) 접속 후 민원 신청   │  │
-│  │  3. 직접 방문: 시·군·구 동물보호 담당 부서               │  │
-│  │                                                           │  │
-│  │  (동물보호법 제14조에 따르면 신고자의 신원은 보호됩니다) │  │
-│  └───────────────────────────────────────────────────────────┘  │
-│                                                                  │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │ 📚 참고 문서 2개                       클릭하여 펼치기▾ │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│    ↓ 펼쳤을 때                                                   │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │ ① 📄 동물보호법.pdf                                     │    │
-│  │ ─────────────────────────────────────────────────────── │    │
-│  │ 제8조(동물학대 등의 금지) ① 누구든지 동물에 대하여 다  │    │
-│  │ 음 각 호의 행위를 하여서는 아니 된다. 1. 목을 매다는    │    │
-│  │ 등의 잔인한 방법으로 죽이는 행위 2. 노상 등 공개된 장  │    │
-│  │ 소에서 죽이거나...                                      │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │ ② 📝 복지지침2024.docx                                  │    │
-│  │ ─────────────────────────────────────────────────────── │    │
-│  │ 신고센터 운영 안내: 동물보호 신고전화 1577-0954는 연중  │    │
-│  │ 무휴 24시간 운영되며, 긴급한 경우 경찰(112) 또는 소방  │    │
-│  │ (119)에 신고할 수 있습니다...                           │    │
-│  └─────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-> 청크는 원본 그대로 최대 500자 표시 (스크롤 가능, max-height: 300px)

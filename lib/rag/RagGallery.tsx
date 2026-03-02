@@ -18,6 +18,17 @@ interface Props {
   onClose?: () => void;
 }
 
+function openPopup(categoryId: string) {
+  const w = 480, h = 720;
+  const left = Math.max(0, window.screen.width - w - 20);
+  const top = Math.max(0, window.screen.height - h - 60);
+  window.open(
+    `/popup-chat/${categoryId}`,
+    `rag-popup-${categoryId}`,
+    `width=${w},height=${h},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=no,resizable=yes`
+  );
+}
+
 export default function RagGallery({ onSelectCategory, onAdmin, onClose }: Props) {
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -75,13 +86,12 @@ export default function RagGallery({ onSelectCategory, onAdmin, onClose }: Props
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1rem' }}>
             {categories.map(cat => (
-              <button
+              <div
                 key={cat.id}
-                onClick={() => onSelectCategory(cat.id)}
                 style={{
                   display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
                   padding: '1.1rem', background: 'white', border: '1.5px solid #e9e9e7',
-                  borderRadius: '12px', cursor: 'pointer', textAlign: 'left',
+                  borderRadius: '12px', textAlign: 'left',
                   transition: 'all 0.15s', boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
                 }}
                 onMouseEnter={e => {
@@ -96,11 +106,13 @@ export default function RagGallery({ onSelectCategory, onAdmin, onClose }: Props
                 }}
               >
                 <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: cat.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', marginBottom: '12px' }}>
-                  {cat.icon}
+                  {cat.icon.startsWith('/')
+                    ? <img src={cat.icon} width={28} height={28} alt="" style={{ display: 'block', opacity: 0.8 }} />
+                    : cat.icon}
                 </div>
                 <div style={{ fontSize: '15px', fontWeight: 700, color: '#1a1a1a', marginBottom: '6px' }}>{cat.name}</div>
-                <div style={{ fontSize: '12px', color: '#6b6b6b', lineHeight: 1.5, marginBottom: '16px' }}>{cat.description || '등록된 문서를 기반으로 AI가 답변합니다.'}</div>
-                <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+                <div style={{ fontSize: '12px', color: '#6b6b6b', lineHeight: 1.5, marginBottom: '12px' }}>{cat.description || '등록된 문서를 기반으로 AI가 답변합니다.'}</div>
+                <div style={{ display: 'flex', gap: '6px', marginBottom: '12px' }}>
                   <span style={{ fontSize: '11px', padding: '3px 8px', background: cat.color + '14', color: cat.color, borderRadius: '20px', fontWeight: 600 }}>
                     문서 {cat.document_count}개
                   </span>
@@ -110,7 +122,37 @@ export default function RagGallery({ onSelectCategory, onAdmin, onClose }: Props
                     </span>
                   )}
                 </div>
-              </button>
+                {/* 버튼 영역 */}
+                <div style={{ display: 'flex', gap: '6px', width: '100%', marginTop: 'auto' }}>
+                  <button
+                    onClick={() => onSelectCategory(cat.id)}
+                    style={{
+                      flex: 1, padding: '6px 0', fontSize: '12px', fontWeight: 600,
+                      background: cat.color, color: 'white', border: 'none',
+                      borderRadius: '7px', cursor: 'pointer', transition: 'opacity 0.15s',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }}
+                    onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+                  >
+                    채팅 열기
+                  </button>
+                  <button
+                    onClick={() => openPopup(cat.id)}
+                    title="별도 창으로 열기"
+                    style={{
+                      padding: '6px 8px', fontSize: '12px', fontWeight: 600,
+                      background: '#f3f4f6', color: '#374151', border: 'none',
+                      borderRadius: '7px', cursor: 'pointer', transition: 'background 0.15s',
+                      display: 'flex', alignItems: 'center', gap: '3px', flexShrink: 0,
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = '#e5e7eb'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = '#f3f4f6'; }}
+                  >
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    팝업
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         )}
