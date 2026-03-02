@@ -4,7 +4,7 @@ import { verifySession, COOKIE_NAME } from '@/lib/auth/session';
 const PROTECTED = ['/board', '/my', '/api/board', '/api/my'];
 const ADMIN_ONLY = ['/admin', '/api/admin'];
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const isProtected = PROTECTED.some(p => pathname.startsWith(p));
