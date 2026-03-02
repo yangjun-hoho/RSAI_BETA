@@ -43,7 +43,13 @@
       "Bash(git commit -m \"feat: PII 필터 + 관리자 패널 구현:*)",
       "Bash(git add app/api/work-support/greetings/route.ts app/api/work-support/merit-citation/route.ts app/api/work-support/ppt-converter/generate/route.ts app/api/work-support/press-release/route.ts app/api/work-support/report/route.ts app/api/work-support/scenario-generator/route.ts app/api/work-support/text-to-speech/route.ts)",
       "Bash(git commit:*)",
-      "Bash(git add app/api/auth/register/route.ts)"
+      "Bash(git add app/api/auth/register/route.ts)",
+      "Bash(git add proxy.ts)",
+      "Bash(git rm middleware.ts)",
+      "Bash(git add app/fun/page.tsx lib/board/BoardPanel.tsx app/page.tsx)",
+      "Bash(done)",
+      "Bash(python3 -c \":*)",
+      "Bash(node scale-fonts.mjs)"
     ]
   }
 }

@@ -262,12 +262,12 @@ export default function MBTIPage() {
         </div>
       </div>
 
-      <div style={{ padding: '1.5rem 2rem 3rem', maxWidth: '580px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '0' }}>
+      <div style={{ padding: '1.5rem 2rem 3rem', maxWidth: done ? '960px' : '580px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '0', transition: 'max-width 0.3s' }}>
 
         {!done ? (
           <>
             {/* 진행 바 */}
-            <div style={{ background: 'white', border: '1px solid #edebe9', borderBottom: 'none', padding: '0.85rem 1.25rem' }}>
+            <div style={{ background: 'white', border: '1px solid #e0dedd', borderBottom: 'none', borderRadius: '12px 12px 0 0', boxShadow: '0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)', padding: '0.85rem 1.25rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ padding: '0.15rem 0.6rem', background: `${dim.color}12`, color: dim.color, border: `1px solid ${dim.color}30`, fontSize: '0.86rem', fontWeight: 700 }}>
                   {DIM_META[q?.dim ?? 'EI'].aFull.split(' ')[0]} · {DIM_META[q?.dim ?? 'EI'].bFull.split(' ')[0]}
@@ -280,7 +280,7 @@ export default function MBTIPage() {
             </div>
 
             {/* 질문 카드 */}
-            <div style={{ background: 'white', border: '1px solid #edebe9', padding: '2rem 1.75rem 1.75rem' }}>
+            <div style={{ background: 'white', border: '1px solid #e0dedd', borderTop: 'none', borderRadius: '0 0 12px 12px', boxShadow: '0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)', padding: '2rem 1.75rem 1.75rem' }}>
 
               {/* 안내 (첫 질문에만) */}
               {current === 0 && (
@@ -294,7 +294,7 @@ export default function MBTIPage() {
               </p>
 
               {/* A 선택지 */}
-              <div style={{ padding: '0.75rem 1rem', background: '#f8faff', border: '1px solid #d0e4ff', marginBottom: '1.25rem', fontSize: '1.02rem', color: '#003a8c', lineHeight: 1.55, borderRadius: '2px' }}>
+              <div style={{ padding: '0.85rem 1.1rem', background: 'linear-gradient(135deg, #f0f6ff 0%, #e8f2ff 100%)', border: '1px solid #c0d8ff', marginBottom: '1.25rem', fontSize: '1.02rem', color: '#003a8c', lineHeight: 1.55, borderRadius: '10px', boxShadow: '0 3px 10px rgba(0,120,212,0.12), inset 0 1px 0 rgba(255,255,255,0.8)' }}>
                 <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#0078D4', display: 'block', marginBottom: '0.2rem' }}>A</span>
                 {q.a}
               </div>
@@ -354,7 +354,7 @@ export default function MBTIPage() {
               </div>
 
               {/* B 선택지 */}
-              <div style={{ padding: '0.75rem 1rem', background: '#fff8f8', border: '1px solid #ffd0d0', marginBottom: '1.5rem', fontSize: '1.02rem', color: '#8c0000', lineHeight: 1.55, borderRadius: '2px' }}>
+              <div style={{ padding: '0.85rem 1.1rem', background: 'linear-gradient(135deg, #fff5f5 0%, #ffeded 100%)', border: '1px solid #ffbcbc', marginBottom: '1.5rem', fontSize: '1.02rem', color: '#8c0000', lineHeight: 1.55, borderRadius: '10px', boxShadow: '0 3px 10px rgba(209,52,56,0.12), inset 0 1px 0 rgba(255,255,255,0.8)' }}>
                 <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#d13438', display: 'block', marginBottom: '0.2rem' }}>B</span>
                 {q.b}
               </div>
@@ -372,98 +372,102 @@ export default function MBTIPage() {
           </>
         ) : mbti && res ? (
           /* ── 결과 화면 ── */
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
 
-            {/* 타입 헤더 */}
-            <div style={{ background: 'white', border: '1px solid #edebe9', borderBottom: 'none', padding: '2.5rem 2rem 1.5rem', textAlign: 'center' }}>
-              <div style={{ fontSize: '4.8rem', marginBottom: '0.75rem' }}>{res.emoji}</div>
-              <div style={{ display: 'inline-block', padding: '0.4rem 1.75rem', background: '#0078D4', color: 'white', fontSize: '2.16rem', fontWeight: 700, marginBottom: '0.75rem', letterSpacing: '3px' }}>
-                {mbti.type}
+            {/* 타입 헤더 - 전체 너비 */}
+            <div style={{ background: 'linear-gradient(135deg, #003a7a 0%, #0078D4 100%)', borderRadius: '14px', boxShadow: '0 8px 32px rgba(0,78,212,0.25), 0 2px 8px rgba(0,0,0,0.12)', padding: '1.5rem 2rem', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }}>
+              <div style={{ fontSize: '4rem', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}>{res.emoji}</div>
+              <div>
+                <div style={{ display: 'inline-block', padding: '0.3rem 1.5rem', background: 'rgba(255,255,255,0.2)', color: 'white', fontSize: '2.4rem', fontWeight: 700, marginBottom: '0.4rem', letterSpacing: '4px', borderRadius: '8px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.3)' }}>
+                  {mbti.type}
+                </div>
+                <div style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.2rem' }}>{res.en}</div>
+                <h2 style={{ margin: '0', fontSize: '1.35rem', fontWeight: 700, color: 'white' }}>{res.name}</h2>
               </div>
-              <div style={{ fontSize: '0.94rem', color: '#a19f9d', marginBottom: '0.35rem' }}>{res.en}</div>
-              <h2 style={{ margin: '0', fontSize: '1.5rem', fontWeight: 700, color: '#323130' }}>{res.name}</h2>
             </div>
 
-            {/* 차원별 비율 */}
-            <div style={{ background: 'white', border: '1px solid #edebe9', borderBottom: 'none', padding: '1.25rem 1.75rem' }}>
-              <h3 style={{ margin: '0 0 1rem 0', fontSize: '0.94rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>성격 차원 분석</h3>
-              {(['EI', 'SN', 'TF', 'JP'] as Dim[]).map(d => {
-                const info = mbti.info[d];
-                const isA = info.dominant === DIM_META[d].a;
-                const pct = info.pct;
-                return (
-                  <div key={d} style={{ marginBottom: '1rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <span style={{ fontSize: '0.96rem', fontWeight: 700, color: info.color, padding: '0.1rem 0.4rem', background: `${info.color}12`, border: `1px solid ${info.color}30` }}>
-                          {info.dominant}
-                        </span>
-                        <span style={{ fontSize: '0.94rem', color: '#323130', fontWeight: 500 }}>
-                          {isA ? info.aLabel : info.bLabel}
-                        </span>
+            {/* 2열 그리드 */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem', alignItems: 'start' }}>
+
+              {/* 좌열: 차원별 비율 */}
+              <div style={{ background: 'white', border: '1px solid #e0dedd', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', padding: '1.1rem 1.4rem' }}>
+                <h3 style={{ margin: '0 0 0.85rem 0', fontSize: '0.88rem', fontWeight: 700, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>성격 차원 분석</h3>
+                {(['EI', 'SN', 'TF', 'JP'] as Dim[]).map(d => {
+                  const info = mbti.info[d];
+                  const isA = info.dominant === DIM_META[d].a;
+                  const pct = info.pct;
+                  return (
+                    <div key={d} style={{ marginBottom: '0.85rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                          <span style={{ fontSize: '0.9rem', fontWeight: 700, color: info.color, padding: '0.1rem 0.4rem', background: `${info.color}12`, border: `1px solid ${info.color}30`, borderRadius: '4px' }}>
+                            {info.dominant}
+                          </span>
+                          <span style={{ fontSize: '0.88rem', color: '#323130', fontWeight: 500 }}>
+                            {isA ? info.aLabel : info.bLabel}
+                          </span>
+                        </div>
+                        <span style={{ fontSize: '0.86rem', color: info.color, fontWeight: 700 }}>{pct}%</span>
                       </div>
-                      <span style={{ fontSize: '0.9rem', color: info.color, fontWeight: 600 }}>{pct}%</span>
+                      <div style={{ height: '7px', background: '#f3f2f1', borderRadius: '4px', overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${pct}%`, background: `linear-gradient(90deg, ${info.color}70, ${info.color})`, borderRadius: '4px', transition: 'width 0.8s ease' }} />
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.15rem' }}>
+                        <span style={{ fontSize: '0.72rem', color: '#a19f9d' }}>{DIM_META[d].aFull}</span>
+                        <span style={{ fontSize: '0.72rem', color: '#a19f9d' }}>{DIM_META[d].bFull}</span>
+                      </div>
                     </div>
-                    <div style={{ height: '6px', background: '#f3f2f1', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{
-                        height: '100%',
-                        width: `${pct}%`,
-                        background: `linear-gradient(90deg, ${info.color}80, ${info.color})`,
-                        borderRadius: '3px',
-                        transition: 'width 0.8s ease',
-                      }} />
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.2rem' }}>
-                      <span style={{ fontSize: '0.78rem', color: '#a19f9d' }}>{DIM_META[d].aFull}</span>
-                      <span style={{ fontSize: '0.78rem', color: '#a19f9d' }}>{DIM_META[d].bFull}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
 
-            {/* 핵심 성격 */}
-            <div style={{ background: 'white', border: '1px solid #edebe9', borderBottom: 'none', padding: '1.25rem 1.75rem' }}>
-              <h3 style={{ margin: '0 0 0.75rem 0', fontSize: '0.94rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>핵심 성격</h3>
-              <p style={{ margin: 0, fontSize: '1.08rem', color: '#323130', lineHeight: 1.8 }}>{res.core}</p>
-            </div>
-
-            {/* 강점 */}
-            <div style={{ background: 'white', border: '1px solid #edebe9', borderBottom: 'none', padding: '1.25rem 1.75rem' }}>
-              <h3 style={{ margin: '0 0 0.75rem 0', fontSize: '0.94rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>주요 강점</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                {res.strengths.map((s, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>
-                    <span style={{ color: '#107c10', fontWeight: 700, fontSize: '1.02rem', flexShrink: 0 }}>✓</span>
-                    <span style={{ fontSize: '1.05rem', color: '#323130', lineHeight: 1.55 }}>{s}</span>
+                {/* 강점 - 좌열 하단 */}
+                <div style={{ borderTop: '1px solid #f3f2f1', paddingTop: '0.85rem', marginTop: '0.2rem' }}>
+                  <h3 style={{ margin: '0 0 0.6rem 0', fontSize: '0.88rem', fontWeight: 700, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>주요 강점</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    {res.strengths.map((s, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                        <span style={{ color: '#107c10', fontWeight: 700, fontSize: '0.96rem', flexShrink: 0, marginTop: '0.05rem' }}>✓</span>
+                        <span style={{ fontSize: '0.94rem', color: '#323130', lineHeight: 1.5 }}>{s}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
 
-            {/* 성장 포인트 */}
-            <div style={{ background: 'white', border: '1px solid #edebe9', borderBottom: 'none', padding: '1.25rem 1.75rem', borderLeft: '4px solid #ca5010' }}>
-              <h3 style={{ margin: '0 0 0.6rem 0', fontSize: '0.94rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>성장 포인트</h3>
-              <p style={{ margin: 0, fontSize: '1.05rem', color: '#323130', lineHeight: 1.7 }}>{res.growth}</p>
-            </div>
+              {/* 우열: 핵심 + 성장 + 업무 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
 
-            {/* 업무 스타일 */}
-            <div style={{ background: 'white', border: '1px solid #edebe9', padding: '1.25rem 1.75rem' }}>
-              <h3 style={{ margin: '0 0 0.6rem 0', fontSize: '0.94rem', fontWeight: 600, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>업무 스타일</h3>
-              <p style={{ margin: 0, fontSize: '1.05rem', color: '#323130', lineHeight: 1.7 }}>{res.work}</p>
+                {/* 핵심 성격 */}
+                <div style={{ background: 'white', border: '1px solid #e0dedd', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', padding: '1.1rem 1.4rem' }}>
+                  <h3 style={{ margin: '0 0 0.6rem 0', fontSize: '0.88rem', fontWeight: 700, color: '#605e5c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>핵심 성격</h3>
+                  <p style={{ margin: 0, fontSize: '0.96rem', color: '#323130', lineHeight: 1.75 }}>{res.core}</p>
+                </div>
+
+                {/* 성장 포인트 */}
+                <div style={{ background: 'white', border: '1px solid #e0dedd', borderLeft: '4px solid #ca5010', borderRadius: '0 12px 12px 0', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', padding: '1.1rem 1.4rem' }}>
+                  <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '0.88rem', fontWeight: 700, color: '#ca5010', textTransform: 'uppercase', letterSpacing: '0.5px' }}>성장 포인트</h3>
+                  <p style={{ margin: 0, fontSize: '0.94rem', color: '#323130', lineHeight: 1.7 }}>{res.growth}</p>
+                </div>
+
+                {/* 업무 스타일 */}
+                <div style={{ background: 'white', border: '1px solid #e0dedd', borderLeft: '4px solid #0078D4', borderRadius: '0 12px 12px 0', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', padding: '1.1rem 1.4rem' }}>
+                  <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '0.88rem', fontWeight: 700, color: '#0078D4', textTransform: 'uppercase', letterSpacing: '0.5px' }}>업무 스타일</h3>
+                  <p style={{ margin: 0, fontSize: '0.94rem', color: '#323130', lineHeight: 1.7 }}>{res.work}</p>
+                </div>
+              </div>
             </div>
 
             {/* 버튼 */}
-            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button
                 onClick={reset}
-                style={{ flex: 1, padding: '0.65rem', background: 'transparent', color: '#0078D4', border: '1px solid #0078D4', borderRadius: '2px', fontSize: '1.02rem', fontWeight: 600, cursor: 'pointer' }}
+                style={{ flex: 1, padding: '0.65rem', background: 'transparent', color: '#0078D4', border: '1px solid #0078D4', borderRadius: '8px', fontSize: '1.02rem', fontWeight: 600, cursor: 'pointer' }}
                 onMouseEnter={e => e.currentTarget.style.background = '#0078D408'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
               >다시 검사하기</button>
               <button
                 onClick={() => router.push('/fun')}
-                style={{ flex: 1, padding: '0.65rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '2px', fontSize: '1.02rem', fontWeight: 600, cursor: 'pointer' }}
+                style={{ flex: 1, padding: '0.65rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '8px', fontSize: '1.02rem', fontWeight: 600, cursor: 'pointer' }}
                 onMouseEnter={e => e.currentTarget.style.background = '#106ebe'}
                 onMouseLeave={e => e.currentTarget.style.background = '#0078D4'}
               >FuN fUn 홈</button>

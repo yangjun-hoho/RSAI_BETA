@@ -54,12 +54,13 @@ export default function BalancePage() {
   const total = v.a + v.b;
   const pctA = Math.round((v.a / total) * 100);
   const pctB = 100 - pctA;
+  const progressPct = (idx / QUESTIONS.length) * 100;
 
   return (
-    <div style={{ position: 'fixed', inset: 0, overflowY: 'auto', background: '#f3f2f1', fontFamily: MS_FONT, color: '#323130' }}>
+    <div style={{ position: 'fixed', inset: 0, overflowY: 'auto', background: 'linear-gradient(160deg, #f8f5ff 0%, #f3f2f1 60%)', fontFamily: MS_FONT, color: '#323130' }}>
 
       {/* ── Nav ── */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 200, height: '48px', background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(20px)', borderBottom: '1px solid #edebe9', display: 'flex', alignItems: 'center', padding: '0 2rem', gap: '0' }}>
+      <nav style={{ position: 'sticky', top: 0, zIndex: 200, height: '48px', background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(20px)', borderBottom: '1px solid #edebe9', display: 'flex', alignItems: 'center', padding: '0 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flex: 1, cursor: 'pointer' }} onClick={() => router.push('/fun')}>
           <svg width="14" height="14" viewBox="0 0 23 23" fill="none" style={{ flexShrink: 0 }}>
             <rect x="0" y="0" width="10" height="10" fill="#f25022"/><rect x="12" y="0" width="10" height="10" fill="#7fba00"/>
@@ -70,16 +71,20 @@ export default function BalancePage() {
           <span style={{ color: '#323130', fontSize: '0.98rem', fontWeight: 600 }}>밸런스 게임</span>
         </div>
         {!done && (
-          <span style={{ color: '#605e5c', fontSize: '0.94rem', fontWeight: 600, marginRight: '1rem' }}>{idx + 1} / {QUESTIONS.length}</span>
+          <span style={{
+            fontSize: '0.86rem', color: COLOR_A, fontWeight: 700,
+            background: `${COLOR_A}15`, border: `1px solid ${COLOR_A}40`,
+            borderRadius: '20px', padding: '0.2rem 0.75rem', marginRight: '0.75rem',
+          }}>{idx + 1} / {QUESTIONS.length}</span>
         )}
-        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem' }}
+        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '6px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>메인 채팅</button>
       </nav>
 
       {/* ── Hero ── */}
-      <div style={{ background: 'linear-gradient(135deg, #1a0a3d 0%, #744da9 100%)', padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '2.1rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>⚖️</div>
+      <div style={{ background: 'linear-gradient(135deg, #1a0a3d 0%, #744da9 100%)', padding: '1.1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', textAlign: 'center' }}>
+        <div style={{ fontSize: '2.2rem', filter: 'drop-shadow(0 3px 8px rgba(0,0,0,0.35))' }}>⚖️</div>
         <div>
           <p style={{ color: '#d8b4fe', fontSize: '0.74rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>선택 · 밸런스게임</p>
           <h1 style={{ color: 'white', fontSize: '1.32rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>공무원 밸런스 게임</h1>
@@ -88,34 +93,64 @@ export default function BalancePage() {
       </div>
 
       {/* ── Content ── */}
-      <div style={{ padding: '1.5rem 2rem 3rem', maxWidth: '560px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1px' }}>
+      <div style={{ padding: '1.75rem 2rem 3rem', maxWidth: '560px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
         {!done ? (
           <>
-            {/* 진행 바 */}
-            <div style={{ background: 'white', border: '1px solid #edebe9', padding: '0.85rem 1.25rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                <span style={{ fontSize: '0.86rem', color: '#605e5c', fontWeight: 600 }}>Q{idx + 1}</span>
-                <span style={{ fontSize: '0.86rem', color: COLOR_A, fontWeight: 600 }}>{Math.round((idx / QUESTIONS.length) * 100)}% 완료</span>
+            {/* ── 진행 바 카드 ── */}
+            <div style={{
+              background: 'white',
+              border: '1px solid #e0dedd',
+              borderRadius: '16px',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9)',
+              padding: '1rem 1.5rem',
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.55rem' }}>
+                <span style={{ fontSize: '0.9rem', fontWeight: 800, color: COLOR_A }}>Q{idx + 1}</span>
+                <span style={{ fontSize: '0.84rem', color: '#8a8886', fontWeight: 600 }}>총 {QUESTIONS.length}문항</span>
+                <span style={{ fontSize: '0.84rem', color: COLOR_A, fontWeight: 700 }}>{Math.round(progressPct)}% 완료</span>
               </div>
-              <div style={{ height: '4px', background: '#f3f2f1', overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${((idx) / QUESTIONS.length) * 100}%`, background: COLOR_A, transition: 'width 0.35s' }} />
+              <div style={{ position: 'relative', height: '8px', background: '#f0eeec', borderRadius: '999px', overflow: 'hidden', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.08)' }}>
+                <div style={{
+                  height: '100%', width: `${progressPct}%`,
+                  background: `linear-gradient(90deg, #5c3a9a, ${COLOR_A})`,
+                  borderRadius: '999px',
+                  transition: 'width 0.4s ease',
+                  boxShadow: `0 2px 6px ${COLOR_A}60`,
+                }} />
               </div>
             </div>
 
-            {/* 질문 */}
-            <div style={{ background: 'white', border: '1px solid #edebe9', padding: '2rem 1.5rem' }}>
-              <h2 style={{ textAlign: 'center', fontSize: '1.26rem', fontWeight: 700, color: '#323130', marginBottom: '1.75rem', lineHeight: 1.55 }}>
+            {/* ── 질문 카드 ── */}
+            <div style={{
+              background: 'white',
+              border: '1px solid #e0dedd',
+              borderRadius: '20px',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9)',
+              padding: '2rem 1.75rem',
+              overflow: 'hidden',
+            }}>
+              {/* 상단 컬러 줄 */}
+              <div style={{ height: '4px', background: `linear-gradient(90deg, ${COLOR_A}, #d13438)`, borderRadius: '999px', marginBottom: '1.75rem' }} />
+
+              {/* 질문 텍스트 */}
+              <h2 style={{
+                textAlign: 'center', fontSize: '1.22rem', fontWeight: 800,
+                color: '#1b1b1b', marginBottom: '2rem', lineHeight: 1.55,
+                letterSpacing: '-0.3px',
+              }}>
                 ⚖️ {q.q}
               </h2>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              {/* 선택지 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {(['a', 'b'] as const).map(opt => {
                   const text = opt === 'a' ? q.a : q.b;
-                  const pct = opt === 'a' ? pctA : pctB;
+                  const pct  = opt === 'a' ? pctA : pctB;
                   const isChosen = selected === opt;
                   const otherChosen = selected && selected !== opt;
                   const optColor = opt === 'a' ? COLOR_A : COLOR_B;
+                  const label = opt === 'a' ? 'A' : 'B';
 
                   return (
                     <div key={opt}>
@@ -123,36 +158,71 @@ export default function BalancePage() {
                         onClick={() => choose(opt)}
                         disabled={!!selected}
                         style={{
-                          width: '100%', padding: '1rem 1.25rem',
-                          border: `1.5px solid ${isChosen ? optColor : otherChosen ? '#edebe9' : '#edebe9'}`,
-                          background: isChosen ? `${optColor}0d` : otherChosen ? '#faf9f8' : 'white',
-                          color: otherChosen ? '#a19f9d' : '#323130',
+                          width: '100%',
+                          padding: '1.1rem 1.25rem',
+                          border: `2px solid ${isChosen ? optColor : otherChosen ? '#edebe9' : '#e0dedd'}`,
+                          background: isChosen
+                            ? `linear-gradient(135deg, ${optColor}12 0%, ${optColor}1e 100%)`
+                            : otherChosen ? '#faf9f8' : 'white',
+                          color: otherChosen ? '#b0adab' : '#1b1b1b',
                           cursor: selected ? 'default' : 'pointer',
-                          fontSize: '1.06rem', fontWeight: isChosen ? 600 : 400, textAlign: 'left', transition: 'all 0.15s',
-                          opacity: otherChosen ? 0.55 : 1,
-                          borderRadius: '2px',
+                          fontSize: '1.04rem',
+                          fontWeight: isChosen ? 700 : 500,
+                          textAlign: 'left',
+                          transition: 'all 0.15s',
+                          opacity: otherChosen ? 0.6 : 1,
+                          borderRadius: '14px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.9rem',
+                          boxShadow: isChosen
+                            ? `0 4px 16px ${optColor}25`
+                            : otherChosen ? 'none' : '0 2px 8px rgba(0,0,0,0.06)',
                         }}
-                        onMouseEnter={e => { if (!selected) { e.currentTarget.style.borderColor = optColor; e.currentTarget.style.background = `${optColor}08`; } }}
-                        onMouseLeave={e => { if (!isChosen) { e.currentTarget.style.borderColor = '#edebe9'; e.currentTarget.style.background = 'white'; } }}
+                        onMouseEnter={e => {
+                          if (!selected) {
+                            e.currentTarget.style.borderColor = optColor;
+                            e.currentTarget.style.background = `linear-gradient(135deg, ${optColor}08 0%, ${optColor}12 100%)`;
+                            e.currentTarget.style.boxShadow = `0 4px 16px ${optColor}20`;
+                          }
+                        }}
+                        onMouseLeave={e => {
+                          if (!isChosen) {
+                            e.currentTarget.style.borderColor = '#e0dedd';
+                            e.currentTarget.style.background = 'white';
+                            e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
+                          }
+                        }}
                       >
+                        {/* 레이블 배지 */}
                         <span style={{
                           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                          width: '22px', height: '22px',
-                          background: isChosen ? optColor : '#f3f2f1',
-                          color: isChosen ? 'white' : '#605e5c',
-                          borderRadius: '2px', fontSize: '0.86rem', fontWeight: 700, marginRight: '0.75rem',
-                          transition: 'all 0.15s', flexShrink: 0,
-                        }}>{opt.toUpperCase()}</span>
-                        {text}
+                          width: '32px', height: '32px', flexShrink: 0,
+                          background: isChosen ? optColor : `${optColor}18`,
+                          color: isChosen ? 'white' : optColor,
+                          borderRadius: '50%',
+                          fontSize: '0.88rem', fontWeight: 900,
+                          transition: 'all 0.15s',
+                          boxShadow: isChosen ? `0 3px 8px ${optColor}50` : 'none',
+                        }}>{label}</span>
+                        <span style={{ lineHeight: 1.45 }}>{text}</span>
                       </button>
+
+                      {/* 투표 결과 바 */}
                       {selected && (
-                        <div style={{ marginTop: '0.3rem', padding: '0 0.25rem' }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', color: '#605e5c', marginBottom: '0.2rem' }}>
-                            <span>{opt === 'a' ? '나도 A' : '나도 B'}</span>
-                            <span style={{ fontWeight: 700, color: optColor }}>{pct}%</span>
+                        <div style={{ marginTop: '0.45rem', padding: '0 0.4rem' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '0.25rem' }}>
+                            <span style={{ color: '#8a8886', fontWeight: 600 }}>나도 {label}</span>
+                            <span style={{ fontWeight: 800, color: optColor }}>{pct}%</span>
                           </div>
-                          <div style={{ height: '3px', background: '#f3f2f1', overflow: 'hidden' }}>
-                            <div style={{ height: '100%', width: `${pct}%`, background: optColor, transition: 'width 0.55s ease' }} />
+                          <div style={{ height: '5px', background: '#f0eeec', borderRadius: '999px', overflow: 'hidden' }}>
+                            <div style={{
+                              height: '100%', width: `${pct}%`,
+                              background: `linear-gradient(90deg, ${optColor}cc, ${optColor})`,
+                              borderRadius: '999px',
+                              transition: 'width 0.6s cubic-bezier(0.34,1.56,0.64,1)',
+                              boxShadow: `0 1px 4px ${optColor}50`,
+                            }} />
                           </div>
                         </div>
                       )}
@@ -160,41 +230,93 @@ export default function BalancePage() {
                   );
                 })}
               </div>
+
+              {/* 선택 후 다음 안내 */}
+              {selected && (
+                <p style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '0.86rem', color: '#a19f9d', fontWeight: 600 }}>
+                  잠시 후 다음 질문으로 넘어갑니다...
+                </p>
+              )}
             </div>
           </>
         ) : (
-          <>
-            {/* 완료 */}
-            <div style={{ background: 'white', border: '1px solid #edebe9', padding: '2rem 1.5rem', textAlign: 'center' }}>
-              <div style={{ fontSize: '4.2rem', marginBottom: '0.5rem' }}>🎊</div>
-              <h2 style={{ fontSize: '1.56rem', fontWeight: 700, color: '#323130', marginBottom: '1.5rem' }}>게임 완료!</h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginBottom: '1.5rem', textAlign: 'left' }}>
-                {QUESTIONS.map((question, i) => (
+          /* ── 완료 화면 ── */
+          <div style={{
+            background: 'white',
+            border: '1px solid #e0dedd',
+            borderRadius: '20px',
+            boxShadow: '0 12px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.07)',
+            padding: '2rem 1.75rem',
+            textAlign: 'center',
+          }}>
+            {/* 헤더 */}
+            <div style={{ fontSize: '4rem', marginBottom: '0.5rem' }}>🎊</div>
+            <h2 style={{ fontSize: '1.56rem', fontWeight: 800, color: '#1b1b1b', marginBottom: '0.4rem' }}>게임 완료!</h2>
+            <p style={{ color: '#8a8886', fontSize: '0.9rem', marginBottom: '1.75rem' }}>당신의 선택을 확인하세요</p>
+
+            {/* A/B 통계 */}
+            <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem' }}>
+              {[
+                { label: 'A 선택', count: userChoices.filter(c => c === 'a').length, color: COLOR_A },
+                { label: 'B 선택', count: userChoices.filter(c => c === 'b').length, color: COLOR_B },
+              ].map(({ label, count, color }) => (
+                <div key={label} style={{
+                  flex: 1, padding: '0.85rem',
+                  background: `${color}0e`,
+                  border: `1.5px solid ${color}35`,
+                  borderRadius: '12px',
+                  boxShadow: `0 4px 12px ${color}15`,
+                }}>
+                  <div style={{ fontSize: '2rem', fontWeight: 900, color }}>{count}</div>
+                  <div style={{ fontSize: '0.82rem', color: '#8a8886', fontWeight: 600 }}>{label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* 선택 목록 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginBottom: '1.75rem', textAlign: 'left' }}>
+              {QUESTIONS.map((question, i) => {
+                const choice = userChoices[i];
+                const color = choice === 'a' ? COLOR_A : COLOR_B;
+                const text = choice === 'a' ? question.a : question.b;
+                return (
                   <div key={i} style={{
-                    display: 'flex', gap: '0.6rem', alignItems: 'center',
-                    padding: '0.55rem 0.85rem',
-                    background: userChoices[i] === 'a' ? `${COLOR_A}0a` : `${COLOR_B}0a`,
-                    border: `1px solid ${userChoices[i] === 'a' ? COLOR_A : COLOR_B}30`,
-                    fontSize: '0.96rem', borderRadius: '2px',
+                    display: 'flex', gap: '0.65rem', alignItems: 'flex-start',
+                    padding: '0.65rem 0.9rem',
+                    background: `${color}0a`,
+                    border: `1px solid ${color}28`,
+                    borderRadius: '10px',
+                    fontSize: '0.94rem',
                   }}>
                     <span style={{
-                      padding: '0.18rem 0.5rem',
-                      background: userChoices[i] === 'a' ? COLOR_A : COLOR_B,
-                      color: 'white', borderRadius: '2px',
-                      fontWeight: 700, flexShrink: 0, fontSize: '0.84rem',
-                    }}>{(userChoices[i] || '?').toUpperCase()}</span>
-                    <span style={{ color: '#323130', lineHeight: 1.4 }}>{userChoices[i] === 'a' ? question.a : question.b}</span>
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                      width: '24px', height: '24px', flexShrink: 0, marginTop: '1px',
+                      background: color, color: 'white',
+                      borderRadius: '50%', fontWeight: 900, fontSize: '0.78rem',
+                      boxShadow: `0 2px 6px ${color}50`,
+                    }}>{(choice || '?').toUpperCase()}</span>
+                    <span style={{ color: '#323130', lineHeight: 1.4 }}>{text}</span>
                   </div>
-                ))}
-              </div>
-              <button
-                onClick={reset}
-                style={{ padding: '0.55rem 1.75rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '2px', cursor: 'pointer', fontSize: '0.98rem', fontWeight: 600 }}
-                onMouseEnter={e => e.currentTarget.style.background = '#106ebe'}
-                onMouseLeave={e => e.currentTarget.style.background = '#0078D4'}
-              >다시 하기 🎮</button>
+                );
+              })}
             </div>
-          </>
+
+            {/* 다시하기 버튼 */}
+            <button
+              onClick={reset}
+              style={{
+                padding: '0.7rem 2.25rem',
+                background: `linear-gradient(135deg, #5c3a9a 0%, ${COLOR_A} 100%)`,
+                color: 'white', border: 'none',
+                borderRadius: '50px', cursor: 'pointer',
+                fontSize: '1.02rem', fontWeight: 700,
+                boxShadow: `0 6px 20px ${COLOR_A}45`,
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = `0 8px 24px ${COLOR_A}55`; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 6px 20px ${COLOR_A}45`; }}
+            >🎮 다시 하기</button>
+          </div>
         )}
       </div>
     </div>

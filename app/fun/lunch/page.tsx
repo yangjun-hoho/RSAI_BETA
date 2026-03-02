@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 const DEFAULT_ITEMS = ['한식 🍚', '중식 🥟', '일식 🍣', '양식 🍝', '분식 🍜', '패스트푸드 🍔'];
-const COLORS = ['#d13438','#ca5010','#ca5010','#107c10','#0078D4','#744da9','#008272','#c50f1f'];
+const COLORS = ['#d13438', '#ca5010', '#107c10', '#0078D4', '#744da9', '#008272', '#c50f1f', '#e6a118'];
 
 const MS_FONT = '"Segoe UI", -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif';
 
@@ -34,40 +34,52 @@ export default function LunchPage() {
     items.forEach((item, i) => {
       const start = ang + i * slice;
       const end = start + slice;
+
+      // 섹터 그리기
       ctx.beginPath();
       ctx.moveTo(CX, CY);
       ctx.arc(CX, CY, R, start, end);
       ctx.closePath();
       ctx.fillStyle = COLORS[i % COLORS.length];
       ctx.fill();
-      ctx.strokeStyle = 'white';
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)';
       ctx.lineWidth = 2;
       ctx.stroke();
 
+      // 텍스트
       ctx.save();
       ctx.translate(CX, CY);
       ctx.rotate(start + slice / 2);
       ctx.textAlign = 'right';
       ctx.fillStyle = 'white';
       ctx.font = `bold ${n > 6 ? 11 : 13}px "Segoe UI", sans-serif`;
-      ctx.shadowColor = 'rgba(0,0,0,0.3)';
-      ctx.shadowBlur = 4;
+      ctx.shadowColor = 'rgba(0,0,0,0.4)';
+      ctx.shadowBlur = 5;
       ctx.fillText(item, R - 12, 5);
       ctx.restore();
     });
 
+    // 중앙 허브
+    const hubGrad = ctx.createRadialGradient(CX - 4, CY - 4, 2, CX, CY, 26);
+    hubGrad.addColorStop(0, 'white');
+    hubGrad.addColorStop(1, '#f0eeec');
     ctx.beginPath();
-    ctx.arc(CX, CY, 24, 0, 2 * Math.PI);
-    ctx.fillStyle = 'white';
+    ctx.arc(CX, CY, 26, 0, 2 * Math.PI);
+    ctx.fillStyle = hubGrad;
+    ctx.shadowColor = 'rgba(0,0,0,0.2)';
+    ctx.shadowBlur = 8;
     ctx.fill();
-    ctx.strokeStyle = '#edebe9';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.fillStyle = '#323130';
-    ctx.font = 'bold 11px "Segoe UI", sans-serif';
-    ctx.textAlign = 'center';
     ctx.shadowBlur = 0;
-    ctx.fillText('SPIN', CX, CY + 4);
+    ctx.strokeStyle = '#d1cfcd';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = '#323130';
+    ctx.font = 'bold 10px "Segoe UI", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('SPIN', CX, CY);
+    ctx.textBaseline = 'alphabetic';
   }, [items]);
 
   useEffect(() => { drawWheel(angle); }, [drawWheel, angle]);
@@ -114,7 +126,7 @@ export default function LunchPage() {
   }
 
   return (
-    <div style={{ position: 'fixed', inset: 0, overflowY: 'auto', background: '#f3f2f1', fontFamily: MS_FONT, color: '#323130' }}>
+    <div style={{ position: 'fixed', inset: 0, overflowY: 'auto', background: 'linear-gradient(160deg, #f0faf0 0%, #f3f2f1 60%)', fontFamily: MS_FONT, color: '#323130' }}>
 
       {/* ── Nav ── */}
       <nav style={{ position: 'sticky', top: 0, zIndex: 200, height: '48px', background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(20px)', borderBottom: '1px solid #edebe9', display: 'flex', alignItems: 'center', padding: '0 2rem', gap: '0' }}>
@@ -127,14 +139,14 @@ export default function LunchPage() {
           <span style={{ color: '#a19f9d', fontSize: '0.98rem', margin: '0 0.2rem' }}>›</span>
           <span style={{ color: '#323130', fontSize: '0.98rem', fontWeight: 600 }}>점심메뉴 결정기</span>
         </div>
-        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '2px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem' }}
+        <button onClick={() => router.push('/')} style={{ padding: '0.35rem 0.85rem', background: 'transparent', border: '1px solid #8a8886', borderRadius: '6px', cursor: 'pointer', color: '#323130', fontSize: '0.94rem' }}
           onMouseEnter={e => e.currentTarget.style.background = '#f3f2f1'}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>메인 채팅</button>
       </nav>
 
       {/* ── Hero ── */}
-      <div style={{ background: 'linear-gradient(135deg, #002b00 0%, #107c10 100%)', padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '2.1rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}>🍱</div>
+      <div style={{ background: 'linear-gradient(135deg, #002b00 0%, #107c10 100%)', padding: '1.1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', textAlign: 'center' }}>
+        <div style={{ fontSize: '2.2rem', filter: 'drop-shadow(0 3px 8px rgba(0,0,0,0.35))' }}>🍱</div>
         <div>
           <p style={{ color: '#a3e4a3', fontSize: '0.74rem', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 0.15rem', fontWeight: 600 }}>랜덤 · 점심메뉴</p>
           <h1 style={{ color: 'white', fontSize: '1.32rem', fontWeight: 700, margin: '0 0 0.1rem', letterSpacing: '-0.3px' }}>점심메뉴 결정기</h1>
@@ -143,115 +155,206 @@ export default function LunchPage() {
       </div>
 
       {/* ── Content ── */}
-      <div style={{ padding: '1.5rem 2rem 3rem', maxWidth: '560px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1px' }}>
+      <div style={{ padding: '1.5rem 2rem 2.5rem', maxWidth: '900px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', alignItems: 'start' }}>
 
-        {/* 룰렛 카드 */}
-        <div style={{ background: 'white', border: '1px solid #edebe9', padding: '2rem 1.5rem', textAlign: 'center' }}>
+        {/* ── 룰렛 카드 ── */}
+        <div style={{
+          background: 'white',
+          border: '1px solid #e0dedd',
+          borderRadius: '18px',
+          boxShadow: '0 12px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9)',
+          padding: '1.75rem 1.25rem 1.5rem',
+          textAlign: 'center',
+        }}>
+
+          {/* 룰렛 + 포인터 */}
           <div style={{ position: 'relative', display: 'inline-block' }}>
+            {/* 외부 링 (장식) */}
             <div style={{
-              position: 'absolute', right: '-14px', top: '50%', transform: 'translateY(-50%)',
+              position: 'absolute', inset: '-8px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #767a76ff 0%, #5f6e5fff 50%, #252925ff 100%)',
+              boxShadow: '0 8px 32px rgba(16,124,16,0.30), inset 0 1px 0 rgba(255,255,255,0.2)',
+              zIndex: 0,
+            }} />
+            {/* 포인터 (삼각형) */}
+            <div style={{
+              position: 'absolute', right: '-22px', top: '50%', transform: 'translateY(-50%)',
+              zIndex: 20,
               width: 0, height: 0,
-              borderTop: '13px solid transparent',
-              borderBottom: '13px solid transparent',
-              borderRight: '22px solid #107c10',
-              zIndex: 10,
+              borderTop: '12px solid transparent',
+              borderBottom: '12px solid transparent',
+              borderRight: '22px solid #d34b15ff',
+              filter: 'drop-shadow(-2px 0 4px rgba(0,0,0,0.25))',
+            }} />
+            {/* 포인터 꼭지 하이라이트 */}
+            <div style={{
+              position: 'absolute', right: '-19px', top: '50%', transform: 'translateY(-50%)',
+              zIndex: 21,
+              width: 0, height: 0,
+              borderTop: '8px solid transparent',
+              borderBottom: '8px solid transparent',
+              borderRight: '14px solid #ecf00bff',
             }} />
             <canvas
               ref={canvasRef} width={SIZE} height={SIZE}
               onClick={spin}
               style={{
+                position: 'relative', zIndex: 5,
                 cursor: spinning ? 'not-allowed' : 'pointer',
                 borderRadius: '50%',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-                border: '2px solid #edebe9',
+                display: 'block',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.18), inset 0 0 0 3px rgba(255,255,255,0.4)',
               }}
             />
           </div>
 
-          <div style={{ marginTop: '1.5rem' }}>
+          {/* 돌리기 버튼 */}
+          <div style={{ marginTop: '1.75rem' }}>
             <button
               onClick={spin}
               disabled={spinning || items.length < 2}
               style={{
-                padding: '0.55rem 2rem',
-                background: spinning ? '#f3f2f1' : '#0078D4',
+                padding: '0.7rem 2.5rem',
+                background: spinning
+                  ? 'linear-gradient(135deg, #e0dedd 0%, #f3f2f1 100%)'
+                  : 'linear-gradient(135deg, #0d6e0d 0%, #107c10 50%, #1a8f1a 100%)',
                 color: spinning ? '#a19f9d' : 'white',
-                border: `1px solid ${spinning ? '#edebe9' : '#0078D4'}`,
-                borderRadius: '2px',
-                fontSize: '1.06rem', fontWeight: 600,
+                border: 'none',
+                borderRadius: '50px',
+                fontSize: '1.06rem', fontWeight: 700,
                 cursor: spinning ? 'not-allowed' : 'pointer',
-                transition: 'all 0.12s',
+                transition: 'all 0.15s',
+                boxShadow: spinning
+                  ? 'none'
+                  : '0 6px 20px rgba(16,124,16,0.40), 0 2px 6px rgba(0,0,0,0.12)',
+                letterSpacing: '0.3px',
               }}
-              onMouseEnter={e => { if (!spinning && items.length >= 2) e.currentTarget.style.background = '#106ebe'; }}
-              onMouseLeave={e => { if (!spinning && items.length >= 2) e.currentTarget.style.background = '#0078D4'; }}
+              onMouseEnter={e => { if (!spinning && items.length >= 2) { e.currentTarget.style.background = 'linear-gradient(135deg, #0a5a0a 0%, #0d6e0d 50%, #107c10 100%)'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(16,124,16,0.50), 0 3px 8px rgba(0,0,0,0.14)'; } }}
+              onMouseLeave={e => { if (!spinning && items.length >= 2) { e.currentTarget.style.background = 'linear-gradient(135deg, #0d6e0d 0%, #107c10 50%, #1a8f1a 100%)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(16,124,16,0.40), 0 2px 6px rgba(0,0,0,0.12)'; } }}
             >
-              {spinning ? '돌아가는 중...' : '🎰 돌리기!'}
+              {spinning ? '⏳ 돌아가는 중...' : '🎰 돌리기!'}
             </button>
           </div>
 
+          {/* 결과 */}
           {result && !spinning && (
             <div style={{
-              marginTop: '1.25rem', padding: '0.85rem 1.25rem',
-              background: '#f3f2f1', border: '1px solid #edebe9',
-              borderLeft: '4px solid #107c10',
-              textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.75rem',
+              marginTop: '1.5rem',
+              padding: '1.1rem 1.5rem',
+              background: 'linear-gradient(135deg, #f0faf0 0%, #e8f7e8 100%)',
+              border: '1px solid #9fd89f',
+              borderRadius: '14px',
+              textAlign: 'center',
+              boxShadow: '0 4px 16px rgba(16,124,16,0.12), inset 0 1px 0 rgba(255,255,255,0.8)',
             }}>
-              <span style={{ fontSize: '1.62rem' }}>🍽️</span>
-              <div>
-                <div style={{ fontSize: '0.78rem', color: '#605e5c', fontWeight: 600, marginBottom: '0.15rem', textTransform: 'uppercase', letterSpacing: '1px' }}>오늘 점심은...</div>
-                <div style={{ fontSize: '1.56rem', fontWeight: 700, color: '#107c10' }}>{result}</div>
-              </div>
+              <div style={{ fontSize: '0.76rem', color: '#5a8f5a', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '0.4rem' }}>오늘 점심은...</div>
+              <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#107c10', letterSpacing: '-0.5px' }}>{result}</div>
             </div>
           )}
         </div>
 
-        {/* 항목 관리 */}
-        <div style={{ background: 'white', border: '1px solid #edebe9', padding: '1.1rem 1.25rem' }}>
-          <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#323130', marginBottom: '0.75rem' }}>
-            메뉴 목록 관리 <span style={{ color: '#a19f9d', fontWeight: 400 }}>(최대 8개)</span>
+        {/* ── 항목 관리 카드 ── */}
+        <div style={{
+          background: 'white',
+          border: '1px solid #e0dedd',
+          borderRadius: '18px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.9)',
+          padding: '1.5rem',
+          overflow: 'hidden',
+        }}>
+          {/* 카드 헤더 */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{ width: '4px', height: '20px', background: 'linear-gradient(180deg, #107c10 0%, #1a8f1a 100%)', borderRadius: '2px' }} />
+              <span style={{ fontSize: '0.96rem', fontWeight: 700, color: '#323130' }}>메뉴 목록</span>
+            </div>
+            <span style={{
+              fontSize: '0.8rem', color: '#107c10', fontWeight: 700,
+              background: '#e8f7e8', border: '1px solid #9fd89f',
+              borderRadius: '20px', padding: '0.2rem 0.65rem',
+            }}>{items.length} / 8</span>
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.75rem' }}>
+
+          {/* 메뉴 태그 목록 */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', marginBottom: '1rem' }}>
             {items.map((item, i) => (
               <div key={i} style={{
-                display: 'flex', alignItems: 'center', gap: '0.3rem',
-                padding: '0.25rem 0.5rem 0.25rem 0.75rem',
-                background: `${COLORS[i % COLORS.length]}15`,
-                border: `1px solid ${COLORS[i % COLORS.length]}40`,
-                fontSize: '0.96rem', color: '#323130',
+                display: 'flex', alignItems: 'center', gap: '0.35rem',
+                padding: '0.3rem 0.55rem 0.3rem 0.85rem',
+                background: `${COLORS[i % COLORS.length]}12`,
+                border: `1.5px solid ${COLORS[i % COLORS.length]}50`,
+                borderRadius: '50px',
+                fontSize: '0.94rem', color: '#1b1b1b',
+                boxShadow: `0 2px 6px ${COLORS[i % COLORS.length]}20`,
+                transition: 'all 0.1s',
               }}>
+                <span style={{ color: COLORS[i % COLORS.length], fontWeight: 700, fontSize: '0.72rem' }}>●</span>
                 {item}
                 <button
                   onClick={() => setItems(items.filter((_, j) => j !== i))}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#a19f9d', fontSize: '1.02rem', padding: '0 2px', lineHeight: 1 }}
+                  style={{
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    color: '#a19f9d', fontSize: '0.85rem', padding: '0 2px', lineHeight: 1,
+                    borderRadius: '50%', width: '18px', height: '18px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'all 0.1s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#fde7e7'; e.currentTarget.style.color = '#d13438'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = '#a19f9d'; }}
                 >✕</button>
               </div>
             ))}
           </div>
+
+          {/* 추가 입력 */}
           {items.length < 8 && (
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
               <input
                 value={newItem}
                 onChange={e => setNewItem(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && addItem()}
-                placeholder="새 메뉴 추가"
-                style={{ flex: 1, padding: '0.45rem 0.65rem', border: '1px solid #8a8886', borderRadius: '2px', fontSize: '1.02rem', outline: 'none' }}
-                onFocus={e => e.currentTarget.style.borderColor = '#0078D4'}
-                onBlur={e => e.currentTarget.style.borderColor = '#8a8886'}
+                placeholder="새 메뉴 입력 후 Enter 또는 +"
+                style={{
+                  flex: 1, padding: '0.55rem 0.9rem',
+                  border: '1.5px solid #d0cece', borderRadius: '10px',
+                  fontSize: '0.98rem', outline: 'none',
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+                  transition: 'all 0.12s',
+                }}
+                onFocus={e => { e.currentTarget.style.borderColor = '#107c10'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(16,124,16,0.10)'; }}
+                onBlur={e => { e.currentTarget.style.borderColor = '#d0cece'; e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.06)'; }}
               />
               <button
                 onClick={addItem}
-                style={{ padding: '0.45rem 0.85rem', background: '#0078D4', color: 'white', border: 'none', borderRadius: '2px', cursor: 'pointer', fontWeight: 700, fontSize: '1.06rem' }}
-                onMouseEnter={e => e.currentTarget.style.background = '#106ebe'}
-                onMouseLeave={e => e.currentTarget.style.background = '#0078D4'}
+                style={{
+                  padding: '0.55rem 1.1rem',
+                  background: 'linear-gradient(135deg, #0d6e0d 0%, #107c10 100%)',
+                  color: 'white', border: 'none',
+                  borderRadius: '10px', cursor: 'pointer',
+                  fontWeight: 700, fontSize: '1.2rem',
+                  boxShadow: '0 4px 12px rgba(16,124,16,0.30)',
+                  transition: 'all 0.12s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'linear-gradient(135deg, #0a5a0a 0%, #0d6e0d 100%)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'linear-gradient(135deg, #0d6e0d 0%, #107c10 100%)'; e.currentTarget.style.transform = 'translateY(0)'; }}
               >+</button>
             </div>
           )}
+
+          {/* 초기화 버튼 */}
           <button
             onClick={() => setItems(DEFAULT_ITEMS)}
-            style={{ width: '100%', padding: '0.45rem', background: 'transparent', color: '#a19f9d', border: '1px solid #edebe9', borderRadius: '2px', cursor: 'pointer', fontSize: '0.9rem' }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#f3f2f1'; e.currentTarget.style.color = '#605e5c'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#a19f9d'; }}
-          >기본값으로 초기화</button>
+            style={{
+              width: '100%', padding: '0.5rem',
+              background: 'transparent', color: '#8a8886',
+              border: '1.5px solid #e0dedd', borderRadius: '10px',
+              cursor: 'pointer', fontSize: '0.9rem',
+              transition: 'all 0.12s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#f3f2f1'; e.currentTarget.style.color = '#605e5c'; e.currentTarget.style.borderColor = '#c8c6c4'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#8a8886'; e.currentTarget.style.borderColor = '#e0dedd'; }}
+          >↺ 기본값으로 초기화</button>
         </div>
       </div>
     </div>
