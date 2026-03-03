@@ -6,6 +6,9 @@ import { ragDb } from '@/lib/rag/db';
 import { invalidateCache } from '@/lib/rag/vectorCache';
 import OpenAI from 'openai';
 
+// 대용량 파일 처리를 위한 타임아웃 설정 (초)
+export const maxDuration = 300;
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // 업로드 파일 저장 디렉토리

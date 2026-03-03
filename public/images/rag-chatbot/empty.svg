@@ -1,0 +1,64 @@
+<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="docShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#64748b" flood-opacity="0.10"/>
+    </filter>
+    <filter id="circleShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#6366f1" flood-opacity="0.20"/>
+    </filter>
+    <linearGradient id="docGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f8fafc"/>
+    </linearGradient>
+    <linearGradient id="aiGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eef2ff" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#fdf4ff" stop-opacity="0.6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 배경 원 -->
+  <circle cx="80" cy="80" r="68" fill="url(#bgGrad)"/>
+
+  <!-- 뒤 문서 (살짝 기울어짐) -->
+  <g transform="rotate(-6, 65, 72)">
+    <rect x="32" y="30" width="58" height="74" rx="7" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1.2" opacity="0.75"/>
+    <rect x="40" y="44" width="36" height="2.5" rx="1.25" fill="#cbd5e1" opacity="0.8"/>
+    <rect x="40" y="52" width="28" height="2.5" rx="1.25" fill="#cbd5e1" opacity="0.8"/>
+    <rect x="40" y="60" width="32" height="2.5" rx="1.25" fill="#cbd5e1" opacity="0.8"/>
+  </g>
+
+  <!-- 앞 문서 -->
+  <rect x="42" y="22" width="64" height="82" rx="9" fill="url(#docGrad)" stroke="#e2e8f0" stroke-width="1.4" filter="url(#docShadow)"/>
+  <!-- 문서 상단 컬러 바 -->
+  <rect x="42" y="22" width="64" height="5" rx="5" fill="#6366f1" opacity="0.15"/>
+  <rect x="42" y="22" width="64" height="5" rx="5" style="clip-path: inset(0 0 2.5px 0)"/>
+  <!-- 텍스트 라인들 -->
+  <rect x="52" y="38" width="44" height="2.8" rx="1.4" fill="#e2e8f0"/>
+  <rect x="52" y="47" width="38" height="2.8" rx="1.4" fill="#e2e8f0"/>
+  <rect x="52" y="56" width="42" height="2.8" rx="1.4" fill="#e2e8f0"/>
+  <rect x="52" y="65" width="30" height="2.8" rx="1.4" fill="#e2e8f0"/>
+  <rect x="52" y="74" width="36" height="2.8" rx="1.4" fill="#e2e8f0"/>
+  <rect x="52" y="83" width="24" height="2.8" rx="1.4" fill="#e2e8f0"/>
+
+  <!-- AI 원 배지 -->
+  <circle cx="104" cy="104" r="26" fill="white" filter="url(#circleShadow)"/>
+  <circle cx="104" cy="104" r="26" stroke="#6366f1" stroke-width="1.5" stroke-opacity="0.25" fill="none"/>
+  <circle cx="104" cy="104" r="20" fill="url(#aiGrad)" opacity="0.08"/>
+
+  <!-- 스파크 아이콘 (중앙) -->
+  <path d="M104 90 L106.5 99.5 L116 102 L106.5 104.5 L104 114 L101.5 104.5 L92 102 L101.5 99.5 Z" fill="#6366f1" opacity="0.85"/>
+
+  <!-- 점 장식들 -->
+  <circle cx="128" cy="36" r="3.5" fill="#6366f1" opacity="0.35"/>
+  <circle cx="22" cy="90" r="2.5" fill="#ec4899" opacity="0.45"/>
+  <circle cx="134" cy="72" r="2" fill="#f59e0b" opacity="0.6"/>
+  <circle cx="18" cy="55" r="3" fill="#10b981" opacity="0.3"/>
+  <circle cx="120" cy="130" r="2" fill="#8b5cf6" opacity="0.4"/>
+
+  <!-- 연결선 (문서 → AI 원) -->
+  <path d="M96 90 Q100 96 96 100" stroke="#6366f1" stroke-width="1.2" stroke-opacity="0.3" stroke-dasharray="2.5 2" fill="none" stroke-linecap="round"/>
+</svg>
