@@ -35,7 +35,7 @@ const sampleTitles: Record<string, string[]> = {
 
 const models = [
   { id: 'gemini-2.5-flash-lite', label: 'Google Gemini' },
-  { id: 'gpt-5-nano',           label: 'Openai GPT' },
+  { id: 'gpt-4.1-nano',           label: 'Openai GPT' },
 ];
 
 export default function ReportChatForm({ onSubmit, onCancel, isLoading }: Props) {

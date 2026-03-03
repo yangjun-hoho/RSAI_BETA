@@ -57,7 +57,7 @@ const labelStyle: React.CSSProperties = { fontSize: '0.78rem', fontWeight: '600'
 
 const models = [
   { id: 'gemini-2.5-flash-lite', label: 'Gemini 2.5 Flash Lite', badge: 'Gemini' },
-  { id: 'gpt-5-nano', label: 'GPT-5 Mini', badge: 'OpenAI' },
+  { id: 'gpt-4.1-nano', label: 'GPT-4.1 Nano', badge: 'OpenAI' },
 ];
 
 export default function ReportForm({ onGenerate, isLoading }: ReportFormProps) {
