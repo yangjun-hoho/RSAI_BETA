@@ -22,6 +22,16 @@ function escapeXML(text: string): string {
     .replace(/'/g, '&apos;');
 }
 
+// **bold** → ODT bold span, 나머지는 XML 이스케이프
+function renderInline(text: string): string {
+  return text.split(/(\*\*[^*]+?\*\*)/g).map(part => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return `<text:span text:style-name="T_Bold">${escapeXML(part.slice(2, -2))}</text:span>`;
+    }
+    return escapeXML(part);
+  }).join('');
+}
+
 export async function exportScenarioToODT(scriptContent: string, titleLabel: string): Promise<void> {
   const zip = new JSZip();
   const title = titleLabel || '대본';
@@ -104,11 +114,19 @@ export async function exportScenarioToODT(scriptContent: string, titleLabel: str
       <style:text-properties fo:font-size="2pt"/>
     </style:style>
 
+    <!-- Scenario_Heading: 섹션 제목(###) 스타일 -->
+    <style:style style:name="Scenario_Heading" style:family="paragraph">
+      <style:paragraph-properties fo:margin-top="0.5cm" fo:margin-bottom="0.15cm" fo:line-height="30%"/>
+      <style:text-properties style:font-name="휴먼명조" style:font-name-asian="휴먼명조"
+                             fo:font-size="14pt" fo:font-weight="bold"
+                             style:font-weight-asian="bold" fo:color="#1d4ed8"/>
+    </style:style>
+
     <!-- Scenario_Body: 대본 본문 스타일 -->
     <style:style style:name="Scenario_Body" style:family="paragraph">
       <style:paragraph-properties fo:margin-bottom="0.2cm" fo:line-height="120%"/>
       <style:text-properties style:font-name="휴먼명조" style:font-name-asian="휴먼명조"
-                             fo:font-size="12pt" fo:color="#1a1a1a"/>
+                             fo:font-size="13pt" fo:color="#1a1a1a"/>
     </style:style>
   </office:styles>
 
@@ -128,7 +146,13 @@ export async function exportScenarioToODT(scriptContent: string, titleLabel: str
 
   const bodyParagraphs = scriptContent
     .split('\n')
-    .map(line => `<text:p text:style-name="Scenario_Body">${escapeXML(line)}</text:p>`)
+    .map(line => {
+      const headingMatch = line.match(/^#{1,3}\s*(.*)/);
+      if (headingMatch) {
+        return `<text:p text:style-name="Scenario_Heading">${renderInline(headingMatch[1])}</text:p>`;
+      }
+      return `<text:p text:style-name="Scenario_Body">${renderInline(line)}</text:p>`;
+    })
     .join('\n      ');
 
   zip.file('content.xml', `<?xml version="1.0" encoding="UTF-8"?>
@@ -151,6 +175,9 @@ export async function exportScenarioToODT(scriptContent: string, titleLabel: str
     </style:style>
     <style:style style:name="HeaderImagePara" style:family="paragraph">
       <style:paragraph-properties fo:text-align="center" fo:margin-top="0cm" fo:margin-bottom="0cm"/>
+    </style:style>
+    <style:style style:name="T_Bold" style:family="text">
+      <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold"/>
     </style:style>
   </office:automatic-styles>
   <office:body>

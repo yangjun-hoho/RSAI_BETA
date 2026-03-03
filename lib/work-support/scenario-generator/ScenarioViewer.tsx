@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { marked } from 'marked';
 import { exportScenarioToODT } from './scenarioOdtExporter';
 
 interface ScriptData {
@@ -64,7 +65,18 @@ const scenarioCSS = `
     font-size: 1rem;
     line-height: 2.0;
     color: #1a1a1a;
-    white-space: pre-line;
+  }
+  .scenario-doc-body h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1d4ed8;
+    margin: 0em 0 0.4em;
+  }
+  .scenario-doc-body p {
+    margin: 0 0 0.8em;
+  }
+  .scenario-doc-body strong {
+    font-weight: 700;
   }
 `;
 
@@ -123,7 +135,7 @@ export default function ScenarioViewer({ script, template }: ScenarioViewerProps
           <div className="scenario-doc-header">
             <h1 className="scenario-doc-title">{titleLabel}</h1>
           </div>
-          <div className="scenario-doc-body">{script.content}</div>
+          <div className="scenario-doc-body" dangerouslySetInnerHTML={{ __html: marked.parse(script.content) as string }} />
         </div>
       </div>
     </div>

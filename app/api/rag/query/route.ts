@@ -131,6 +131,7 @@ ${context}
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
+        'X-Accel-Buffering': 'no',  // Nginx 프록시 버퍼링 비활성화
       },
     });
   } catch (error) {

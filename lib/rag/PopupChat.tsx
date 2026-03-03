@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { marked } from 'marked';
 
 interface Category {
   id: string;
@@ -80,6 +81,7 @@ export default function PopupChat({ categoryId }: Props) {
       const decoder = new TextDecoder();
       let assistantContent = '';
       let sources: Message['sources'] = [];
+      let lineBuffer = '';  // 잘린 SSE 줄 누적 버퍼
 
       setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
 
@@ -87,10 +89,15 @@ export default function PopupChat({ categoryId }: Props) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const text  = decoder.decode(value);
-        const lines = text.split('\n').filter(l => l.startsWith('data: '));
+        // stream: true → 멀티바이트 문자가 청크 경계에 걸쳐도 안전하게 디코딩
+        lineBuffer += decoder.decode(value, { stream: true });
+
+        // 완전한 줄만 처리하고, 마지막 미완성 줄은 버퍼에 남김
+        const lines = lineBuffer.split('\n');
+        lineBuffer = lines.pop() ?? '';
 
         for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
           try {
             const json = JSON.parse(line.slice(6));
             if (json.type === 'chunk') {
@@ -102,6 +109,12 @@ export default function PopupChat({ categoryId }: Props) {
               });
             } else if (json.type === 'sources') {
               sources = json.sources;
+              // done 이벤트 유실 대비: sources 수신 즉시 메시지에 반영
+              setMessages(prev => {
+                const updated = [...prev];
+                updated[updated.length - 1] = { role: 'assistant', content: assistantContent, sources };
+                return updated;
+              });
             } else if (json.type === 'done') {
               setMessages(prev => {
                 const updated = [...prev];
@@ -109,7 +122,7 @@ export default function PopupChat({ categoryId }: Props) {
                 return updated;
               });
             }
-          } catch { /* ignore */ }
+          } catch { /* ignore parse errors */ }
         }
       }
     } catch (err) {
@@ -275,10 +288,10 @@ export default function PopupChat({ categoryId }: Props) {
                   fontSize: '13px', lineHeight: 1.7,
                   color: '#1e293b',
                   boxShadow: '0 1px 4px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.02)',
-                  whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                  wordBreak: 'break-word',
                 }}>
                   {msg.content
-                    ? msg.content
+                    ? <div className="rag-md" dangerouslySetInnerHTML={{ __html: marked.parse(msg.content) as string }} />
                     : (isLoading && i === messages.length - 1)
                       ? (
                         <span style={{ display: 'flex', gap: '3px', alignItems: 'center', padding: '2px 0' }}>
@@ -468,6 +481,12 @@ export default function PopupChat({ categoryId }: Props) {
           40%            { transform: translateY(-5px); opacity: 1;   }
         }
         details summary::-webkit-details-marker { display: none; }
+        .rag-md p { margin: 0 0 0.5em; }
+        .rag-md p:last-child { margin-bottom: 0; }
+        .rag-md strong { font-weight: 700; }
+        .rag-md ol, .rag-md ul { margin: 0.3em 0; padding-left: 1.4em; }
+        .rag-md li { margin-bottom: 0.25em; }
+        .rag-md li:last-child { margin-bottom: 0; }
       `}</style>
     </div>
   );

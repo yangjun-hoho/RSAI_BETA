@@ -148,14 +148,6 @@ export default function RagChat({ categoryId, onBack }: Props) {
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#f9f9f7' }}>
-      <style>{`
-        .rag-md p { margin: 0 0 0.5em; }
-        .rag-md p:last-child { margin-bottom: 0; }
-        .rag-md strong { font-weight: 700; }
-        .rag-md ol, .rag-md ul { margin: 0.3em 0; padding-left: 1.4em; }
-        .rag-md li { margin-bottom: 0.25em; }
-        .rag-md li:last-child { margin-bottom: 0; }
-      `}</style>
       {/* 헤더 */}
       <div style={{ padding: '12px 20px', borderBottom: '1px solid #e9e9e7', background: 'white', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
         <button
@@ -256,6 +248,14 @@ export default function RagChat({ categoryId, onBack }: Props) {
                     ? <div className="rag-md" dangerouslySetInnerHTML={{ __html: marked.parse(msg.content) as string }} />
                     : msg.content || (isLoading && i === messages.length - 1 ? '▍' : '')}
                 </div>
+                <style>{`
+                  .rag-md p { margin: 0 0 0.5em; }
+                  .rag-md p:last-child { margin-bottom: 0; }
+                  .rag-md strong { font-weight: 700; }
+                  .rag-md ol, .rag-md ul { margin: 0.3em 0; padding-left: 1.4em; }
+                  .rag-md li { margin-bottom: 0.25em; }
+                  .rag-md li:last-child { margin-bottom: 0; }
+                `}</style>
                 {msg.sources && msg.sources.length > 0 && (
                   <div style={{ marginTop: '8px', width: '100%', maxWidth: '80%' }}>
                     <details>
