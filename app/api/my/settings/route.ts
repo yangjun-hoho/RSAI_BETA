@@ -18,5 +18,6 @@ export async function PUT(req: NextRequest) {
 
   const body = await req.json() as { preferred_model?: string; theme?: string };
   const updated = updateSettings(session.userId, body);
+  if (!updated) return NextResponse.json({ error: '세션이 만료되었습니다. 다시 로그인해주세요.' }, { status: 401 });
   return NextResponse.json(updated);
 }

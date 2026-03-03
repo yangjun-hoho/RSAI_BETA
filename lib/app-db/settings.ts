@@ -16,7 +16,7 @@ export function getSettings(userId: number): UserSettings | null {
   return db.prepare(`SELECT * FROM user_settings WHERE user_id = ?`).get(userId) as UserSettings;
 }
 
-export function updateSettings(userId: number, data: Partial<Pick<UserSettings, 'preferred_model' | 'theme'>>): UserSettings {
+export function updateSettings(userId: number, data: Partial<Pick<UserSettings, 'preferred_model' | 'theme'>>): UserSettings | null {
   const db = getAppDb();
   const fields = Object.keys(data).map(k => `${k} = ?`).join(', ');
   const values = Object.values(data);
