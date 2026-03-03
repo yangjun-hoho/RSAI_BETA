@@ -102,8 +102,7 @@ export async function POST(req: NextRequest) {
             ...messages.map((m) => ({ role: m.role, content: m.content })),
           ],
           stream: true,
-          max_tokens: 2048,
-          temperature: 0.7,
+          max_completion_tokens: 2048,
         });
 
         for await (const chunk of completion) {

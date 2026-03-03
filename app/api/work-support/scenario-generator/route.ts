@@ -56,7 +56,7 @@ ${content}
 각 섹션을 명확히 구분하여 작성해주세요.`;
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-4.1-nano',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },

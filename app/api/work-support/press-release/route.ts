@@ -8,7 +8,7 @@ async function generateTitles(coreContent: string, keywords: string[]): Promise<
   const keywordText = keywords.filter(Boolean).join(', ');
 
   const completion = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
+    model: 'gpt-4.1-nano',
     messages: [
       {
         role: 'system',
@@ -42,7 +42,7 @@ async function generatePressRelease(title: string, coreContent: string, keywords
   const keywordText = keywords.filter(Boolean).join(', ');
 
   const completion = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
+    model: 'gpt-4.1-nano',
     messages: [
       {
         role: 'system',

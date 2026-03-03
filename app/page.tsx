@@ -14,7 +14,7 @@ import BoardPanel from '@/lib/board/BoardPanel';
 import type { Message } from '@/lib/chat/MessageBubble';
 
 const AVAILABLE_MODELS = [
-  { id: 'gpt-4o-mini',           name: 'OpenAI',    size: 'API', badge: 'API' },
+  { id: 'gpt-4.1-nano',      name: 'OpenAI',    size: 'API', badge: 'API' },
   { id: 'gemini-2.5-flash-lite', name: 'GoogleAI',  size: 'API', badge: 'API' },
 ];
 
@@ -31,7 +31,7 @@ function newId() {
 export default function Home() {
   const [messages, setMessages]       = useState<Message[]>([]);
   const [activeMode, setActiveMode]   = useState<ToolId | null>(null);
-  const [selectedModel, setSelectedModel] = useState('gpt-4o-mini');
+  const [selectedModel, setSelectedModel] = useState('gpt-4.1-nano');
   const selectedModelRef = useRef(selectedModel);
   useEffect(() => { selectedModelRef.current = selectedModel; }, [selectedModel]);
   const [isLoading, setIsLoading]     = useState(false);
@@ -153,14 +153,13 @@ export default function Home() {
           if (!line.startsWith('data:')) continue;
           const data = line.slice(5).trim();
           if (data === '[DONE]') continue;
-          try {
-            const parsed = JSON.parse(data);
-            if (parsed.error) throw new Error(parsed.error);
-            if (parsed.content) {
-              accumulated += parsed.content;
-              updateLastAssistant(accumulated);
-            }
-          } catch { /* skip */ }
+          let parsed: { error?: string; content?: string };
+          try { parsed = JSON.parse(data); } catch { continue; }
+          if (parsed.error) throw new Error(parsed.error);
+          if (parsed.content) {
+            accumulated += parsed.content;
+            updateLastAssistant(accumulated);
+          }
         }
       }
     } catch (err) {
