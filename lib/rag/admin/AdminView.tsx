@@ -22,6 +22,7 @@ export default function AdminView({ onBack }: Props) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedId, setSelectedId] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string>('');
   const [deleteError, setDeleteError] = useState<string>('');
   const [deletingId, setDeletingId] = useState<string>('');
 
@@ -91,36 +92,59 @@ export default function AdminView({ onBack }: Props) {
               </div>
             )}
             {categories.map(cat => (
-              <div key={cat.id} style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                <button
-                  onClick={() => { setSelectedId(cat.id); setDeleteError(''); }}
-                  style={{
-                    flex: 1, display: 'flex', alignItems: 'center', gap: '10px',
-                    padding: '10px 12px', borderRadius: '9px', border: 'none', cursor: 'pointer',
-                    background: selectedId === cat.id ? cat.color + '18' : 'transparent',
-                    color: selectedId === cat.id ? cat.color : '#374151',
-                    fontWeight: selectedId === cat.id ? 700 : 400,
-                    fontSize: '14px', textAlign: 'left', transition: 'all 0.15s',
-                  }}
-                  onMouseEnter={e => { if (selectedId !== cat.id) e.currentTarget.style.background = '#f9fafb'; }}
-                  onMouseLeave={e => { if (selectedId !== cat.id) e.currentTarget.style.background = 'transparent'; }}
-                >
-                  {cat.icon.startsWith('/')
-                    ? <img src={cat.icon} width={22} height={22} alt="" style={{ display: 'block', opacity: 0.75, flexShrink: 0 }} />
-                    : <span style={{ fontSize: '18px', flexShrink: 0 }}>{cat.icon}</span>}
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{cat.name}</span>
-                </button>
-                {/* 삭제 버튼 */}
-                <button
-                  onClick={() => handleDelete(cat.id)}
-                  disabled={deletingId === cat.id}
-                  title="카테고리 삭제"
-                  style={{ padding: '6px 7px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#d1d5db', borderRadius: '6px', flexShrink: 0, fontSize: '14px' }}
-                  onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = '#fef2f2'; }}
-                  onMouseLeave={e => { e.currentTarget.style.color = '#d1d5db'; e.currentTarget.style.background = 'transparent'; }}
-                >
-                  🗑
-                </button>
+              <div key={cat.id} style={{ marginBottom: '4px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <button
+                    onClick={() => { setSelectedId(cat.id); setDeleteError(''); }}
+                    style={{
+                      flex: 1, display: 'flex', alignItems: 'center', gap: '10px',
+                      padding: '10px 12px', borderRadius: '9px', border: 'none', cursor: 'pointer',
+                      background: selectedId === cat.id ? cat.color + '18' : 'transparent',
+                      color: selectedId === cat.id ? cat.color : '#374151',
+                      fontWeight: selectedId === cat.id ? 700 : 400,
+                      fontSize: '14px', textAlign: 'left', transition: 'all 0.15s',
+                    }}
+                    onMouseEnter={e => { if (selectedId !== cat.id) e.currentTarget.style.background = '#f9fafb'; }}
+                    onMouseLeave={e => { if (selectedId !== cat.id) e.currentTarget.style.background = 'transparent'; }}
+                  >
+                    {cat.icon.startsWith('/')
+                      ? <img src={cat.icon} width={22} height={22} alt="" style={{ display: 'block', opacity: 0.75, flexShrink: 0 }} />
+                      : <span style={{ fontSize: '18px', flexShrink: 0 }}>{cat.icon}</span>}
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{cat.name}</span>
+                  </button>
+                  {/* 수정 버튼 */}
+                  <button
+                    onClick={() => { setEditingId(editingId === cat.id ? '' : cat.id); setShowForm(false); setDeleteError(''); }}
+                    title="카테고리 수정"
+                    style={{ padding: '6px 7px', border: 'none', background: editingId === cat.id ? '#eff6ff' : 'transparent', cursor: 'pointer', color: editingId === cat.id ? '#3b82f6' : '#d1d5db', borderRadius: '6px', flexShrink: 0, fontSize: '13px' }}
+                    onMouseEnter={e => { if (editingId !== cat.id) { e.currentTarget.style.color = '#3b82f6'; e.currentTarget.style.background = '#eff6ff'; } }}
+                    onMouseLeave={e => { if (editingId !== cat.id) { e.currentTarget.style.color = '#d1d5db'; e.currentTarget.style.background = 'transparent'; } }}
+                  >
+                    ✏️
+                  </button>
+                  {/* 삭제 버튼 */}
+                  <button
+                    onClick={() => handleDelete(cat.id)}
+                    disabled={deletingId === cat.id}
+                    title="카테고리 삭제"
+                    style={{ padding: '6px 7px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#d1d5db', borderRadius: '6px', flexShrink: 0, fontSize: '14px' }}
+                    onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = '#fef2f2'; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = '#d1d5db'; e.currentTarget.style.background = 'transparent'; }}
+                  >
+                    🗑
+                  </button>
+                </div>
+                {/* 인라인 수정 폼 */}
+                {editingId === cat.id && (
+                  <div style={{ marginTop: '4px', marginLeft: '4px', marginRight: '4px' }}>
+                    <CategoryForm
+                      categoryId={cat.id}
+                      initialData={{ name: cat.name, icon: cat.icon, color: cat.color, description: cat.description }}
+                      onCreated={() => { setEditingId(''); loadCategories(); }}
+                      onCancel={() => setEditingId('')}
+                    />
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -141,7 +165,7 @@ export default function AdminView({ onBack }: Props) {
               />
             ) : (
               <button
-                onClick={() => { setShowForm(true); setDeleteError(''); }}
+                onClick={() => { setShowForm(true); setEditingId(''); setDeleteError(''); }}
                 style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '10px', border: '1.5px dashed #d1d5db', borderRadius: '9px', background: 'transparent', cursor: 'pointer', color: '#6b7280', fontSize: '13px', fontWeight: 600 }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.color = '#3b82f6'; e.currentTarget.style.background = '#eff6ff'; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = '#d1d5db'; e.currentTarget.style.color = '#6b7280'; e.currentTarget.style.background = 'transparent'; }}

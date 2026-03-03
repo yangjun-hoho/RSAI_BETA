@@ -96,6 +96,12 @@ export const ragDb = {
     return { id, ...cat };
   },
 
+  updateCategory(id: string, cat: { name: string; icon: string; color: string; description: string }): void {
+    db.prepare(`
+      UPDATE categories SET name = ?, icon = ?, description = ?, color = ? WHERE id = ?
+    `).run(cat.name, cat.icon, cat.description, cat.color, id);
+  },
+
   deleteCategory(id: string): void {
     const docCount = (db.prepare('SELECT COUNT(*) as cnt FROM documents WHERE category_id = ?').get(id) as { cnt: number }).cnt;
     if (docCount > 0) throw new Error('문서를 먼저 삭제해주세요.');

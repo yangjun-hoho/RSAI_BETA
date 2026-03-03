@@ -17,8 +17,8 @@ export const TOOLS: Tool[] = [
   { id: 'merit-citation', label: '공적조서 생성', tooltip: '공적조서 자동 작성' },
   { id: 'scenario',      label: '시나리오 생성',  tooltip: '발표 시나리오 자동 변환' },
   { id: 'ppt',           label: 'PPT 생성',       tooltip: 'AI 자동 프레젠테이션 작성' },
-  { id: 'templates',     label: '템플릿',         tooltip: '공무원 업무 특화 AI 템플릿' },
-  { id: 'rag',           label: 'Rag',            tooltip: '문서 기반 AI 지식 검색' },
+  { id: 'templates',     label: '업무 템플릿',     tooltip: '공무원 업무 특화 AI 템플릿' },
+  { id: 'rag',           label: 'RAG챗봇(노트북LM)', tooltip: '문서 기반 AI 지식 검색' },
 ];
 
 const ICON_MAP: Record<string, string> = {

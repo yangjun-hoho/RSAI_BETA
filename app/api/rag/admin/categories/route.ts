@@ -38,6 +38,34 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export async function PUT(request: NextRequest) {
+  try {
+    const { id, name, icon, color, description } = await request.json() as {
+      id: string;
+      name: string;
+      icon: string;
+      color: string;
+      description: string;
+    };
+
+    if (!id || !name?.trim() || !icon?.trim() || !color?.trim()) {
+      return NextResponse.json({ error: '이름, 아이콘, 색상은 필수입니다.' }, { status: 400 });
+    }
+
+    ragDb.updateCategory(id, {
+      name: name.trim(),
+      icon: icon.trim(),
+      color: color.trim(),
+      description: (description ?? '').trim(),
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('[rag/categories PUT]', error);
+    return NextResponse.json({ error: '카테고리 수정 실패' }, { status: 500 });
+  }
+}
+
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

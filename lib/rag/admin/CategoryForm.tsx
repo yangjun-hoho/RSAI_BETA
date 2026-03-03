@@ -51,16 +51,22 @@ function getLabel(path: string) {
 interface Props {
   onCreated: () => void;
   onCancel: () => void;
+  // 수정 모드: categoryId + initialData 제공 시 PUT 요청
+  categoryId?: string;
+  initialData?: { name: string; icon: string; color: string; description: string };
 }
 
-export default function CategoryForm({ onCreated, onCancel }: Props) {
-  const [name, setName] = useState('');
-  const [icon, setIcon] = useState('📁');
-  const [color, setColor] = useState(COLOR_PRESETS[0]);
-  const [description, setDescription] = useState('');
+export default function CategoryForm({ onCreated, onCancel, categoryId, initialData }: Props) {
+  const isEditMode = !!categoryId;
+  const [name, setName] = useState(initialData?.name ?? '');
+  const [icon, setIcon] = useState(initialData?.icon ?? '📁');
+  const [color, setColor] = useState(initialData?.color ?? COLOR_PRESETS[0]);
+  const [description, setDescription] = useState(initialData?.description ?? '');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [iconTab, setIconTab] = useState<'emoji' | 'image'>('emoji');
+  const [iconTab, setIconTab] = useState<'emoji' | 'image'>(
+    initialData?.icon?.startsWith('/') ? 'image' : 'emoji'
+  );
   const [imageIcons, setImageIcons] = useState<string[]>([]);
 
   useEffect(() => {
@@ -77,13 +83,17 @@ export default function CategoryForm({ onCreated, onCancel }: Props) {
     setIsLoading(true);
     setError('');
     try {
+      const body = isEditMode
+        ? { id: categoryId, name: name.trim(), icon: icon.trim(), color, description: description.trim() }
+        : { name: name.trim(), icon: icon.trim(), color, description: description.trim() };
+
       const res = await fetch('/api/rag/admin/categories', {
-        method: 'POST',
+        method: isEditMode ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), icon: icon.trim(), color, description: description.trim() }),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
-      if (!res.ok) { setError(data.error ?? '생성 실패'); return; }
+      if (!res.ok) { setError(data.error ?? (isEditMode ? '수정 실패' : '생성 실패')); return; }
       onCreated();
     } catch {
       setError('네트워크 오류가 발생했습니다.');
@@ -96,7 +106,9 @@ export default function CategoryForm({ onCreated, onCancel }: Props) {
 
   return (
     <form onSubmit={handleSubmit} style={{ padding: '12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', marginBottom: '8px' }}>
-      <div style={{ fontSize: '12px', fontWeight: 700, color: '#374151', marginBottom: '10px' }}>새 카테고리</div>
+      <div style={{ fontSize: '12px', fontWeight: 700, color: '#374151', marginBottom: '10px' }}>
+        {isEditMode ? '카테고리 수정' : '새 카테고리'}
+      </div>
 
       {/* 이름 */}
       <div style={{ marginBottom: '8px' }}>
@@ -265,7 +277,7 @@ export default function CategoryForm({ onCreated, onCancel }: Props) {
           disabled={isLoading}
           style={{ flex: 1, padding: '6px', background: color, color: 'white', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: isLoading ? 'not-allowed' : 'pointer', opacity: isLoading ? 0.7 : 1 }}
         >
-          {isLoading ? '저장 중...' : '저장'}
+          {isLoading ? '저장 중...' : isEditMode ? '수정 완료' : '저장'}
         </button>
         <button
           type="button"
