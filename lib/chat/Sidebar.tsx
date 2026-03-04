@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-export type ToolId = 'report' | 'ppt' | 'scenario' | 'merit-citation' | 'greetings' | 'press-release' | 'templates' | 'rag' | 'board';
+export type ToolId = 'report' | 'ppt' | 'scenario' | 'merit-citation' | 'greetings' | 'press-release' | 'templates' | 'rag' | 'board' | 'text-transform';
 
 export interface Tool {
   id: ToolId;
@@ -19,6 +19,7 @@ export const TOOLS: Tool[] = [
   { id: 'ppt',           label: 'PPT 생성',       tooltip: 'AI 자동 프레젠테이션 작성' },
   { id: 'templates',     label: '업무 템플릿',     tooltip: '공무원 업무 특화 AI 템플릿' },
   { id: 'rag',           label: 'RAG챗봇(노트북LM)', tooltip: '문서 기반 AI 지식 검색' },
+  { id: 'text-transform', label: '텍스트 변환',     tooltip: '문체·맞춤법·표현 변환 도구' },
 ];
 
 const ICON_MAP: Record<string, string> = {
@@ -32,6 +33,7 @@ const ICON_MAP: Record<string, string> = {
   'press-release': `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"/><rect x="7" y="7" width="8" height="5"/><line x1="8" y1="15" x2="12" y2="15"/><path d="M17 18v-1a2 2 0 0 1 2-2h2"/></svg>`,
   templates: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`,
   rag: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
+  'text-transform': `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
   chart: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`,
 };
 
