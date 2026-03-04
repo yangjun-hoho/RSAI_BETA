@@ -98,7 +98,7 @@ export default function Home() {
   // 사이드바 도구 클릭: 폼 토글만 (미리보기 탭은 건드리지 않음)
   function handleToolClick(toolId: ToolId) {
     if (toolId === 'text-transform') {
-      const w = 440, h = 700;
+      const w = 550, h = 720;
       const left = Math.max(0, window.screen.width - w - 20);
       const top = Math.max(0, Math.floor((window.screen.height - h) / 2));
       window.open('/popup-text-transform', 'text-transform-panel',
