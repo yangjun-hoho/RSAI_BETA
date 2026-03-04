@@ -364,7 +364,7 @@ export default function Home() {
         ) : (
           <>
             {/* 채팅 영역 */}
-            <div style={{ flex: 4, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+            <div style={{ flex: 4, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0, position: 'relative' }}>
               <ChatHeader
                 models={AVAILABLE_MODELS}
                 selectedModel={selectedModel}
@@ -395,6 +395,9 @@ export default function Home() {
                   if (loading) setPreviewTool('press-release');
                 }}
               />
+              <div style={{ position: 'absolute', bottom: '0.1rem', right: '1rem', fontSize: '0.9rem', color: 'rgba(0, 0, 0, 0.39)', pointerEvents: 'none', userSelect: 'none', zIndex: 0 }}>
+                © 2026 기획조정실 스마트도시과
+              </div>
             </div>
 
             {/* 미리보기 패널 */}

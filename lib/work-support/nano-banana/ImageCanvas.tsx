@@ -326,9 +326,9 @@ export default function ImageCanvas({
           )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: isDarkMode ? '#ecec10' : '#ca8a04' }}>
-          <span>© 2025 남양주 자동차관리과</span>
+          <span>© 2026 기획조정실 스마트도시과</span>
           <span>⚡</span>
-          <span>Powered by Gemini 2.0 Flash</span>
+          <span>Powered by Gemini 3.0 Flash</span>
         </div>
       </div>
     </div>

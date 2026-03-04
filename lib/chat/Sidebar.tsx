@@ -18,7 +18,7 @@ export const TOOLS: Tool[] = [
   { id: 'scenario',      label: '시나리오 생성',  tooltip: '발표 시나리오 자동 변환' },
   { id: 'ppt',           label: 'PPT 생성',       tooltip: 'AI 자동 프레젠테이션 작성' },
   { id: 'templates',     label: '업무 템플릿',     tooltip: '공무원 업무 특화 AI 템플릿' },
-  { id: 'rag',           label: 'RAG챗봇(노트북LM)', tooltip: '문서 기반 AI 지식 검색' },
+  { id: 'rag',           label: 'RAG (NotebookLM)', tooltip: '문서 기반 AI 지식 검색' },
   { id: 'text-transform', label: '텍스트 변환',     tooltip: '문체·맞춤법·표현 변환 도구' },
 ];
 
@@ -125,7 +125,7 @@ export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
               도구
             </div>
           )}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', border: '1px solid #e3e2df', borderRadius: '8px', padding: '0.2rem', overflow: 'hidden' }}>
             {TOOLS.map((tool) => {
               const isActive = activeMode === tool.id;
               return (
@@ -179,7 +179,7 @@ export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
             <div style={{ fontSize: '0.7rem', fontWeight: 600, color: '#6b6b6b', textTransform: 'uppercase', letterSpacing: '0.025em', marginBottom: '0.5rem', paddingLeft: '0.25rem' }}>
               바로가기
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', border: '1px solid #e3e2df', borderRadius: '8px', padding: '0.2rem', overflow: 'hidden' }}>
               {SHORTCUTS.map((sc) => (
                 <a
                   key={sc.id}
@@ -202,7 +202,7 @@ export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
             <div style={{ fontSize: '0.7rem', fontWeight: 600, color: '#6b6b6b', textTransform: 'uppercase', letterSpacing: '0.025em', marginBottom: '0.5rem', paddingLeft: '0.25rem' }}>
               회원 공간
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', border: '1px solid #e3e2df', borderRadius: '8px', padding: '0.2rem', overflow: 'hidden' }}>
               {MEMBER_LINKS.map((sc) => {
                 const isActive = activeMode === sc.id;
                 return (
