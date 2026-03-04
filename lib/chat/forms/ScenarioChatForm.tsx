@@ -55,8 +55,13 @@ export default function ScenarioChatForm({ onSubmit, onCancel, isLoading }: Prop
   return (
     <form onSubmit={handleSubmit} style={S.card}>
       <div style={S.header}>
-        <h3 style={S.h3}>🎭 시나리오 생성</h3>
-        <p style={S.desc}>발표 대본으로 변환할 정보를 입력하세요</p>
+        <div>
+          <h3 style={S.h3}>🎭 시나리오 생성</h3>
+          <p style={S.desc}>발표 대본으로 변환할 정보를 입력하세요</p>
+        </div>
+        <button type="button" onClick={onCancel} style={S.closeBtn} title="닫기">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
       </div>
 
       <div style={S.content}>

@@ -46,8 +46,13 @@ export default function GreetingChatForm({ onSubmit, onCancel, isLoading }: Prop
   return (
     <form onSubmit={handleSubmit} style={S.card}>
       <div style={S.header}>
-        <h3 style={S.h3}>💬 인사말씀 생성</h3>
-        <p style={S.desc}>행사 정보와 연설 옵션을 입력하세요</p>
+        <div>
+          <h3 style={S.h3}>💬 인사말씀 생성</h3>
+          <p style={S.desc}>행사 정보와 연설 옵션을 입력하세요</p>
+        </div>
+        <button type="button" onClick={onCancel} style={S.closeBtn} title="닫기">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
       </div>
 
       <div style={S.content}>

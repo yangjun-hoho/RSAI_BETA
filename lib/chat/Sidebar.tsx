@@ -90,9 +90,16 @@ export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
         gap: '0.5rem',
       }}>
         {open && (
-          <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#37352fda', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>
-            AI Work Space
-          </h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, overflow: 'hidden' }}>
+            <img
+              src="/images/main-logo.png"
+              alt="logo"
+              style={{ height: '25px', width: 'auto', objectFit: 'contain', flexShrink: 0 }}
+            />
+            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#37352fda', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              AI Work Space
+            </h2>
+          </div>
         )}
         <button
           onClick={() => setOpen(!open)}
@@ -141,7 +148,7 @@ export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.3rem',
-                    padding: open ? '0.3rem 0.25rem' : '0.5rem',
+                    padding: open ? '0.3rem 1rem' : '0.5rem',
                     background: isActive ? '#e8f4ff' : 'transparent',
                     border: 'none',
                     borderRadius: '6px',

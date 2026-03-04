@@ -65,8 +65,13 @@ export default function PPTChatForm({ onSubmit, onCancel, isLoading }: Props) {
   return (
     <form onSubmit={handleSubmit} style={S.card}>
       <div style={S.header}>
-        <h3 style={S.h3}>🖥️ PPT 생성</h3>
-        <p style={S.desc}>내용을 입력하면 프레젠테이션으로 변환됩니다</p>
+        <div>
+          <h3 style={S.h3}>🖥️ PPT 생성</h3>
+          <p style={S.desc}>내용을 입력하면 프레젠테이션으로 변환됩니다</p>
+        </div>
+        <button type="button" onClick={onCancel} style={S.closeBtn} title="닫기">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
       </div>
 
       <div style={S.content}>

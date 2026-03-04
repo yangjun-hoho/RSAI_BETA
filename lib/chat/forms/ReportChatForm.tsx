@@ -44,6 +44,7 @@ export default function ReportChatForm({ onSubmit, onCancel, isLoading }: Props)
   const [detailType, setDetailType]           = useState('basic');
   const [length, setLength]                   = useState('detailed');
   const [selectedModel, setSelectedModel]     = useState('gemini-2.5-flash-lite');
+  const [keyContent, setKeyContent]           = useState('');
 
   function handleTypeChange(type: string) {
     setReportType(type);
@@ -58,14 +59,19 @@ export default function ReportChatForm({ onSubmit, onCancel, isLoading }: Props)
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!reportTitle.trim()) return;
-    onSubmit({ reportTitle, selectedReportType: reportType, selectedDetailType: detailType, selectedLength: length, selectedModel });
+    onSubmit({ reportTitle, selectedReportType: reportType, selectedDetailType: detailType, selectedLength: length, selectedModel, keyContent: keyContent.trim() || undefined });
   }
 
   return (
     <form onSubmit={handleSubmit} style={S.card}>
       <div style={S.header}>
-        <h3 style={S.h3}>📊 보고서 생성</h3>
-        <p style={S.desc}>보고서 유형과 제목을 설정하세요</p>
+        <div>
+          <h3 style={S.h3}>📊 보고서 생성</h3>
+          <p style={S.desc}>보고서 유형과 제목을 설정하세요</p>
+        </div>
+        <button type="button" onClick={onCancel} style={S.closeBtn} title="닫기">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
       </div>
 
       <div style={S.content}>
@@ -133,7 +139,7 @@ export default function ReportChatForm({ onSubmit, onCancel, isLoading }: Props)
                   borderRadius: '4px',
                   background: selectedModel === m.id ? '#e8f4ff' : 'white',
                   color: selectedModel === m.id ? '#2383e2' : '#6b6b6b',
-                  fontSize: '0.82rem', cursor: 'pointer',
+                  fontSize: '0.8rem', cursor: 'pointer',
                   fontWeight: selectedModel === m.id ? 600 : 400,
                 }}
               >
@@ -141,6 +147,18 @@ export default function ReportChatForm({ onSubmit, onCancel, isLoading }: Props)
               </button>
             ))}
           </div>
+        </div>
+
+        {/* 핵심 내용 */}
+        <div>
+          <label style={S.label}>핵심 내용 <span style={{ fontWeight: 400, color: '#9ca3af' }}>(선택)</span></label>
+          <textarea
+            style={{ ...S.input, resize: 'vertical', lineHeight: '1.6', minHeight: '60px' }}
+            placeholder="보고서에 반드시 포함할 핵심 내용을 입력하세요&#10;예) 2026년 예산 50억, 3단계 추진 일정, 설문 결과 85% 찬성 등"
+            value={keyContent}
+            onChange={e => setKeyContent(e.target.value)}
+            disabled={isLoading}
+          />
         </div>
       </div>
 

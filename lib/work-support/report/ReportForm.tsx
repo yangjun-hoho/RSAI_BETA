@@ -66,6 +66,7 @@ export default function ReportForm({ onGenerate, isLoading }: ReportFormProps) {
   const [selectedDetailType, setSelectedDetailType] = useState('basic');
   const [selectedLength, setSelectedLength] = useState('detailed');
   const [selectedModel, setSelectedModel] = useState('gemini-2.5-flash-lite');
+  const [keyContent, setKeyContent] = useState('');
 
   const currentDetailTypes = detailTypes[selectedReportType] || [];
   const currentStructure = sectionStructures[selectedReportType]?.[selectedDetailType] || [];
@@ -77,7 +78,7 @@ export default function ReportForm({ onGenerate, isLoading }: ReportFormProps) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    onGenerate({ reportTitle, selectedReportType, selectedDetailType, selectedLength, selectedModel });
+    onGenerate({ reportTitle, selectedReportType, selectedDetailType, selectedLength, selectedModel, keyContent: keyContent.trim() || undefined });
   }
 
   function setSampleTitle() {
@@ -175,6 +176,17 @@ export default function ReportForm({ onGenerate, isLoading }: ReportFormProps) {
             </button>
           ))}
         </div>
+      </div>
+
+      <div>
+        <label style={labelStyle}>핵심 내용 <span style={{ fontWeight: 400, color: '#9ca3af' }}>(선택)</span></label>
+        <textarea
+          value={keyContent}
+          onChange={e => setKeyContent(e.target.value)}
+          placeholder="보고서에 반드시 포함할 핵심 내용을 입력하세요&#10;예) 2026년 예산 50억 편성, 3단계 추진 일정, 주민 설문 결과 85% 찬성 등"
+          rows={4}
+          style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }}
+        />
       </div>
 
       <button type="submit" style={{ width: '100%', padding: '0.65rem', background: 'var(--focus-color)', color: 'white', border: 'none', borderRadius: '6px', fontSize: '0.85rem', fontWeight: '600', cursor: 'pointer', opacity: isLoading ? 0.7 : 1 }} disabled={isLoading}>
