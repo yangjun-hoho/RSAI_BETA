@@ -482,7 +482,7 @@ export default function TextTransformPanel({ onClose, isPopup }: Props) {
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '12px 18px 16px', minHeight: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexShrink: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '11px', fontWeight: 600, color: displayResult ? C.dark : C.muted, letterSpacing: '0.02em' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: displayResult ? C.dark : C.muted, letterSpacing: '0.02em' }}>
                       변환 결과
                     </span>
                   </div>
