@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       if (!prompt) return NextResponse.json({ error: '유효하지 않은 비율입니다.' }, { status: 400 });
 
       const completion = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4.1-nano',
         messages: [
           { role: 'system', content: `당신은 한국 공무원을 위한 텍스트 확장 도우미입니다. ${prompt}\n\n확장된 텍스트만 출력하고 설명이나 부연설명은 절대 하지 마세요.` },
           { role: 'user', content: text.trim() },
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       const count = typeof keywordCount === 'number' ? keywordCount : 5;
 
       const completion = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4.1-nano',
         messages: [
           { role: 'system', content: `다음 텍스트에서 핵심 키워드를 ${count}개 추출하세요. JSON 배열 형태로만 응답하세요: ["키워드1", "키워드2", ...]` },
           { role: 'user', content: text.trim() },

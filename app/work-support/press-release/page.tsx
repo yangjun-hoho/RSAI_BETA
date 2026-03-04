@@ -18,7 +18,7 @@ export default function PressReleasePage() {
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<Record<string, unknown>>({});
 
-  useEffect(() => { document.title = '보도자료 생성기 | 아레스 AI'; }, []);
+  useEffect(() => { document.title = '보도자료 생성기 | 남양주 AI'; }, []);
 
   async function handleGenerateTitles(data: Record<string, unknown>) {
     setIsLoading(true);

@@ -12,7 +12,7 @@ export default function ReportPage() {
   const [generatedReport, setGeneratedReport] = useState<Record<string, unknown> | null>(null);
   const [error, setError] = useState('');
 
-  useEffect(() => { document.title = '보고서 생성 | 아레스 AI'; }, []);
+  useEffect(() => { document.title = '보고서 생성 | 남양주 AI'; }, []);
 
   async function handleGenerateReport(formValues: Record<string, unknown>) {
     if (!String(formValues.reportTitle || '').trim()) {

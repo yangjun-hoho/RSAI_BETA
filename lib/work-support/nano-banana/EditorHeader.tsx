@@ -47,7 +47,7 @@ export default function EditorHeader({ isDarkMode, onToggleDarkMode, dailyUsageC
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
           <span style={{ fontSize: '1.4rem' }}>🍌</span>
           <h1 style={{ fontSize: '1rem', fontWeight: 600, color: titleColor, margin: 0, whiteSpace: 'nowrap' }}>
-            Nano Banana AI 이미지 에디터
+            Nano Banana 2 이미지 에디터
           </h1>
           <span style={{ fontSize: '0.7rem', background: verBg, color: verColor, padding: '0.1rem 0.45rem', borderRadius: '4px' }}>
             1.0
@@ -111,7 +111,7 @@ export default function EditorHeader({ isDarkMode, onToggleDarkMode, dailyUsageC
         >
           <div style={{ background: modalBg, border: modalBorder, borderRadius: '12px', maxWidth: '520px', width: '100%', maxHeight: '80vh', overflowY: 'auto' }}>
             <div style={{ padding: '1.25rem 1.5rem', borderBottom: modalBorder, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: modalTitle, margin: 0 }}>🍌 Nano Banana AI Image Editor</h2>
+              <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: modalTitle, margin: 0 }}>🍌 Nano Banana 2 Image Editor</h2>
               <button onClick={() => setShowHelp(false)} style={{ background: 'none', border: 'none', color: btnColor, fontSize: '1.6rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
             </div>
             <div style={{ padding: '1.25rem 1.5rem', color: modalText }}>

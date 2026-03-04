@@ -150,7 +150,7 @@ export default function LatestToolsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    document.title = '최신 AI 도구 | 아레스 AI';
+    document.title = '최신 AI 도구 | 남양주 AI';
   }, []);
 
   return (

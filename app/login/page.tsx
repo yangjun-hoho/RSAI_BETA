@@ -14,7 +14,7 @@ function LoginForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => { document.title = '로그인 | 아레스 AI'; }, []);
+  useEffect(() => { document.title = '로그인 | 남양주 AI'; }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -43,7 +43,7 @@ function LoginForm() {
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🔐</div>
           <h1 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#37352f', margin: '0 0 0.25rem 0' }}>로그인</h1>
-          <p style={{ color: '#9b9a97', fontSize: '0.85rem', margin: 0 }}>아레스 AI에 오신 것을 환영합니다</p>
+          <p style={{ color: '#9b9a97', fontSize: '0.85rem', margin: 0 }}>남양주 AI에 오신 것을 환영합니다</p>
         </div>
 
         <form onSubmit={handleSubmit} style={{ background: 'white', borderRadius: '12px', padding: '1.75rem', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>

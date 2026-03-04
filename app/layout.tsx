@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "아레스 AI",
+  title: "남양주 AI",
   description: "AI 업무 지원 플랫폼",
   manifest: "/manifest.json",
 };

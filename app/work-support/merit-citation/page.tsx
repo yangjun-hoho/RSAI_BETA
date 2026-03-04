@@ -11,7 +11,7 @@ export default function MeritCitationPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => { document.title = '공적조서 생성기 | 아레스 AI'; }, []);
+  useEffect(() => { document.title = '공적조서 생성기 | 남양주 AI'; }, []);
 
   async function handleFormSubmit(options: Record<string, unknown>) {
     setIsLoading(true);

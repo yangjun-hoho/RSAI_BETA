@@ -27,7 +27,7 @@ interface ShortcutCard {
 const SHORTCUT_CARDS: ShortcutCard[] = [
   {
     id: 'nano-banana',
-    title: 'Nano Banana AI',
+    title: 'Nano Banana 2',
     desc: 'AI 이미지 생성 및 편집 도구',
     image: '/images/cards/nano-banana.svg',
     action: { type: 'page', path: '/work-support/nano-banana' },

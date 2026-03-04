@@ -47,7 +47,7 @@ export default function FunPage() {
 
   /* ── 초기 테마 로드 ── */
   useEffect(() => {
-    document.title = 'FuN fUn | 아레스 AI';
+    document.title = 'FuN fUn | 남양주 AI';
     try { if (localStorage.getItem('fun-dark') === '1') setDark(true); } catch {}
     setReady(true);
   }, []);

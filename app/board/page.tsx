@@ -15,7 +15,7 @@ export default function BoardPage() {
   const [page, setPage] = useState(1);
   const [me, setMe] = useState<Me | null>(null);
 
-  useEffect(() => { document.title = 'AI 자유게시판 | 아레스 AI'; }, []);
+  useEffect(() => { document.title = 'AI 자유게시판 | 남양주 AI'; }, []);
 
   useEffect(() => {
     fetch('/api/auth/me').then(r => r.json()).then(d => setMe(d.user));

@@ -15,7 +15,7 @@ export default function PPTConverterPage() {
   const [pptTitle, setPptTitle] = useState('프레젠테이션');
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>('template1');
 
-  useEffect(() => { document.title = 'PPT 변환기 | 아레스 AI'; }, []);
+  useEffect(() => { document.title = 'PPT 변환기 | 남양주 AI'; }, []);
 
   async function handleGenerate(data: {
     content: string; title: string; slideCount: number;

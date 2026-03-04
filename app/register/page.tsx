@@ -12,7 +12,7 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => { document.title = '회원가입 | 아레스 AI'; }, []);
+  useEffect(() => { document.title = '회원가입 | 남양주 AI'; }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

@@ -65,7 +65,7 @@ export default function ScreenRecorderPage() {
   const [includeSystem, setIncludeSystem] = useState(true);
 
   useEffect(() => {
-    document.title = '화면 녹화 | 아레스 AI';
+    document.title = '화면 녹화 | 남양주 AI';
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       streamRef.current?.getTracks().forEach(t => t.stop());

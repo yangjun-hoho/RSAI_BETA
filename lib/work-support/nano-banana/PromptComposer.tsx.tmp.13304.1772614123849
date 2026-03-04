@@ -13,6 +13,7 @@ interface PromptComposerProps {
   editReferenceImages: string[];
   isGenerating: boolean;
   temperature: number;
+  seed: number | undefined;
   aspectRatio: string;
   imageSize: string;
   showPromptPanel: boolean;
@@ -25,6 +26,7 @@ interface PromptComposerProps {
   onRemoveUploadedImage: (i: number) => void;
   onRemoveEditReferenceImage: (i: number) => void;
   onSetTemperature: (v: number) => void;
+  onSetSeed: (v: number | undefined) => void;
   onSetAspectRatio: (v: string) => void;
   onSetImageSize: (v: string) => void;
   onTogglePanel: () => void;
@@ -52,14 +54,15 @@ const IMAGE_SIZES = [
   { value: '512px', label: '512px (0.5K)', desc: '빠름' },
   { value: '1K',    label: '1K',           desc: '기본' },
   { value: '2K',    label: '2K',           desc: '고해상도' },
+  { value: '4K',    label: '4K',           desc: '최고화질' },
 ];
 
 export default function PromptComposer(props: PromptComposerProps) {
   const {
     isDarkMode, selectedTool, currentPrompt, uploadedImages, editReferenceImages,
-    isGenerating, temperature, aspectRatio, imageSize, showPromptPanel, isUsageLimitReached, dailyUsageLimit,
+    isGenerating, temperature, seed, aspectRatio, imageSize, showPromptPanel, isUsageLimitReached, dailyUsageLimit,
     onSetTool, onSetPrompt, onGenerate, onFileUpload, onRemoveUploadedImage,
-    onRemoveEditReferenceImage, onSetTemperature, onSetAspectRatio, onSetImageSize,
+    onRemoveEditReferenceImage, onSetTemperature, onSetSeed, onSetAspectRatio, onSetImageSize,
     onTogglePanel, onClearSession,
   } = props;
 
@@ -183,7 +186,7 @@ export default function PromptComposer(props: PromptComposerProps) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
         {sectionLabel(selectedTool === 'generate' ? '참조 이미지' : selectedTool === 'edit' ? '스타일 참조' : '이미지 업로드')}
         <div style={{ fontSize: '0.72rem', color: t.hint }}>
-          {selectedTool === 'generate' ? '선택사항, 최대 2개 (800px 리사이즈)' : selectedTool === 'edit' ? '스타일 참조, 최대 2개 (800px 리사이즈)' : '편집할 이미지를 업로드하세요'}
+          {selectedTool === 'generate' ? '선택사항, 최대 10개' : selectedTool === 'edit' ? '스타일 참조, 최대 10개' : '편집할 이미지를 업로드하세요'}
         </div>
         <button
           onClick={() => fileInputRef.current?.click()}
@@ -290,6 +293,15 @@ export default function PromptComposer(props: PromptComposerProps) {
                 value={temperature}
                 onChange={(e) => onSetTemperature(parseFloat(e.target.value))}
                 style={{ width: '100%' }}
+              />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+              <label style={{ fontSize: '0.72rem', color: t.hint }}>Seed (optional)</label>
+              <input
+                type="number" placeholder="Random"
+                value={seed ?? ''}
+                onChange={(e) => onSetSeed(e.target.value ? parseInt(e.target.value) : undefined)}
+                style={{ padding: '0.4rem', borderRadius: '4px', fontSize: '0.8rem', width: '100%', boxSizing: 'border-box', ...t.select }}
               />
             </div>
           </div>

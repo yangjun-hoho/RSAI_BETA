@@ -424,7 +424,7 @@ export default function AdminPage() {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    document.title = '관리자 패널 | 아레스 AI';
+    document.title = '관리자 패널 | 남양주 AI';
     fetch('/api/auth/me').then(r => r.json()).then(d => {
       if (!d.user || d.user.role !== 'admin') { router.push('/'); return; }
       setChecking(false);

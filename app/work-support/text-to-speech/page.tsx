@@ -17,7 +17,7 @@ export default function TextToSpeechPage() {
   const prevAudioUrl = useRef<string | null>(null);
 
   useEffect(() => {
-    document.title = '텍스트 음성변환 | 아레스 AI';
+    document.title = '텍스트 음성변환 | 남양주 AI';
     return () => { if (prevAudioUrl.current) URL.revokeObjectURL(prevAudioUrl.current); };
   }, []);
 

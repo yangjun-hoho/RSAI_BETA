@@ -52,7 +52,7 @@ export default function Home() {
   const previewData = previewTool ? (previewStore[previewTool] ?? null) : null;
 
   useEffect(() => {
-    document.title = '아레스 AI';
+    document.title = '남양주 AI';
     fetch('/api/auth/me').then(r => r.json()).then(d => { if (d.user?.nickname) setNickname(d.user.nickname); });
     fetch('/api/notices').then(r => r.json()).then(d => { if (d.notice) setNotice(d.notice); });
     try {

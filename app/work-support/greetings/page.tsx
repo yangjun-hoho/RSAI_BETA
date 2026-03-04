@@ -12,7 +12,7 @@ export default function GreetingsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => { document.title = 'AI 인사말씀 생성기 | 아레스 AI'; }, []);
+  useEffect(() => { document.title = 'AI 인사말씀 생성기 | 남양주 AI'; }, []);
 
   async function handleFormSubmit(options: Record<string, unknown>) {
     setIsLoading(true);

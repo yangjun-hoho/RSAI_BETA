@@ -14,14 +14,14 @@ const services = [
   { id: 'tts',                title: '텍스트 음성변환',   subtitle: 'TTS 음성 생성',               icon: '🔊', path: '/work-support/text-to-speech' },
   { id: 'scenario-generator', title: '발표 대본 생성기',  subtitle: '다양한 형식의 발표 대본 생성', icon: '📝', path: '/work-support/scenario-generator' },
   { id: 'chart-editor',       title: '차트 에디터',       subtitle: '데이터 시각화',               icon: '📈', path: '/work-support/chart-editor' },
-  { id: 'nano-banana',        title: 'Nano Banana AI',    subtitle: 'AI 이미지 생성 · 편집',        icon: '🍌', path: '/work-support/nano-banana' },
+  { id: 'nano-banana',        title: 'Nano Banana 2',     subtitle: 'AI 이미지 생성 · 편집',        icon: '🍌', path: '/work-support/nano-banana' },
 ];
 
 export default function WorkSupportPage() {
   const router = useRouter();
 
   useEffect(() => {
-    document.title = '업무 지원 | 아레스 AI';
+    document.title = '업무 지원 | 남양주 AI';
   }, []);
 
   return (

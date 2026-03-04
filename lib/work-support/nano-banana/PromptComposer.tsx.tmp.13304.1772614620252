@@ -183,7 +183,7 @@ export default function PromptComposer(props: PromptComposerProps) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
         {sectionLabel(selectedTool === 'generate' ? '참조 이미지' : selectedTool === 'edit' ? '스타일 참조' : '이미지 업로드')}
         <div style={{ fontSize: '0.72rem', color: t.hint }}>
-          {selectedTool === 'generate' ? '선택사항, 최대 2개 (800px 리사이즈)' : selectedTool === 'edit' ? '스타일 참조, 최대 2개 (800px 리사이즈)' : '편집할 이미지를 업로드하세요'}
+          {selectedTool === 'generate' ? '선택사항, 최대 10개' : selectedTool === 'edit' ? '스타일 참조, 최대 10개' : '편집할 이미지를 업로드하세요'}
         </div>
         <button
           onClick={() => fileInputRef.current?.click()}

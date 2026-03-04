@@ -20,8 +20,8 @@ export default function NanaBananaPage() {
   const [currentPrompt, setCurrentPrompt] = useState('');
   const [selectedTool, setSelectedTool] = useState<ToolMode>('generate');
   const [temperature, setTemperature] = useState(0.9);
-  const [seed, setSeed] = useState<number | undefined>(undefined);
   const [aspectRatio, setAspectRatio] = useState('1:1');
+  const [imageSize, setImageSize] = useState('1K');
   const [isGenerating, setIsGenerating] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [editReferenceImages, setEditReferenceImages] = useState<string[]>([]);
@@ -36,7 +36,7 @@ export default function NanaBananaPage() {
   const [selectedGenerationId, setSelectedGenerationId] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = '🍌 Nano Banana AI | 아레스 AI';
+    document.title = '🍌 Nano Banana 2 | 남양주 AI';
 
     // Load theme
     const saved = localStorage.getItem(THEME_KEY);
@@ -64,13 +64,33 @@ export default function NanaBananaPage() {
   }
 
   // ── File Upload ────────────────────────────────────────
-  async function handleFileUpload(file: File) {
+  // 이미지를 최대 800px로 리사이즈 (문서 삽입용)
+  async function resizeImage(file: File, maxPx = 800): Promise<string> {
     const dataUrl = await new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => resolve(e.target!.result as string);
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
+
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const ratio = Math.min(maxPx / img.width, maxPx / img.height, 1);
+        const w = Math.round(img.width * ratio);
+        const h = Math.round(img.height * ratio);
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d')!.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.88));
+      };
+      img.src = dataUrl;
+    });
+  }
+
+  async function handleFileUpload(file: File) {
+    const dataUrl = await resizeImage(file);
 
     if (selectedTool === 'generate') {
       if (uploadedImages.length < 2) setUploadedImages(prev => [...prev, dataUrl]);
@@ -114,8 +134,8 @@ export default function NanaBananaPage() {
           referenceImages: selectedTool === 'generate' ? refImages : editRefImages,
           maskImage: maskBase64,
           temperature,
-          seed,
           aspectRatio,
+          imageSize,
         }),
       });
 
@@ -135,9 +155,9 @@ export default function NanaBananaPage() {
       const newGen: Generation = {
         id: Math.random().toString(36).slice(2),
         prompt: currentPrompt,
-        modelVersion: 'gemini-2.5-flash-image',
+        modelVersion: 'gemini-3.1-flash-image-preview',
         timestamp: Date.now(),
-        parameters: { temperature, seed },
+        parameters: { temperature },
         imageUrl: dataUrl,
       };
       setGenerations(prev => [...prev, newGen]);
@@ -155,7 +175,7 @@ export default function NanaBananaPage() {
     } finally {
       setIsGenerating(false);
     }
-  }, [currentPrompt, isGenerating, dailyUsageCount, selectedTool, uploadedImages, editReferenceImages, canvasImage, brushStrokes, temperature, seed, aspectRatio]);
+  }, [currentPrompt, isGenerating, dailyUsageCount, selectedTool, uploadedImages, editReferenceImages, canvasImage, brushStrokes, temperature, aspectRatio]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -207,7 +227,6 @@ export default function NanaBananaPage() {
           editReferenceImages={editReferenceImages}
           isGenerating={isGenerating}
           temperature={temperature}
-          seed={seed}
           aspectRatio={aspectRatio}
           showPromptPanel={showPromptPanel}
           isUsageLimitReached={dailyUsageCount >= DAILY_LIMIT}
@@ -218,9 +237,10 @@ export default function NanaBananaPage() {
           onFileUpload={handleFileUpload}
           onRemoveUploadedImage={(i) => setUploadedImages(prev => prev.filter((_, idx) => idx !== i))}
           onRemoveEditReferenceImage={(i) => setEditReferenceImages(prev => prev.filter((_, idx) => idx !== i))}
+          imageSize={imageSize}
           onSetTemperature={setTemperature}
-          onSetSeed={setSeed}
           onSetAspectRatio={setAspectRatio}
+          onSetImageSize={setImageSize}
           onTogglePanel={() => setShowPromptPanel(p => !p)}
           onClearSession={clearSession}
         />

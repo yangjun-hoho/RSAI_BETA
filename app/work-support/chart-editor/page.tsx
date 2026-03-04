@@ -8,7 +8,7 @@ export default function ChartEditorPage() {
   const router = useRouter();
 
   useEffect(() => {
-    document.title = '차트 에디터 | 아레스 AI';
+    document.title = '차트 에디터 | 남양주 AI';
   }, []);
 
   return (

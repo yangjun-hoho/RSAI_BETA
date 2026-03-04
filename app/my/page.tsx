@@ -20,7 +20,7 @@ export default function MyPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    document.title = '나의 메뉴 | 아레스 AI';
+    document.title = '나의 메뉴 | 남양주 AI';
     Promise.all([
       fetch('/api/auth/me').then(r => r.json()),
       fetch('/api/my/settings').then(r => r.json()),
