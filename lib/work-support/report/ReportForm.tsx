@@ -56,7 +56,7 @@ const inputStyle: React.CSSProperties = { width: '100%', padding: '0.4rem 0.6rem
 const labelStyle: React.CSSProperties = { fontSize: '0.78rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '0.25rem', display: 'block' };
 
 const models = [
-  { id: 'gemini-2.5-flash-lite', label: 'Gemini 2.5 Flash Lite', badge: 'Gemini' },
+  { id: 'gemini-3.1-flash-lite-preview', label: 'Gemini 3.1 Flash Lite', badge: 'Gemini' },
   { id: 'gpt-4.1-nano', label: 'GPT-4.1 Nano', badge: 'OpenAI' },
 ];
 
@@ -65,7 +65,7 @@ export default function ReportForm({ onGenerate, isLoading }: ReportFormProps) {
   const [selectedReportType, setSelectedReportType] = useState('plan');
   const [selectedDetailType, setSelectedDetailType] = useState('basic');
   const [selectedLength, setSelectedLength] = useState('detailed');
-  const [selectedModel, setSelectedModel] = useState('gemini-2.5-flash-lite');
+  const [selectedModel, setSelectedModel] = useState('gemini-3.1-flash-lite-preview');
   const [keyContent, setKeyContent] = useState('');
 
   const currentDetailTypes = detailTypes[selectedReportType] || [];

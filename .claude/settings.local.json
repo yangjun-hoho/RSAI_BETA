@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "Bash(python3 -c \":*)",
+      "Bash(node -e \":*)"
     ],
     "deny": [],
     "ask": []

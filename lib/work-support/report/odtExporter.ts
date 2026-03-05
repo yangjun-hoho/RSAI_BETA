@@ -171,8 +171,8 @@ export class ODTExporter {
       content += `<text:p text:style-name="Official_Summary">◇ ${this.escapeXML(reportData.summary)}</text:p>`;
     }
 
-    // 각 섹션을 XML로 변환하여 순서대로 추가
-    content += sections.map(section => this.generateSectionXML(section)).join('');
+    // 각 섹션을 XML로 변환하여 순서대로 추가 (1부터 시작하는 번호 전달)
+    content += sections.map((section, i) => this.generateSectionXML(section, i + 1)).join('');
 
     // 문서 하단 메타데이터 블록 (있을 경우에만 출력)
     if (reportData.metadata) {
@@ -190,6 +190,52 @@ export class ODTExporter {
   /**
    * content.xml 내부에서 사용하는 자동 스타일(테이블, 컬러 바 등)을 반환합니다.
    * styles.xml의 named 스타일과 달리, 이 스타일들은 문서 내부에서만 사용됩니다.
+   *
+   * ── 섹션 제목 테이블 미세 조정 가이드 ──────────────────────────────────
+   * 구조: [번호 셀 | 제목 셀] 2열 1행 테이블
+   *
+   * [SectionTitle_Table] 테이블 전체
+   *   style:width      = "18.000cm"  — 전체 너비 (A열+B열 합과 반드시 일치)
+   *   table:align      = "left"      — 정렬 (center로 변경 가능)
+   *   fo:margin-top    = "0.500cm"   — 테이블 위 여백 (이전 요소와의 간격, 늘리면 더 떨어짐)
+   *   fo:margin-bottom = "0.100cm"   — 테이블 아래 여백
+   *   border-model     = collapsing  — 셀 간 이중 선 방지
+   *
+   * [SectionTitle_Table.A] A열 = 번호 열
+   *   style:column-width = "1.412cm"   — 좁게: 1.0cm / 넓게: 2.0cm
+   *   ※ 변경 시 B열도 함께 조정 (A열 + B열 = 17.800cm)
+   *
+   * [SectionTitle_Table.B] B열 = 제목 열
+   *   style:column-width = "16.388cm"  — = 17.800 - A열 너비
+   *
+   * [SectionTitle_Table.Row] 행
+   *   min-row-height   = "0.099cm"  — 최소 높이 (실제는 폰트·패딩으로 자동 결정)
+   *   fo:keep-together = "auto"     — 행 분리 허용 (always: 항상 같은 페이지)
+   *
+   * [SectionTitle_Table.NumCell] 번호 셀
+   *   fo:background-color = "#4f5357"            — 배경(진회색). 밝게: #6b7280 / 어둡게: #2d2f31
+   *   fo:border           = "0.012cm solid #000000" — 테두리 두께·색상
+   *   fo:padding-top/bottom = "0.050cm"          — 상하 내부 여백
+   *   fo:padding-left/right = "0.180cm"          — 좌우 내부 여백
+   *
+   * [SectionTitle_Table.TitleCell] 제목 셀
+   *   fo:background-color = "#e6e6e7"  — 배경(연회색). 밝게: #f5f5f5 / 어둡게: #c0c0c0
+   *   (나머지 속성은 NumCell과 동일)
+   *
+   * [SectionTitle_NumPara] 번호 셀 내 단락
+   *   fo:line-height    = "60%"      — 줄 높이. 100%: 정상 / 낮출수록 텍스트 위로 올라감
+   *   fo:margin-top     = "0.200cm"  — 단락 위 여백 (셀 패딩과 합산됨)
+   *   fo:margin-bottom  = "0.100cm"  — 단락 아래 여백
+   *   fo:font-size      = "20.00pt"  — 번호 글자 크기 (작게: 16pt / 크게: 28pt)
+   *   fo:color          = "#ffffff"  — 글자색(흰색). 검정: #000000
+   *   style:font-name   = "휴먼명조" — 폰트 (변경 시 asian 속성도 함께 수정)
+   *   fo:letter-spacing = "0.00pt"  — 자간. 넓게: 1.00pt / 좁게: -0.50pt
+   *
+   * [SectionTitle_TitlePara] 제목 셀 내 단락
+   *   fo:line-height    = "73%"      — NumPara와 동일하게 유지해야 행 높이 균일
+   *   fo:font-size      = "22.00pt"  — 제목 글자 크기
+   *   fo:color 없음                  — 기본 검정색 (추가: fo:color="#000000")
+   * ─────────────────────────────────────────────────────────────────────
    */
   private getAutomaticStyles(): string {
     return `
@@ -215,11 +261,45 @@ export class ODTExporter {
     </style:style>
     <!-- 헤더 셀: 회색 배경 + 테두리 -->
     <style:style style:name="Official_Table.A1" style:family="table-cell">
-      <style:table-cell-properties fo:padding="0.2cm" fo:border="1pt solid #000000" fo:background-color="#f0f0f0ff"/>
+      <style:table-cell-properties fo:padding="0.2cm" fo:border="1pt solid #000000" fo:background-color="#f6f6f6"/>
     </style:style>
     <!-- 데이터 셀: 흰 배경 + 테두리 -->
     <style:style style:name="Official_Table.A2" style:family="table-cell">
       <style:table-cell-properties fo:padding="0.2cm" fo:border="1pt solid #000000"/>
+    </style:style>
+    <!-- 섹션 제목 테이블: 번호(진회색) + 제목(연회색) 2열 구조 -->
+    <style:style style:name="SectionTitle_Table" style:family="table">
+      <style:table-properties style:width="18.000cm" table:align="left" fo:margin-top="0.500cm" fo:margin-bottom="0.000cm" fo:margin-left="0cm" fo:margin-right="0cm" style:shadow="none" style:may-break-between-rows="false" table:border-model="collapsing"/>
+    </style:style>
+    <!-- A열: 번호 열 너비 (기본 1.2cm, B열과 합이 18.000cm가 되어야 함) -->
+    <style:style style:name="SectionTitle_Table.A" style:family="table-column">
+      <style:table-column-properties style:column-width="1.2cm"/>
+    </style:style>
+    <!-- B열: 제목 열 너비 (기본 16.8cm = 18.000 - 1.2) -->
+    <style:style style:name="SectionTitle_Table.B" style:family="table-column">
+      <style:table-column-properties style:column-width="16.8cm"/>
+    </style:style>
+    <!-- 행: 최소 높이 (실제 높이는 폰트·패딩에 따라 자동 결정) -->
+    <style:style style:name="SectionTitle_Table.Row" style:family="table-row">
+      <style:table-row-properties style:min-row-height="0.099cm" fo:keep-together="auto"/>
+    </style:style>
+    <!-- 번호 셀: 진회색 배경 #4f5357, 테두리, 패딩 -->
+    <style:style style:name="SectionTitle_Table.NumCell" style:family="table-cell">
+      <style:table-cell-properties style:vertical-align="middle" style:shadow="none" fo:background-color="#4f5357" fo:border="0.012cm solid #000000" fo:padding-top="0.050cm" fo:padding-bottom="0.050cm" fo:padding-left="0.180cm" fo:padding-right="0.180cm"/>
+    </style:style>
+    <!-- 제목 셀: 연회색 배경 #e6e6e7, 테두리, 패딩 -->
+    <style:style style:name="SectionTitle_Table.TitleCell" style:family="table-cell">
+      <style:table-cell-properties style:vertical-align="middle" style:shadow="none" fo:background-color="#e6e6e7" fo:border="0.012cm solid #000000" fo:padding-top="0.050cm" fo:padding-bottom="0.050cm" fo:padding-left="0.180cm" fo:padding-right="0.180cm"/>
+    </style:style>
+    <!-- 번호 텍스트: 중앙 정렬, 흰색 20pt 휴먼명조 bold, line-height=60% -->
+    <style:style style:name="SectionTitle_NumPara" style:family="paragraph">
+      <style:paragraph-properties fo:line-height="60%" fo:text-align="center" fo:margin-top="0.100cm" fo:margin-bottom="0.100cm" fo:border="none"/>
+      <style:text-properties style:font-name="휴먼명조" style:font-name-asian="휴먼명조" fo:font-size="18.00pt" style:font-size-asian="20.00pt" fo:font-weight="bold" style:font-weight-asian="bold" fo:color="#ffffff" fo:letter-spacing="0.00pt" style:letter-kerning="false"/>
+    </style:style>
+    <!-- 제목 텍스트: 좌정렬, 22pt 휴먼명조 bold, line-height=73% -->
+    <style:style style:name="SectionTitle_TitlePara" style:family="paragraph">
+      <style:paragraph-properties fo:line-height="73%" fo:text-align="start" fo:margin-top="0.100cm" fo:margin-bottom="0.100cm" fo:border="none"/>
+      <style:text-properties style:font-name="휴먼명조" style:font-name-asian="휴먼명조" fo:font-size="18.00pt" style:font-size-asian="18.00pt" fo:letter-spacing="0.00pt" style:letter-kerning="false"/>
     </style:style>
 `;
   }
@@ -233,10 +313,63 @@ export class ODTExporter {
    *  - '**(...)**' 패턴이면 소제목 (○ 기호)
    *  - 그 외는 일반 본문
    */
-  private generateSectionXML(section: Section): string {
+  private generateSectionXML(section: Section, sectionNum = 1): string {
     let xml = '';
-    // 섹션 제목 (□ 기호 앞에 붙임)
-    xml += `<text:p text:style-name="Official_Section_Title">□ ${this.escapeXML(section.title || '제목 없음')}</text:p>`;
+
+    /*
+     * ── 섹션 제목 테이블 XML 구조 ────────────────────────────────────────
+     *
+     * <table:table> ← 테이블 시작. table:name은 문서 내 고유해야 하므로 sectionNum 사용
+     *   <table:table-column/>  ← A열(번호 열) 너비 선언 (style:column-width="1.412cm")
+     *   <table:table-column/>  ← B열(제목 열) 너비 선언 (style:column-width="16.388cm")
+     *   <table:table-header-rows>  ← 머리글 행으로 선언 (페이지 넘어가도 반복 출력됨)
+     *     <table:table-row>        ← 실제 행 1개
+     *       <table:table-cell>     ← A열 셀 (진회색 배경 #4f5357, 흰 텍스트)
+     *         <text:p>숫자</text:p>  ← 섹션 번호 (1, 2, 3 …)
+     *       </table:table-cell>
+     *       <table:table-cell>     ← B열 셀 (연회색 배경 #e6e6e7)
+     *         <text:p>제목</text:p>  ← 섹션 제목 텍스트 (앞에 공백 1칸 추가)
+     *       </table:table-cell>
+     *     </table:table-row>
+     *   </table:table-header-rows>
+     * </table:table>
+     *
+     * ■ 번호/제목 열 순서를 바꾸려면:
+     *   table:table-column 선언 순서와 table:table-cell 순서를 같이 바꿀 것
+     * ■ 번호를 숫자 대신 다른 기호로 바꾸려면:
+     *   아래 ${sectionNum} 부분을 원하는 텍스트로 교체 (예: '■', '▶')
+     * ■ 제목 앞 공백을 제거하려면:
+     *   TitlePara 부분의 ` ${...}` 에서 공백 제거
+     * ─────────────────────────────────────────────────────────────────── */
+
+    // 테이블 시작 — table:name은 문서 내 중복 불가이므로 섹션 번호로 구분
+    xml += `<table:table table:name="SectionTitle_${sectionNum}" table:style-name="SectionTitle_Table">`;
+
+    // A열(번호 열) 선언 — 너비: SectionTitle_Table.A (기본 1.412cm)
+    xml += `<table:table-column table:style-name="SectionTitle_Table.A"/>`;
+    // B열(제목 열) 선언 — 너비: SectionTitle_Table.B (기본 16.388cm)
+    xml += `<table:table-column table:style-name="SectionTitle_Table.B"/>`;
+
+    // 머리글 행으로 감싸기 (페이지가 바뀌어도 반복 출력; 원치 않으면 table:table-header-rows 제거)
+    xml += `<table:table-header-rows>`;
+    xml += `<table:table-row table:style-name="SectionTitle_Table.Row">`;
+
+    // A열 셀: 진회색 배경(#4f5357), 흰 텍스트, 섹션 번호 표시
+    xml += `<table:table-cell table:style-name="SectionTitle_Table.NumCell" office:value-type="string">`;
+    xml += `<text:p text:style-name="SectionTitle_NumPara">${sectionNum}</text:p>`;  // ← 번호 (1,2,3…)
+    xml += `</table:table-cell>`;
+
+    // B열 셀: 연회색 배경(#e6e6e7), 섹션 제목 표시 (앞에 공백 1칸으로 좌측 여백 확보)
+    xml += `<table:table-cell table:style-name="SectionTitle_Table.TitleCell" office:value-type="string">`;
+    xml += `<text:p text:style-name="SectionTitle_TitlePara"> ${this.escapeXML(section.title || '제목 없음')}</text:p>`;
+    xml += `</table:table-cell>`;
+
+    xml += `</table:table-row>`;
+    xml += `</table:table-header-rows>`;
+    xml += `</table:table>`;
+
+    // 섹션 제목 테이블과 본문 사이 간격 (Section_Spacer: margin-bottom="0.2cm")
+    // 간격을 더 넓히려면 styles.xml 의 Section_Spacer 스타일에서 fo:margin-bottom 값을 키울 것
     xml += `<text:p text:style-name="Section_Spacer"></text:p>`;
 
     // 본문 항목 처리
@@ -468,13 +601,23 @@ export class ODTExporter {
                            style:font-name-asian="휴먼명조"/>
     </style:default-style>
 
-    <!-- 보고서 제목: Pretendard ExtraBold, 22pt, 중앙 정렬 -->
+    <!-- 보고서 제목: Pretendard ExtraBold 22pt bold, 중앙 정렬 -->
     <style:style style:name="Official_Title" style:family="paragraph">
-      <style:paragraph-properties fo:text-align="center" fo:margin-top="0.2cm" fo:margin-bottom="0.1cm"
-                                  fo:padding-top="0.3cm" fo:padding-bottom="0.4cm"/>
+      <style:paragraph-properties fo:line-height="100%" fo:text-align="center"
+                                  fo:margin-left="0.000cm" fo:margin-right="0.000cm" fo:text-indent="0.000cm"
+                                  fo:margin-top="0.200cm" fo:margin-bottom="0.100cm"
+                                  fo:border="none" style:shadow="none"
+                                  style:text-autospace="ideograph-alpha" style:line-break="strict"
+                                  style:vertical-align="auto" style:snap-to-layout-grid="true"/>
       <style:text-properties style:font-name="Pretendard ExtraBold" style:font-name-asian="Pretendard ExtraBold"
-                           fo:font-size="22pt" fo:font-weight="800"
-                           style:font-weight-asian="800" fo:color="#000000"/>
+                             style:font-name-complex="Pretendard ExtraBold"
+                             fo:font-family="Pretendard ExtraBold"
+                             style:font-family-asian="Pretendard ExtraBold"
+                             style:font-family-complex="Pretendard ExtraBold"
+                             fo:font-size="22.00pt" style:font-size-asian="22.00pt" style:font-size-complex="22.00pt"
+                             fo:letter-spacing="0.00pt"
+                             fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"
+                             style:letter-kerning="false"/>
     </style:style>
 
     <!-- 제목 아래 회색 구분선 (높이를 최소화하여 얇은 선처럼 보임) -->
@@ -497,12 +640,25 @@ export class ODTExporter {
       <style:text-properties style:font-name="휴먼명조" style:font-name-asian="휴먼명조" fo:font-size="14pt" fo:color="#000000ff"/>
     </style:style>
 
-    <!-- 섹션 제목: 굵게, 14pt, 하단 경계선 -->
+    <!-- 섹션 제목: Pretendard ExtraBold 16pt bold, 하단 경계선 0.04cm -->
     <style:style style:name="Official_Section_Title" style:family="paragraph">
-      <style:paragraph-properties fo:margin-top="1.2cm" fo:margin-bottom="0.1cm" fo:border-bottom="1pt solid #cccccc"/>
+      <style:paragraph-properties fo:line-height="100%" fo:text-align="justify"
+                                  fo:margin-left="0.000cm" fo:margin-right="0.000cm" fo:text-indent="0.000cm"
+                                  fo:margin-top="1.200cm" fo:margin-bottom="0.100cm"
+                                  fo:border-top="none" fo:border-bottom="0.04cm solid #cccccc"
+                                  fo:border-left="none" fo:border-right="none"
+                                  style:shadow="none" style:text-autospace="ideograph-alpha"
+                                  style:line-break="strict" style:vertical-align="auto"
+                                  style:snap-to-layout-grid="true"/>
       <style:text-properties style:font-name="Pretendard ExtraBold" style:font-name-asian="Pretendard ExtraBold"
-                           fo:font-size="16pt" fo:font-weight="800"
-                           style:font-weight-asian="900" fo:color="#000000"/>
+                             style:font-name-complex="Pretendard ExtraBold"
+                             fo:font-family="Pretendard ExtraBold"
+                             style:font-family-asian="Pretendard ExtraBold"
+                             style:font-family-complex="Pretendard ExtraBold"
+                             fo:font-size="16.00pt" style:font-size-asian="16.00pt" style:font-size-complex="16.00pt"
+                             fo:letter-spacing="0.00pt"
+                             fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"
+                             style:letter-kerning="false"/>
     </style:style>
 
     <!-- 섹션 제목 아래 여백용 빈 단락 -->
@@ -519,9 +675,9 @@ export class ODTExporter {
 
     <!-- 소제목 (○ 기호 항목): 굵게, 13pt -->
     <style:style style:name="Official_Subsection" style:family="paragraph">
-      <style:paragraph-properties fo:margin-top="0.2cm" fo:margin-bottom="0.2cm" fo:margin-left="0.3cm"/>
+      <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0.2cm" fo:margin-left="0.3cm"/>
       <style:text-properties style:font-name="휴먼명조" style:font-name-asian="휴먼명조"
-                           fo:font-size="15pt" fo:letter-spacing="-0.05cm" fo:color="#000000"/>
+                           fo:font-size="15pt" fo:letter-spacing="-0.1cm" fo:color="#000000"/>
     </style:style>
 
     <!-- 들여쓰기 본문 (- 기호 항목): 14pt, 좌측 0.8cm -->

@@ -34,7 +34,7 @@ const sampleTitles: Record<string, string[]> = {
 };
 
 const models = [
-  { id: 'gemini-2.5-flash-lite', label: 'Google Gemini' },
+  { id: 'gemini-3.1-flash-lite-preview', label: 'Google Gemini' },
   { id: 'gpt-4.1-nano',           label: 'Openai GPT' },
 ];
 
@@ -43,7 +43,7 @@ export default function ReportChatForm({ onSubmit, onCancel, isLoading }: Props)
   const [reportType, setReportType]           = useState('plan');
   const [detailType, setDetailType]           = useState('basic');
   const [length, setLength]                   = useState('detailed');
-  const [selectedModel, setSelectedModel]     = useState('gemini-2.5-flash-lite');
+  const [selectedModel, setSelectedModel]     = useState('gemini-3.1-flash-lite-preview');
   const [keyContent, setKeyContent]           = useState('');
 
   function handleTypeChange(type: string) {
