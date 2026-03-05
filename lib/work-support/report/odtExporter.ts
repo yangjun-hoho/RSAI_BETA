@@ -261,7 +261,7 @@ export class ODTExporter {
     </style:style>
     <!-- 헤더 셀: 회색 배경 + 테두리 -->
     <style:style style:name="Official_Table.A1" style:family="table-cell">
-      <style:table-cell-properties fo:padding="0.2cm" fo:border="1pt solid #000000" fo:background-color="#f6f6f6"/>
+      <style:table-cell-properties fo:padding="0.2cm" fo:border="1pt solid #000000" fo:background-color="#ead9f0"/>
     </style:style>
     <!-- 데이터 셀: 흰 배경 + 테두리 -->
     <style:style style:name="Official_Table.A2" style:family="table-cell">
