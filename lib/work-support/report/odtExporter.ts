@@ -285,11 +285,11 @@ export class ODTExporter {
     </style:style>
     <!-- 번호 셀: 진회색 배경 #4f5357, 테두리, 패딩 -->
     <style:style style:name="SectionTitle_Table.NumCell" style:family="table-cell">
-      <style:table-cell-properties style:vertical-align="middle" style:shadow="none" fo:background-color="#4f5357" fo:border="0.012cm solid #000000" fo:padding-top="0.050cm" fo:padding-bottom="0.050cm" fo:padding-left="0.180cm" fo:padding-right="0.180cm"/>
+      <style:table-cell-properties style:vertical-align="middle" style:shadow="none" fo:background-color="#4f5357" fo:border="0.0cm solid #4f5357" fo:padding-top="0.050cm" fo:padding-bottom="0.050cm" fo:padding-left="0.180cm" fo:padding-right="0.180cm"/>
     </style:style>
     <!-- 제목 셀: 연회색 배경 #e6e6e7, 테두리, 패딩 -->
     <style:style style:name="SectionTitle_Table.TitleCell" style:family="table-cell">
-      <style:table-cell-properties style:vertical-align="middle" style:shadow="none" fo:background-color="#e6e6e7" fo:border="0.012cm solid #000000" fo:padding-top="0.050cm" fo:padding-bottom="0.050cm" fo:padding-left="0.180cm" fo:padding-right="0.180cm"/>
+      <style:table-cell-properties style:vertical-align="middle" style:shadow="none" fo:background-color="#e6e6e7" fo:border="0.0cm solid #e6e6e7" fo:padding-top="0.050cm" fo:padding-bottom="0.050cm" fo:padding-left="0.180cm" fo:padding-right="0.180cm"/>
     </style:style>
     <!-- 번호 텍스트: 중앙 정렬, 흰색 18pt 휴먼명조 bold, line-height=60% -->
     <style:style style:name="SectionTitle_NumPara" style:family="paragraph">
