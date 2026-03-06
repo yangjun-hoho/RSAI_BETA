@@ -47,6 +47,8 @@ export default function Home() {
   // 도구별 독립 저장소 (SvelteKit 방식)
   const [previewStore, setPreviewStore] = useState<Partial<Record<ToolId, Record<string, unknown>>>>({});
   const [previewOpen, setPreviewOpen] = useState(true);
+  // 도구 생성 전용 로딩 (채팅 로딩과 분리)
+  const [toolLoading, setToolLoading] = useState(false);
 
   // 현재 표시할 미리보기 데이터 (store에서 파생)
   const previewData = previewTool ? (previewStore[previewTool] ?? null) : null;
@@ -182,6 +184,7 @@ export default function Home() {
   // 도구 폼 제출 핸들러
   const handleToolSubmit = useCallback(async (toolId: ToolId, data: Record<string, unknown>) => {
     setIsLoading(true);
+    setToolLoading(true);
     setError('');
 
     const toolLabels: Record<string, string> = {
@@ -203,6 +206,7 @@ export default function Home() {
       const assistantMsg: Message = { id: newId(), role: 'assistant', content: `✅ **${label} 생성 완료**` };
       setMessages(prev => { const n = [...prev, userMsg, assistantMsg]; saveMessages(n); return n; });
       setIsLoading(false);
+      setToolLoading(false);
       return;
     }
 
@@ -296,6 +300,7 @@ export default function Home() {
       setPreviewTool(null);
     } finally {
       setIsLoading(false);
+      setToolLoading(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [previewStore]);
@@ -392,6 +397,7 @@ export default function Home() {
                 onToolSubmit={handleToolSubmit}
                 onLoadingChange={(loading) => {
                   setIsLoading(loading);
+                  setToolLoading(loading);
                   if (loading) setPreviewTool('press-release');
                 }}
               />
@@ -405,7 +411,7 @@ export default function Home() {
               tool={previewTool}
               data={previewData}
               store={previewStore}
-              isLoading={isLoading}
+              isLoading={toolLoading}
               isOpen={previewOpen}
               onToggle={() => setPreviewOpen(p => !p)}
               onTabSwitch={setPreviewTool}
