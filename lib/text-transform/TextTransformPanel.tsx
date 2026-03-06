@@ -12,12 +12,12 @@ const TABS = ['문체 변환', '길이 조절', '키워드'];
 const C = {
   ink:        '#111827',   // 헤더·활성버튼 배경, 기본 텍스트
   dark:       '#374151',   // 레이블, 아이콘
-  mid:        '#6b7280',   // 보조 텍스트
-  muted:      '#9ca3af',   // 비활성 탭 텍스트
-  border:     '#e5e7eb',   // 기본 테두리
-  borderDark: '#d1d5db',   // 조금 진한 테두리
-  panel:      '#f4f4f4',   // 우측 패널 배경
-  chip:       '#f3f4f6',   // 비활성 칩 배경
+  mid:        '#323232',   // 보조 텍스트
+  muted:      '#757678',   // 비활성 탭 텍스트
+  border:     '#e2e3e6',   // 기본 테두리
+  borderDark: '#6f6f6f',   // 조금 진한 테두리
+  panel:      '#f3f3f3',   // 우측 패널 배경
+  chip:       '#f9fafc',   // 비활성 칩 배경
   inputBg:    '#f9fafb',   // textarea 배경
 };
 

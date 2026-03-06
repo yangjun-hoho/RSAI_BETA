@@ -291,12 +291,12 @@ export class ODTExporter {
     <style:style style:name="SectionTitle_Table.TitleCell" style:family="table-cell">
       <style:table-cell-properties style:vertical-align="middle" style:shadow="none" fo:background-color="#e6e6e7" fo:border="0.012cm solid #000000" fo:padding-top="0.050cm" fo:padding-bottom="0.050cm" fo:padding-left="0.180cm" fo:padding-right="0.180cm"/>
     </style:style>
-    <!-- 번호 텍스트: 중앙 정렬, 흰색 20pt 휴먼명조 bold, line-height=60% -->
+    <!-- 번호 텍스트: 중앙 정렬, 흰색 18pt 휴먼명조 bold, line-height=60% -->
     <style:style style:name="SectionTitle_NumPara" style:family="paragraph">
       <style:paragraph-properties fo:line-height="60%" fo:text-align="center" fo:margin-top="0.100cm" fo:margin-bottom="0.100cm" fo:border="none"/>
       <style:text-properties style:font-name="휴먼명조" style:font-name-asian="휴먼명조" fo:font-size="18.00pt" style:font-size-asian="20.00pt" fo:font-weight="bold" style:font-weight-asian="bold" fo:color="#ffffff" fo:letter-spacing="0.00pt" style:letter-kerning="false"/>
     </style:style>
-    <!-- 제목 텍스트: 좌정렬, 22pt 휴먼명조 bold, line-height=73% -->
+    <!-- 제목 텍스트: 좌정렬, 18pt 휴먼명조 bold, line-height=73% -->
     <style:style style:name="SectionTitle_TitlePara" style:family="paragraph">
       <style:paragraph-properties fo:line-height="73%" fo:text-align="start" fo:margin-top="0.100cm" fo:margin-bottom="0.100cm" fo:border="none"/>
       <style:text-properties style:font-name="휴먼명조" style:font-name-asian="휴먼명조" fo:font-size="18.00pt" style:font-size-asian="18.00pt" fo:letter-spacing="0.00pt" style:letter-kerning="false"/>
