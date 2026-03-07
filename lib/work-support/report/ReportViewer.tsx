@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { ODTExporter } from './odtExporter';
+import { HWPXExporter } from './hwpxExporter';
 
 interface ReportViewerProps {
   reportData: Record<string, unknown>;
@@ -440,20 +440,20 @@ export default function ReportViewer({ reportData }: ReportViewerProps) {
   async function handleDownload() {
     setIsDownloading(true);
     try {
-      const exporter = new ODTExporter();
-      const blob = await exporter.exportToODT(reportData as Parameters<ODTExporter['exportToODT']>[0]);
+      const exporter = new HWPXExporter();
+      const blob = await exporter.export(reportData as Parameters<HWPXExporter['export']>[0]);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       const title = (reportData.title as string) || '보고서';
-      a.download = `${title}.odt`;
+      a.download = `${title}.hwpx`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (e) {
-      console.error('ODT 다운로드 실패', e);
-      alert('ODT 다운로드 중 오류가 발생했습니다.');
+      console.error('HWPX 다운로드 실패', e);
+      alert('HWPX 다운로드 중 오류가 발생했습니다.');
     } finally {
       setIsDownloading(false);
     }
@@ -559,7 +559,7 @@ export default function ReportViewer({ reportData }: ReportViewerProps) {
           <button onClick={handleCopy} style={{ padding: '0.3rem 0.65rem', background: 'var(--focus-color)', color: 'white', border: 'none', borderRadius: '4px', fontSize: '0.72rem', cursor: 'pointer' }}>복사</button>
           <button onClick={handleDownload} disabled={isDownloading} style={{ padding: '0.3rem 0.65rem', background: isDownloading ? '#aaa' : '#16a34a', color: 'white', border: 'none', borderRadius: '4px', fontSize: '0.72rem', cursor: isDownloading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            {isDownloading ? '생성 중...' : 'ODT'}
+            {isDownloading ? '생성 중...' : 'HWP'}
           </button>
         </div>
       </div>

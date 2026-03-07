@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { exportPressReleaseToODT, type PressReleaseSimpleData } from './pressReleaseOdtExporter';
+import { PressReleaseHwpxExporter, type PressReleaseSimpleData } from './pressReleaseHwpxExporter';
 
 interface PressReleaseDisplayProps {
   data: Record<string, unknown>;
@@ -87,7 +87,19 @@ export default function PressReleaseDisplay({ data, isLoading }: PressReleaseDis
   async function handleDownload() {
     setIsDownloading(true);
     try {
-      await exportPressReleaseToODT(pr);
+      const exporter = new PressReleaseHwpxExporter();
+      const blob = await exporter.export(pr);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${pr.title || '보도자료'}.hwpx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('HWPX 다운로드 실패', e);
+      alert('HWPX 다운로드 중 오류가 발생했습니다.');
     } finally {
       setIsDownloading(false);
     }
@@ -113,7 +125,7 @@ export default function PressReleaseDisplay({ data, isLoading }: PressReleaseDis
             style={{ padding: '0.3rem 0.65rem', background: hasContent && !isDownloading ? '#16a34a' : '#aaa', color: 'white', border: 'none', borderRadius: '4px', fontSize: '0.72rem', cursor: hasContent && !isDownloading ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            {isDownloading ? '생성 중...' : 'ODT'}
+            {isDownloading ? '생성 중...' : 'HWP'}
           </button>
         </div>
       </div>

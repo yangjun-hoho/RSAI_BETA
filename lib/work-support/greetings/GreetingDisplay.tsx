@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { exportGreetingToODT } from './greetingOdtExporter';
+import { exportGreetingToHWPX } from './greetingHwpxExporter';
 
 interface GreetingDisplayProps {
   greetingText: string;
@@ -61,7 +61,7 @@ export default function GreetingDisplay({ greetingText, greetingType, isLoading 
   async function handleDownload() {
     setIsDownloading(true);
     try {
-      await exportGreetingToODT(greetingText, greetingType || '인사말씀');
+      await exportGreetingToHWPX(greetingText, greetingType || '인사말씀');
     } finally {
       setIsDownloading(false);
     }
@@ -77,7 +77,7 @@ export default function GreetingDisplay({ greetingText, greetingType, isLoading 
           <button onClick={handleCopy} disabled={!greetingText} style={{ padding: '0.3rem 0.65rem', background: greetingText ? 'var(--focus-color)' : '#aaa', color: 'white', border: 'none', borderRadius: '4px', fontSize: '0.72rem', cursor: greetingText ? 'pointer' : 'not-allowed' }}>복사</button>
           <button onClick={handleDownload} disabled={!greetingText || isDownloading} style={{ padding: '0.3rem 0.65rem', background: greetingText && !isDownloading ? '#16a34a' : '#aaa', color: 'white', border: 'none', borderRadius: '4px', fontSize: '0.72rem', cursor: greetingText && !isDownloading ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            {isDownloading ? '생성 중...' : 'ODT'}
+            {isDownloading ? '생성 중...' : 'HWP'}
           </button>
         </div>
       </div>
