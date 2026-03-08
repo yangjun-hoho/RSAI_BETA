@@ -4,8 +4,9 @@ import { useState } from 'react';
 import RagGallery from './RagGallery';
 import RagChat from './RagChat';
 import AdminView from './admin/AdminView';
+import UserChatbotPanel from './UserChatbotPanel';
 
-type View = 'gallery' | 'chat' | 'admin';
+type View = 'gallery' | 'chat' | 'admin' | 'user-chatbot';
 
 interface Props {
   onClose?: () => void;
@@ -19,6 +20,15 @@ export default function RagView({ onClose }: Props) {
     return <AdminView onBack={() => setView('gallery')} />;
   }
 
+  if (view === 'user-chatbot') {
+    return (
+      <UserChatbotPanel
+        onBack={() => setView('gallery')}
+        onOpenChat={id => { setSelectedCategory(id); setView('chat'); }}
+      />
+    );
+  }
+
   if (view === 'chat' && selectedCategory) {
     return <RagChat categoryId={selectedCategory} onBack={() => setView('gallery')} />;
   }
@@ -27,6 +37,7 @@ export default function RagView({ onClose }: Props) {
     <RagGallery
       onSelectCategory={id => { setSelectedCategory(id); setView('chat'); }}
       onAdmin={() => setView('admin')}
+      onManageChatbot={() => setView('user-chatbot')}
       onClose={onClose}
     />
   );

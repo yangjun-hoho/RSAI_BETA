@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { searchSimilar } from '@/lib/rag/vectorCache';
 import { ragDb } from '@/lib/rag/db';
+import { verifySession, COOKIE_NAME } from '@/lib/auth/session';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -22,9 +23,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'categoryId, question 필요' }, { status: 400 });
     }
 
-    const categories = ragDb.getCategories();
-    const category = categories.find(c => c.id === categoryId);
+    const category = ragDb.getCategoryById(categoryId);
     if (!category) return NextResponse.json({ error: '유효하지 않은 카테고리' }, { status: 400 });
+
+    // 비공개 카테고리: 소유자만 접근 가능
+    if (category.is_public === 0) {
+      const token = request.cookies.get(COOKIE_NAME)?.value;
+      const session = token ? await verifySession(token) : null;
+      if (!session || session.userId !== category.created_by) {
+        return NextResponse.json({ error: '접근 권한이 없습니다.' }, { status: 403 });
+      }
+    }
 
     // 1. 질문 임베딩
     const embRes = await openai.embeddings.create({

@@ -46,7 +46,7 @@ export const S: Record<string, CSSProperties> = {
   content: {
     padding: '0.75rem 1rem',
     overflowY: 'auto',
-    maxHeight: '390px',
+    maxHeight: '520px',
     display: 'flex',
     flexDirection: 'column',
     gap: '0.6rem',

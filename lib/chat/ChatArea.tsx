@@ -139,7 +139,7 @@ export default function ChatArea({ messages, isLoading, onToolClick }: ChatAreaP
               />
               <div>
                 <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#37352f', margin: '0 0 0.4rem 0' }}>
-                  남양주시 스마트도시과 AI-Agent에 오신 것을 환영합니다
+                  남양주 AI 에이전트 <span style={{ fontSize: '2.5rem', color: '#2383e2', fontWeight: 700 }}>RS-AI</span>에 오신 것을 환영합니다.
                 </h2>
                 <p style={{ color: '#9b9a97', fontSize: '0.9rem', margin: 0 }}>
                   무엇을 도와드릴까요?

@@ -271,44 +271,55 @@ export default function ChartEditor({ initialData }: { initialData?: ChartSpec }
     <>
       <style>{`
         .ce-container {
-          display: grid;
-          grid-template-columns: 1fr 1fr 2fr;
-          gap: 14px;
+          display: flex;
+          flex-direction: row;
           height: 100%;
-          padding: 14px;
-          background: #f9fafb;
+          background: #e2e5e9;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           box-sizing: border-box;
+          overflow: hidden;
         }
         .ce-left {
+          flex: 1 1 0;
+          min-width: 0;
           display: flex;
           flex-direction: column;
           gap: 16px;
           overflow-y: auto;
-          max-height: 100%;
+          padding: 14px;
           scrollbar-width: thin;
           scrollbar-color: #ccc transparent;
         }
         .ce-data {
+          flex: 1 1 0;
+          min-width: 0;
           display: flex;
           flex-direction: column;
           gap: 16px;
           overflow-y: auto;
-          max-height: 100%;
+          padding: 14px;
           scrollbar-width: thin;
           scrollbar-color: #ccc transparent;
         }
         .ce-preview {
+          flex: 2 1 0;
+          min-width: 0;
           display: flex;
           flex-direction: column;
-          min-height: 0;
+          padding: 14px;
+        }
+        .ce-divider {
+          width: 1px;
+          flex-shrink: 0;
+          background: rgba(255, 255, 255, 0.45);
+          align-self: stretch;
         }
         .ce-card {
-          background: #ffffff;
+          background: #dadada52;
           border-radius: 8px;
           padding: 14px;
           box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
-          border: 1px solid #e5e7eb;
+          border: 1px solid #a0a0a0;
           box-sizing: border-box;
         }
         .ce-chart-card {
@@ -524,7 +535,7 @@ export default function ChartEditor({ initialData }: { initialData?: ChartSpec }
         }
         .ce-btn-primary:hover { background: #1d4ed8; }
         .ce-btn-secondary {
-          background: #f3f4f6;
+          background: #a3cf4c;
           color: #374151;
           border: 1px solid #e5e7eb;
         }
@@ -567,19 +578,14 @@ export default function ChartEditor({ initialData }: { initialData?: ChartSpec }
           gap: 8px;
           flex-shrink: 0;
         }
-        @media (max-width: 1200px) {
-          .ce-container { grid-template-columns: 1fr 1fr 1.5fr; }
-        }
         @media (max-width: 1024px) {
-          .ce-container {
-            grid-template-columns: 1fr;
-            height: auto;
-          }
-          .ce-left, .ce-data { max-height: none; overflow-y: visible; }
+          .ce-container { flex-direction: column; height: auto; overflow-y: auto; }
+          .ce-left, .ce-data, .ce-preview { flex: none; padding: 10px; }
+          .ce-divider { width: auto; height: 1px; align-self: auto; }
           .ce-chart-container { height: 350px; }
         }
         @media (max-width: 768px) {
-          .ce-container { padding: 8px; gap: 10px; }
+          .ce-container { padding: 0; }
           .ce-action-buttons { grid-template-columns: 1fr; }
           .ce-chart-container { height: 280px; }
           .ce-grid-2, .ce-style-grid { grid-template-columns: 1fr; }
@@ -589,6 +595,7 @@ export default function ChartEditor({ initialData }: { initialData?: ChartSpec }
       <div className="ce-container">
         {/* 1열: 차트 설정 + 스타일 설정 */}
         <div className="ce-left">
+
           {/* 차트 설정 */}
           <div className="ce-card">
             <h3 className="ce-section-title">⚙️ 차트 설정</h3>
@@ -741,7 +748,35 @@ export default function ChartEditor({ initialData }: { initialData?: ChartSpec }
           </div>
         </div>
 
-        {/* 2열: 데이터 입력 */}
+        {/* 분리선 */}
+        <div className="ce-divider" />
+
+        {/* 2열: 실시간 차트 미리보기 (가운데) */}
+        <div className="ce-preview">
+          <div className="ce-chart-card">
+            <h3 className="ce-section-title">📊 실시간 차트 미리보기</h3>
+
+            <div className="ce-chart-container">
+              {!chartReady ? (
+                <div className="ce-loading">
+                  <span className="ce-loading-icon">⏳</span>
+                  <p style={{ margin: 0, fontSize: '0.9rem' }}>Chart.js를 로딩하는 중...</p>
+                </div>
+              ) : (
+                <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
+              )}
+            </div>
+
+            <div className="ce-info-alert">
+              ℹ️ 좌측에서 설정과 데이터를 변경하면 차트가 실시간으로 업데이트됩니다.
+            </div>
+          </div>
+        </div>
+
+        {/* 분리선 */}
+        <div className="ce-divider" />
+
+        {/* 3열: 데이터 입력 */}
         <div className="ce-data">
           <div className="ce-card">
             <div className="ce-data-header">
@@ -796,30 +831,8 @@ export default function ChartEditor({ initialData }: { initialData?: ChartSpec }
                 🔄 수동 새로고침
               </button>
               <button className="ce-btn ce-btn-secondary" onClick={saveChart}>
-                💾 차트 저장
+                💾 차트 이미지 저장
               </button>
-            </div>
-          </div>
-        </div>
-
-        {/* 3열: 실시간 차트 미리보기 */}
-        <div className="ce-preview">
-          <div className="ce-chart-card">
-            <h3 className="ce-section-title">📊 실시간 차트 미리보기</h3>
-
-            <div className="ce-chart-container">
-              {!chartReady ? (
-                <div className="ce-loading">
-                  <span className="ce-loading-icon">⏳</span>
-                  <p style={{ margin: 0, fontSize: '0.9rem' }}>Chart.js를 로딩하는 중...</p>
-                </div>
-              ) : (
-                <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
-              )}
-            </div>
-
-            <div className="ce-info-alert">
-              ℹ️ 좌측에서 설정과 데이터를 변경하면 차트가 실시간으로 업데이트됩니다.
             </div>
           </div>
         </div>

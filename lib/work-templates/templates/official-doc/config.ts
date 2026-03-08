@@ -6,7 +6,7 @@ export const nationalComplaintBetaConfig: TemplateConfig = {
   icon: '🏛️✨',
   description: '국민신문고 답변을 구조화 서식 + 스트리밍으로 실시간 생성합니다',
   category: '민원',
-  apiPath: '/api/templates/national-complaint-beta',
+  apiPath: '/api/work-templates/national-complaint-beta',
   streaming: true,
   fields: [
     {

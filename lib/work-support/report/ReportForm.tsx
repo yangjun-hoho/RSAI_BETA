@@ -67,6 +67,9 @@ export default function ReportForm({ onGenerate, isLoading }: ReportFormProps) {
   const [selectedLength, setSelectedLength] = useState('detailed');
   const [selectedModel, setSelectedModel] = useState('gemini-3.1-flash-lite-preview');
   const [keyContent, setKeyContent] = useState('');
+  const [includeHeader, setIncludeHeader] = useState(false);
+  const [managerInfo, setManagerInfo] = useState('');
+  const [teamLeaderInfo, setTeamLeaderInfo] = useState('');
 
   const currentDetailTypes = detailTypes[selectedReportType] || [];
   const currentStructure = sectionStructures[selectedReportType]?.[selectedDetailType] || [];
@@ -78,7 +81,7 @@ export default function ReportForm({ onGenerate, isLoading }: ReportFormProps) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    onGenerate({ reportTitle, selectedReportType, selectedDetailType, selectedLength, selectedModel, keyContent: keyContent.trim() || undefined });
+    onGenerate({ reportTitle, selectedReportType, selectedDetailType, selectedLength, selectedModel, keyContent: keyContent.trim() || undefined, managerInfo: includeHeader ? (managerInfo.trim() || undefined) : undefined, teamLeaderInfo: includeHeader ? (teamLeaderInfo.trim() || undefined) : undefined });
   }
 
   function setSampleTitle() {
@@ -187,6 +190,33 @@ export default function ReportForm({ onGenerate, isLoading }: ReportFormProps) {
           rows={4}
           style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }}
         />
+      </div>
+
+      <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '0.65rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', userSelect: 'none' }}>
+          <input
+            type="checkbox"
+            checked={includeHeader}
+            onChange={e => {
+              setIncludeHeader(e.target.checked);
+              if (e.target.checked) {
+                if (!managerInfo) setManagerInfo('정책기획과장 홍길동(☎9090)');
+                if (!teamLeaderInfo) setTeamLeaderInfo('기획팀장 홍길동(☎9091)');
+              }
+            }}
+            style={{ width: '14px', height: '14px', cursor: 'pointer', accentColor: 'var(--focus-color)' }}
+          />
+          <span style={{ fontSize: '0.78rem', fontWeight: '600', color: 'var(--text-secondary)' }}>
+            담당부서 포함
+          </span>
+          <span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#9ca3af' }}>(HWP 다운로드 시 상단 우측에 표시)</span>
+        </label>
+        {includeHeader && (
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <input style={{ ...inputStyle, flex: 1 }} type="text" placeholder="예: 정책기획과장 홍길동(☎9090)" value={managerInfo} onChange={e => setManagerInfo(e.target.value)} />
+            <input style={{ ...inputStyle, flex: 1 }} type="text" placeholder="예: 기획팀장 홍길동(☎9091)" value={teamLeaderInfo} onChange={e => setTeamLeaderInfo(e.target.value)} />
+          </div>
+        )}
       </div>
 
       <button type="submit" style={{ width: '100%', padding: '0.65rem', background: 'var(--focus-color)', color: 'white', border: 'none', borderRadius: '6px', fontSize: '0.85rem', fontWeight: '600', cursor: 'pointer', opacity: isLoading ? 0.7 : 1 }} disabled={isLoading}>

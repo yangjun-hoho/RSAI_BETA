@@ -45,6 +45,9 @@ export default function ReportChatForm({ onSubmit, onCancel, isLoading }: Props)
   const [length, setLength]                   = useState('detailed');
   const [selectedModel, setSelectedModel]     = useState('gemini-3.1-flash-lite-preview');
   const [keyContent, setKeyContent]           = useState('');
+  const [includeHeader, setIncludeHeader]     = useState(false);
+  const [managerInfo, setManagerInfo]         = useState('');
+  const [teamLeaderInfo, setTeamLeaderInfo]   = useState('');
 
   function handleTypeChange(type: string) {
     setReportType(type);
@@ -59,7 +62,7 @@ export default function ReportChatForm({ onSubmit, onCancel, isLoading }: Props)
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!reportTitle.trim()) return;
-    onSubmit({ reportTitle, selectedReportType: reportType, selectedDetailType: detailType, selectedLength: length, selectedModel, keyContent: keyContent.trim() || undefined });
+    onSubmit({ reportTitle, selectedReportType: reportType, selectedDetailType: detailType, selectedLength: length, selectedModel, keyContent: keyContent.trim() || undefined, managerInfo: includeHeader ? (managerInfo.trim() || undefined) : undefined, teamLeaderInfo: includeHeader ? (teamLeaderInfo.trim() || undefined) : undefined });
   }
 
   return (
@@ -159,6 +162,32 @@ export default function ReportChatForm({ onSubmit, onCancel, isLoading }: Props)
             onChange={e => setKeyContent(e.target.value)}
             disabled={isLoading}
           />
+        </div>
+
+        {/* HWP 머리말 */}
+        <div style={{ borderTop: '1px solid #e9e9e7', paddingTop: '0.6rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', userSelect: 'none' }}>
+            <input
+              type="checkbox"
+              checked={includeHeader}
+              onChange={e => {
+                setIncludeHeader(e.target.checked);
+                if (e.target.checked) {
+                  if (!managerInfo) setManagerInfo('정책기획과장 홍길동(☎9090)');
+                  if (!teamLeaderInfo) setTeamLeaderInfo('기획팀장 홍길동(☎9091)');
+                }
+              }}
+              style={{ width: '14px', height: '14px', cursor: 'pointer', accentColor: '#2383e2' }}
+            />
+            <span style={{ fontSize: '0.84rem', fontWeight: 500, color: '#37352f' }}>담당부서 포함</span>
+            <span style={{ fontSize: '0.78rem', color: '#9ca3af' }}>(다운로드 시 우측 상단 표시)</span>
+          </label>
+          {includeHeader && (
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <input style={{ ...S.input, flex: 1 }} type="text" placeholder="예: 정책기획과장 홍길동(☎9090)" value={managerInfo} onChange={e => setManagerInfo(e.target.value)} disabled={isLoading} />
+              <input style={{ ...S.input, flex: 1 }} type="text" placeholder="예: 기획팀장 홍길동(☎9091)" value={teamLeaderInfo} onChange={e => setTeamLeaderInfo(e.target.value)} disabled={isLoading} />
+            </div>
+          )}
         </div>
       </div>
 

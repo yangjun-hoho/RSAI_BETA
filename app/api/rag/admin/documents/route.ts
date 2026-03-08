@@ -2,11 +2,23 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import { ragDb } from '@/lib/rag/db';
 import { invalidateCache } from '@/lib/rag/vectorCache';
+import { verifySession, COOKIE_NAME } from '@/lib/auth/session';
 
 // GET /api/rag/admin/documents?categoryId=xxx
 export async function GET(request: NextRequest) {
+  const token = request.cookies.get(COOKIE_NAME)?.value;
+  const session = token ? await verifySession(token) : null;
+  if (!session) return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 });
+
   const categoryId = request.nextUrl.searchParams.get('categoryId');
   if (!categoryId) return NextResponse.json({ error: 'categoryId 필요' }, { status: 400 });
+
+  if (session.role !== 'admin') {
+    const cat = ragDb.getCategoryById(categoryId);
+    if (!cat || cat.created_by !== session.userId || cat.is_public !== 0) {
+      return NextResponse.json({ error: '권한이 없습니다.' }, { status: 403 });
+    }
+  }
 
   try {
     const documents = ragDb.getDocuments(categoryId);
@@ -19,12 +31,23 @@ export async function GET(request: NextRequest) {
 
 // DELETE /api/rag/admin/documents?id=xxx
 export async function DELETE(request: NextRequest) {
+  const token = request.cookies.get(COOKIE_NAME)?.value;
+  const session = token ? await verifySession(token) : null;
+  if (!session) return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 });
   const id = request.nextUrl.searchParams.get('id');
   if (!id) return NextResponse.json({ error: 'id 필요' }, { status: 400 });
 
   try {
     const doc = ragDb.getDocument(id);
     if (!doc) return NextResponse.json({ error: '문서를 찾을 수 없습니다.' }, { status: 404 });
+
+    // 관리자가 아닌 경우 해당 카테고리의 소유자인지 확인
+    if (session.role !== 'admin') {
+      const cat = ragDb.getCategoryById(doc.category_id);
+      if (!cat || cat.created_by !== session.userId || cat.is_public !== 0) {
+        return NextResponse.json({ error: '권한이 없습니다.' }, { status: 403 });
+      }
+    }
 
     // 원본 파일 삭제
     if (fs.existsSync(doc.file_path)) fs.unlinkSync(doc.file_path);

@@ -8,7 +8,7 @@ import ChatHeader from '@/lib/chat/ChatHeader';
 import ChatArea from '@/lib/chat/ChatArea';
 import InputArea from '@/lib/chat/InputArea';
 import PreviewPanel from '@/lib/chat/PreviewPanel';
-import TemplateView from '@/lib/templates/TemplateView';
+import TemplateView from '@/lib/work-templates/TemplateView';
 import RagView from '@/lib/rag/RagView';
 import BoardPanel from '@/lib/board/BoardPanel';
 import type { Message } from '@/lib/chat/MessageBubble';

@@ -6,7 +6,7 @@ export const civilComplaintConfig: TemplateConfig = {
   icon: '🏛️',
   description: '국민신문고 민원에 대한 공식 답변서를 자동으로 작성합니다',
   category: '민원',
-  apiPath: '/api/templates/civil-complaint',
+  apiPath: '/api/work-templates/civil-complaint',
   fields: [
     {
       key: 'category',

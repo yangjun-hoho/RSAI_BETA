@@ -65,6 +65,8 @@ interface ReportData {
   summary?: string;
   sections?: Section[];
   metadata?: Metadata;
+  managerInfo?: string;     // 예: "정책기획과장 김병기(☎2050)"
+  teamLeaderInfo?: string;  // 예: "기획팀장 김연숙(☎2051)"
 }
 
 export class HWPXExporter {
@@ -127,6 +129,18 @@ export class HWPXExporter {
       /(<hp:run charPrIDRef="20"><hp:t>)[^<]*(<\/hp:t>)/,
       `$1${title}$2`
     );
+
+    // 담당과장/팀장 정보 삽입 (Row 0, Cell 1 — charPrIDRef="19", 빈 run 교체)
+    const contactParts: string[] = [];
+    if (data.managerInfo?.trim()) contactParts.push(data.managerInfo.trim());
+    if (data.teamLeaderInfo?.trim()) contactParts.push(data.teamLeaderInfo.trim());
+    if (contactParts.length > 0) {
+      const contactText = this.escXml(contactParts.join(' / '));
+      headerBlock = headerBlock.replace(
+        /<hp:run charPrIDRef="19"\/>/,
+        `<hp:run charPrIDRef="19"><hp:t>${contactText}</hp:t></hp:run>`
+      );
+    }
 
     // ── 조립 ─────────────────────────────────────────────────────────────
     let xml = secOpen;

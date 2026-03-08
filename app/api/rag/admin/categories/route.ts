@@ -1,5 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ragDb } from '@/lib/rag/db';
+import { verifySession, COOKIE_NAME } from '@/lib/auth/session';
+
+async function requireAdmin(request: NextRequest): Promise<true | NextResponse> {
+  const token = request.cookies.get(COOKIE_NAME)?.value;
+  const session = token ? await verifySession(token) : null;
+  if (!session || session.role !== 'admin') {
+    return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 });
+  }
+  return true;
+}
 
 export async function GET() {
   try {
@@ -12,6 +22,8 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requireAdmin(request);
+  if (auth !== true) return auth;
   try {
     const { name, icon, color, description } = await request.json() as {
       name: string;
@@ -39,6 +51,8 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  const auth = await requireAdmin(request);
+  if (auth !== true) return auth;
   try {
     const { id, name, icon, color, description } = await request.json() as {
       id: string;
@@ -67,6 +81,8 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const auth = await requireAdmin(request);
+  if (auth !== true) return auth;
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

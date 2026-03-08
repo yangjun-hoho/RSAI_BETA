@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import { ragDb } from '@/lib/rag/db';
 import { invalidateCache } from '@/lib/rag/vectorCache';
 import OpenAI from 'openai';
+import { verifySession, COOKIE_NAME } from '@/lib/auth/session';
 
 // 대용량 파일 처리를 위한 타임아웃 설정 (초)
 export const maxDuration = 300;
@@ -105,6 +106,11 @@ async function processDocument(docId: string, categoryId: string, buffer: Buffer
 }
 
 export async function POST(request: NextRequest) {
+  const token = request.cookies.get(COOKIE_NAME)?.value;
+  const session = token ? await verifySession(token) : null;
+  if (!session) {
+    return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 });
+  }
   try {
     const formData  = await request.formData();
     const file       = formData.get('file') as File | null;
@@ -112,6 +118,28 @@ export async function POST(request: NextRequest) {
 
     if (!file)       return NextResponse.json({ error: '파일을 선택해주세요.' }, { status: 400 });
     if (!categoryId) return NextResponse.json({ error: 'categoryId 필요' }, { status: 400 });
+
+    // 관리자가 아닌 경우 해당 카테고리의 소유자인지 확인 + 제한 검사
+    if (session.role !== 'admin') {
+      const cat = ragDb.getCategoryById(categoryId);
+      if (!cat || cat.created_by !== session.userId || cat.is_public !== 0) {
+        return NextResponse.json({ error: '권한이 없습니다.' }, { status: 403 });
+      }
+
+      // 파일 크기 제한
+      const maxFileMb = parseFloat(ragDb.getSetting('user_chatbot_max_file_mb') ?? '10');
+      if (file.size > maxFileMb * 1024 * 1024) {
+        return NextResponse.json({ error: `파일 크기가 제한을 초과합니다. (최대 ${maxFileMb}MB)` }, { status: 400 });
+      }
+
+      // 문서 수 제한
+      const maxDocs = parseInt(ragDb.getSetting('user_chatbot_max_docs') ?? '5', 10);
+      const docs = ragDb.getDocuments(categoryId);
+      const activeDocs = docs.filter(d => d.status !== 'error');
+      if (activeDocs.length >= maxDocs) {
+        return NextResponse.json({ error: `문서를 더 추가할 수 없습니다. (최대 ${maxDocs}개)` }, { status: 400 });
+      }
+    }
 
     const allowedExt = ['.pdf', '.docx', '.txt'];
     const ext = path.extname(file.name).toLowerCase();

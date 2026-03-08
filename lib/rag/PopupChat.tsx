@@ -39,11 +39,10 @@ export default function PopupChat({ categoryId }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    fetch('/api/rag/admin/categories')
-      .then(r => r.json())
+    fetch(`/api/rag/category?id=${categoryId}`)
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
       .then(data => {
-        const found = (data.categories ?? []).find((c: Category) => c.id === categoryId);
-        if (found) setCategory(found);
+        if (data.category) setCategory(data.category);
         else setNotFound(true);
       })
       .catch(() => setNotFound(true));

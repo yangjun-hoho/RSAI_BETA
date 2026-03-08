@@ -39,12 +39,9 @@ export default function RagChat({ categoryId, onBack }: Props) {
 
   // 카테고리 정보 조회
   useEffect(() => {
-    fetch('/api/rag/admin/categories')
+    fetch(`/api/rag/category?id=${categoryId}`)
       .then(r => r.json())
-      .then(data => {
-        const found = (data.categories ?? []).find((c: Category) => c.id === categoryId);
-        setCategory(found ?? null);
-      })
+      .then(data => { setCategory(data.category ?? null); })
       .catch(() => {});
   }, [categoryId]);
 
@@ -169,6 +166,7 @@ export default function RagChat({ categoryId, onBack }: Props) {
         </button>
         {category.icon.startsWith('/')
           ? <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: category.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={category.icon} width={20} height={20} alt="" style={{ display: 'block', opacity: 0.8 }} />
             </div>
           : <span style={{ fontSize: '20px' }}>{category.icon}</span>}
@@ -212,17 +210,17 @@ export default function RagChat({ categoryId, onBack }: Props) {
         {/* 좌측: 소개 + 문서 목록 */}
         <div style={{ width: '400px', flexShrink: 0, borderRight: '1px solid #e9e9e7', background: 'white', overflowY: 'auto', padding: '16px' }}>
           <div style={{ marginBottom: '16px' }}>
-            <div style={{ fontSize: '14px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>시스템 소개</div>
+            <div style={{ fontSize: '15px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>시스템 소개</div>
             <p style={{ fontSize: '13px', color: '#374151', lineHeight: 1.6, margin: 0 }}>{category.description || '등록된 문서를 기반으로 AI가 답변합니다.'}</p>
           </div>
           <div style={{ height: '1px', background: '#f3f4f6', margin: '12px 0' }} />
-          <div style={{ fontSize: '14px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>등록 문서</div>
+          <div style={{ fontSize: '16px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>등록 문서</div>
           {docNames.length === 0 ? (
-            <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0 }}>등록된 문서가 없습니다.</p>
+            <p style={{ fontSize: '13px', color: '#9ca3af', margin: 0 }}>등록된 문서가 없습니다.</p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {docNames.map((name, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#374151', padding: '4px 0' }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', color: '#374151', padding: '4px 0' }}>
                   <span style={{ color: category.color }}>•</span>
                   <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</span>
                 </div>

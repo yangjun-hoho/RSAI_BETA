@@ -91,6 +91,7 @@ export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
       }}>
         {open && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, overflow: 'hidden' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/main-logo.png"
               alt="logo"

@@ -23,6 +23,8 @@ db.exec(`
     icon        TEXT NOT NULL,
     description TEXT,
     color       TEXT,
+    created_by  INTEGER,
+    is_public   INTEGER DEFAULT 1,
     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -48,9 +50,23 @@ db.exec(`
     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
+  CREATE TABLE IF NOT EXISTS rag_settings (
+    key   TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+  );
+
   CREATE INDEX IF NOT EXISTS idx_chunks_category   ON chunks(category_id);
   CREATE INDEX IF NOT EXISTS idx_documents_category ON documents(category_id);
 `);
+
+// 기본 설정값 초기화
+db.prepare("INSERT OR IGNORE INTO rag_settings (key, value) VALUES ('user_chatbot_max_docs', '5')").run();
+db.prepare("INSERT OR IGNORE INTO rag_settings (key, value) VALUES ('user_chatbot_max_file_mb', '10')").run();
+
+// 기존 DB 마이그레이션: 개인 챗봇 컬럼 추가
+try { db.exec('ALTER TABLE categories ADD COLUMN created_by INTEGER'); } catch {}
+try { db.exec('ALTER TABLE categories ADD COLUMN is_public INTEGER DEFAULT 1'); } catch {}
+db.exec("UPDATE categories SET is_public = 1 WHERE is_public IS NULL");
 
 // ── 타입 ────────────────────────────────────────────────
 export interface DbDocument {
@@ -83,17 +99,38 @@ export const ragDb = {
         (SELECT COUNT(*) FROM documents d WHERE d.category_id = c.id AND d.status = 'done') AS document_count,
         (SELECT COUNT(*) FROM chunks   ch WHERE ch.category_id = c.id)                       AS chunk_count
       FROM categories c
+      WHERE c.is_public = 1
       ORDER BY c.created_at
     `).all();
   },
 
-  createCategory(cat: { name: string; icon: string; color: string; description: string }): { id: string; name: string; icon: string; color: string; description: string } {
+  getCategoryById(id: string): { id: string; name: string; icon: string; color: string; description: string; created_by: number | null; is_public: number; document_count: number; chunk_count: number } | null {
+    return db.prepare(`
+      SELECT c.*,
+        (SELECT COUNT(*) FROM documents d WHERE d.category_id = c.id AND d.status = 'done') AS document_count,
+        (SELECT COUNT(*) FROM chunks   ch WHERE ch.category_id = c.id) AS chunk_count
+      FROM categories c WHERE c.id = ?
+    `).get(id) as { id: string; name: string; icon: string; color: string; description: string; created_by: number | null; is_public: number; document_count: number; chunk_count: number } | null;
+  },
+
+  getUserCategory(userId: number): { id: string; name: string; icon: string; color: string; description: string; created_by: number | null; is_public: number; document_count: number; chunk_count: number } | null {
+    return db.prepare(`
+      SELECT c.*,
+        (SELECT COUNT(*) FROM documents d WHERE d.category_id = c.id AND d.status = 'done') AS document_count,
+        (SELECT COUNT(*) FROM chunks   ch WHERE ch.category_id = c.id) AS chunk_count
+      FROM categories c
+      WHERE c.created_by = ? AND c.is_public = 0
+      LIMIT 1
+    `).get(userId) as { id: string; name: string; icon: string; color: string; description: string; created_by: number | null; is_public: number; document_count: number; chunk_count: number } | null;
+  },
+
+  createCategory(cat: { name: string; icon: string; color: string; description: string; created_by?: number | null; is_public?: number }): { id: string; name: string; icon: string; color: string; description: string } {
     const id = crypto.randomUUID();
     db.prepare(`
-      INSERT INTO categories (id, name, icon, description, color)
-      VALUES (?, ?, ?, ?, ?)
-    `).run(id, cat.name, cat.icon, cat.description, cat.color);
-    return { id, ...cat };
+      INSERT INTO categories (id, name, icon, description, color, created_by, is_public)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).run(id, cat.name, cat.icon, cat.description, cat.color, cat.created_by ?? null, cat.is_public ?? 1);
+    return { id, name: cat.name, icon: cat.icon, color: cat.color, description: cat.description };
   },
 
   updateCategory(id: string, cat: { name: string; icon: string; color: string; description: string }): void {
@@ -105,6 +142,10 @@ export const ragDb = {
   deleteCategory(id: string): void {
     const docCount = (db.prepare('SELECT COUNT(*) as cnt FROM documents WHERE category_id = ?').get(id) as { cnt: number }).cnt;
     if (docCount > 0) throw new Error('문서를 먼저 삭제해주세요.');
+    db.prepare('DELETE FROM categories WHERE id = ?').run(id);
+  },
+
+  forceDeleteCategory(id: string): void {
     db.prepare('DELETE FROM categories WHERE id = ?').run(id);
   },
 
@@ -157,6 +198,21 @@ export const ragDb = {
 
   deleteChunksByDocument(documentId: string): void {
     db.prepare('DELETE FROM chunks WHERE document_id = ?').run(documentId);
+  },
+
+  // 설정
+  getSetting(key: string): string | null {
+    const row = db.prepare('SELECT value FROM rag_settings WHERE key = ?').get(key) as { value: string } | undefined;
+    return row?.value ?? null;
+  },
+
+  setSetting(key: string, value: string): void {
+    db.prepare('INSERT OR REPLACE INTO rag_settings (key, value) VALUES (?, ?)').run(key, value);
+  },
+
+  getAllSettings(): Record<string, string> {
+    const rows = db.prepare('SELECT key, value FROM rag_settings').all() as { key: string; value: string }[];
+    return Object.fromEntries(rows.map(r => [r.key, r.value]));
   },
 };
 

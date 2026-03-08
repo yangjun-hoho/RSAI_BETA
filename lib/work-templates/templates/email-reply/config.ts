@@ -6,7 +6,7 @@ export const emailReplyConfig: TemplateConfig = {
   icon: '📧',
   description: '공식 업무 이메일에 대한 회신을 자동으로 작성합니다',
   category: '문서',
-  apiPath: '/api/templates/email-reply',
+  apiPath: '/api/work-templates/email-reply',
   fields: [
     {
       key: 'originalMail',

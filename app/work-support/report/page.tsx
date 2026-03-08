@@ -30,7 +30,11 @@ export default function ReportPage() {
     };
     try {
       const result = await generateReportContent(params);
-      setGeneratedReport(result);
+      setGeneratedReport({
+        ...result,
+        ...(formValues.managerInfo && { managerInfo: String(formValues.managerInfo) }),
+        ...(formValues.teamLeaderInfo && { teamLeaderInfo: String(formValues.teamLeaderInfo) }),
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : '보고서 생성 중 오류가 발생했습니다.');
     } finally {

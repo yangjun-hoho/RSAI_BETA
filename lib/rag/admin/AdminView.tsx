@@ -19,12 +19,20 @@ interface Props {
 }
 
 export default function AdminView({ onBack }: Props) {
+  const [tab, setTab] = useState<'categories' | 'settings'>('categories');
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedId, setSelectedId] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string>('');
   const [deleteError, setDeleteError] = useState<string>('');
   const [deletingId, setDeletingId] = useState<string>('');
+
+  // 설정 상태
+  const [maxDocs, setMaxDocs] = useState<string>('5');
+  const [maxFileMb, setMaxFileMb] = useState<string>('10');
+  const [settingsLoading, setSettingsLoading] = useState(false);
+  const [settingsSaving, setSettingsSaving] = useState(false);
+  const [settingsMsg, setSettingsMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
 
   function loadCategories() {
     fetch('/api/rag/admin/categories')
@@ -42,6 +50,44 @@ export default function AdminView({ onBack }: Props) {
   }
 
   useEffect(() => { loadCategories(); }, []);
+
+  function loadSettings() {
+    setSettingsLoading(true);
+    fetch('/api/rag/admin/settings')
+      .then(r => r.json())
+      .then(data => {
+        if (data.settings) {
+          setMaxDocs(data.settings.user_chatbot_max_docs ?? '5');
+          setMaxFileMb(data.settings.user_chatbot_max_file_mb ?? '10');
+        }
+      })
+      .catch(() => {})
+      .finally(() => setSettingsLoading(false));
+  }
+
+  useEffect(() => { if (tab === 'settings') loadSettings(); }, [tab]);
+
+  async function saveSettings() {
+    setSettingsSaving(true);
+    setSettingsMsg(null);
+    try {
+      const res = await fetch('/api/rag/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_chatbot_max_docs: maxDocs, user_chatbot_max_file_mb: maxFileMb }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setSettingsMsg({ type: 'err', text: data.error ?? '저장 실패' });
+      } else {
+        setSettingsMsg({ type: 'ok', text: '설정이 저장되었습니다.' });
+      }
+    } catch {
+      setSettingsMsg({ type: 'err', text: '네트워크 오류가 발생했습니다.' });
+    } finally {
+      setSettingsSaving(false);
+    }
+  }
 
   async function handleDelete(id: string) {
     if (!confirm('이 카테고리를 삭제하시겠습니까?')) return;
@@ -75,11 +121,90 @@ export default function AdminView({ onBack }: Props) {
           뒤로
         </button>
         <span style={{ fontSize: '16px', fontWeight: 700, color: '#111827' }}>⚙️ RAG 관리자</span>
-        <span style={{ fontSize: '11px', color: '#9ca3af', marginLeft: '4px' }}>문서 업로드 및 임베딩 관리</span>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: '4px' }}>
+          {(['categories', 'settings'] as const).map(t => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              style={{ padding: '5px 12px', border: 'none', borderRadius: '7px', cursor: 'pointer', fontSize: '13px', fontWeight: tab === t ? 700 : 400, background: tab === t ? '#1e3a5f' : 'transparent', color: tab === t ? 'white' : '#6b7280', transition: 'all 0.15s' }}
+              onMouseEnter={e => { if (tab !== t) { e.currentTarget.style.background = '#f3f4f6'; } }}
+              onMouseLeave={e => { if (tab !== t) { e.currentTarget.style.background = 'transparent'; } }}
+            >
+              {t === 'categories' ? '카테고리 관리' : '개인챗봇 제한 설정'}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* 본문: 좌우 분할 */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+      {/* 설정 탭 */}
+      {tab === 'settings' && (
+        <div style={{ flex: 1, overflowY: 'auto', padding: '32px', display: 'flex', justifyContent: 'center' }}>
+          <div style={{ width: '100%', maxWidth: '480px' }}>
+            <div style={{ fontSize: '15px', fontWeight: 700, color: '#111827', marginBottom: '6px' }}>개인 챗봇 제한 설정</div>
+            <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '24px' }}>일반 사용자가 만드는 개인 전용 챗봇에 적용되는 제한 값입니다.</div>
+
+            {settingsLoading ? (
+              <div style={{ color: '#9ca3af', fontSize: '13px' }}>불러오는 중...</div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
+                    최대 문서 수
+                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <input
+                      type="number"
+                      min={1}
+                      max={100}
+                      value={maxDocs}
+                      onChange={e => setMaxDocs(e.target.value)}
+                      style={{ width: '100px', padding: '8px 10px', border: '1px solid #d1d5db', borderRadius: '7px', fontSize: '14px', outline: 'none' }}
+                    />
+                    <span style={{ fontSize: '13px', color: '#6b7280' }}>개 (1~100)</span>
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '4px' }}>개인 챗봇에 업로드할 수 있는 문서의 최대 개수입니다.</div>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
+                    파일당 최대 크기
+                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <input
+                      type="number"
+                      min={1}
+                      max={500}
+                      step={0.5}
+                      value={maxFileMb}
+                      onChange={e => setMaxFileMb(e.target.value)}
+                      style={{ width: '100px', padding: '8px 10px', border: '1px solid #d1d5db', borderRadius: '7px', fontSize: '14px', outline: 'none' }}
+                    />
+                    <span style={{ fontSize: '13px', color: '#6b7280' }}>MB (1~500)</span>
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '4px' }}>업로드 가능한 단일 파일의 최대 크기입니다.</div>
+                </div>
+
+                {settingsMsg && (
+                  <div style={{ padding: '10px 12px', borderRadius: '7px', fontSize: '13px', background: settingsMsg.type === 'ok' ? '#f0fdf4' : '#fef2f2', color: settingsMsg.type === 'ok' ? '#16a34a' : '#ef4444', border: `1px solid ${settingsMsg.type === 'ok' ? '#bbf7d0' : '#fecaca'}` }}>
+                    {settingsMsg.text}
+                  </div>
+                )}
+
+                <button
+                  onClick={saveSettings}
+                  disabled={settingsSaving}
+                  style={{ alignSelf: 'flex-start', padding: '9px 20px', background: settingsSaving ? '#9ca3af' : '#1e3a5f', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: settingsSaving ? 'default' : 'pointer' }}
+                >
+                  {settingsSaving ? '저장 중...' : '저장'}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 카테고리 탭 본문: 좌우 분할 */}
+      {tab === 'categories' && <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         {/* 좌측: 카테고리 목록 (비율 2) */}
         <div style={{ flex: 2, minWidth: 0, borderRight: '1px solid #e5e7eb', background: 'white', overflowY: 'auto', padding: '16px 12px', display: 'flex', flexDirection: 'column' }}>
           <div style={{ fontSize: '12px', fontWeight: 700, color: '#9ca3af', padding: '4px 10px', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>카테고리</div>
@@ -195,7 +320,7 @@ export default function AdminView({ onBack }: Props) {
             </div>
           )}
         </div>
-      </div>
+      </div>}
     </div>
   );
 }
