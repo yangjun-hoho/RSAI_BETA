@@ -281,7 +281,10 @@ export default function Home() {
         previewPayload = { citation: result.citation, title: result.title };
       } else if (toolId === 'report') {
         // API가 { report: {...} } 형태로 반환 → 내부 객체를 unwrap
-        previewPayload = (result.report as Record<string, unknown>) || result;
+        const base = (result.report as Record<string, unknown>) || result;
+        previewPayload = { ...base };
+        if (data.managerInfo) previewPayload.managerInfo = data.managerInfo;
+        if (data.teamLeaderInfo) previewPayload.teamLeaderInfo = data.teamLeaderInfo;
       } else if (toolId === 'scenario') {
         previewPayload = {
           content: result.scenario || result.content || '',
