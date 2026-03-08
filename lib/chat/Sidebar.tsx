@@ -37,7 +37,7 @@ const ICON_MAP: Record<string, string> = {
   chart: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`,
 };
 
-const SHORTCUTS = [
+export const SHORTCUTS = [
   { id: 'work-support',      label: '업무지원',       icon: '⚡', path: '/work-support' },
   { id: 'nano-banana',       label: 'Nano Banana 2',   icon: '🍌', path: '/work-support/nano-banana' },
   { id: 'chart-editor',      label: '차트 에디터',    icon: '📊', path: '/work-support/chart-editor' },
@@ -47,7 +47,7 @@ const SHORTCUTS = [
   { id: 'fun',               label: 'FuN fUn',         icon: '🎮', path: '/fun' },
 ];
 
-const MEMBER_LINKS = [
+export const MEMBER_LINKS = [
   { id: 'board', label: 'AI 자유게시판', icon: '🤖', path: '/board' },
 ];
 
@@ -56,15 +56,38 @@ interface SidebarProps {
   onToolClick: (id: ToolId) => void;
 }
 
+type SidebarItemSetting = { hidden?: boolean; badge?: string };
+type SidebarSettingsMap = Record<string, SidebarItemSetting>;
+
+const BADGE_STYLES: Record<string, React.CSSProperties> = {
+  '공사중':    { background: '#fef3c7', color: '#92400e' },
+  '개발중':    { background: '#dbeafe', color: '#1e40af' },
+  '업데이트중': { background: '#dcfce7', color: '#15803d' },
+  '신규':      { background: '#f3e8ff', color: '#7c3aed' },
+};
+
+function SidebarBadge({ badge }: { badge: string }) {
+  if (!badge) return null;
+  return (
+    <span style={{ marginLeft: 'auto', fontSize: '0.6rem', fontWeight: 700, padding: '0.1rem 0.35rem', borderRadius: '4px', whiteSpace: 'nowrap', ...BADGE_STYLES[badge] }}>
+      {badge}
+    </span>
+  );
+}
+
 export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
   const [open, setOpen] = useState(true);
   const [tooltip, setTooltip] = useState<{ text: string; y: number } | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [sidebarSettings, setSidebarSettings] = useState<SidebarSettingsMap>({});
 
   useEffect(() => {
     fetch('/api/auth/me').then(r => r.json()).then(d => {
       if (d.user?.role === 'admin') setIsAdmin(true);
     });
+    fetch('/api/admin/sidebar-settings').then(r => r.json()).then(d => {
+      if (d.settings) setSidebarSettings(d.settings);
+    }).catch(() => {});
   }, []);
 
   return (
@@ -127,8 +150,9 @@ export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
             </div>
           )}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', border: '1px solid #e3e2df', borderRadius: '8px', padding: '0.2rem', overflow: 'hidden' }}>
-            {TOOLS.map((tool) => {
+            {TOOLS.filter(tool => !sidebarSettings[tool.id]?.hidden).map((tool) => {
               const isActive = activeMode === tool.id;
+              const badge = sidebarSettings[tool.id]?.badge || '';
               return (
                 <button
                   key={tool.id}
@@ -168,6 +192,7 @@ export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
                     dangerouslySetInnerHTML={{ __html: ICON_MAP[tool.id] }}
                   />
                   {open && <span style={{ whiteSpace: 'nowrap' }}>{tool.label}</span>}
+                  {open && <SidebarBadge badge={badge} />}
                 </button>
               );
             })}
@@ -181,7 +206,7 @@ export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
               바로가기
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', border: '1px solid #e3e2df', borderRadius: '8px', padding: '0.2rem', overflow: 'hidden' }}>
-              {SHORTCUTS.map((sc) => (
+              {SHORTCUTS.filter(sc => !sidebarSettings[sc.id]?.hidden).map((sc) => (
                 <a
                   key={sc.id}
                   href={sc.path}
@@ -191,6 +216,7 @@ export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
                 >
                   <span style={{ fontSize: '1rem', width: '20px', textAlign: 'center', flexShrink: 0 }}>{sc.icon}</span>
                   <span>{sc.label}</span>
+                  <SidebarBadge badge={sidebarSettings[sc.id]?.badge || ''} />
                 </a>
               ))}
             </div>
@@ -204,7 +230,7 @@ export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
               회원 공간
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', border: '1px solid #e3e2df', borderRadius: '8px', padding: '0.2rem', overflow: 'hidden' }}>
-              {MEMBER_LINKS.map((sc) => {
+              {MEMBER_LINKS.filter(sc => !sidebarSettings[sc.id]?.hidden).map((sc) => {
                 const isActive = activeMode === sc.id;
                 return (
                   <button
@@ -216,6 +242,7 @@ export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
                   >
                     <span style={{ fontSize: '1rem', width: '20px', textAlign: 'center', flexShrink: 0 }}>{sc.icon}</span>
                     <span>{sc.label}</span>
+                    <SidebarBadge badge={sidebarSettings[sc.id]?.badge || ''} />
                   </button>
                 );
               })}

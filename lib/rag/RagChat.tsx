@@ -235,7 +235,12 @@ export default function RagChat({ categoryId, onBack }: Props) {
           <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
             {messages.length === 0 && (
               <div style={{ textAlign: 'center', color: '#9ca3af', paddingTop: '60px' }}>
-                <div style={{ fontSize: '40px', marginBottom: '12px' }}>{category.icon}</div>
+                <div style={{ fontSize: '40px', marginBottom: '12px' }}>
+                  {category.icon.startsWith('/')
+                    ? (/* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={category.icon} width={48} height={48} alt="" style={{ display: 'block', margin: '0 auto' }} />)
+                    : category.icon}
+                </div>
                 <div style={{ fontSize: '15px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>{category.name} 문서에 대해 질문해보세요</div>
                 <div style={{ fontSize: '13px' }}>등록된 문서를 기반으로 정확한 답변을 제공합니다.</div>
               </div>

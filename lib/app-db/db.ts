@@ -78,6 +78,11 @@ function initTables(db: Database.Database) {
       is_active  INTEGER NOT NULL DEFAULT 1,
       created_at TEXT    NOT NULL DEFAULT (datetime('now'))
     );
+
+    CREATE TABLE IF NOT EXISTS site_settings (
+      key   TEXT PRIMARY KEY,
+      value TEXT NOT NULL DEFAULT ''
+    );
   `);
 
   // 기존 테이블에 컬럼 추가 (이미 있으면 무시)

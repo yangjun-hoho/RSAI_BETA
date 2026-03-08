@@ -3,8 +3,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { TOOLS, SHORTCUTS, MEMBER_LINKS } from '@/lib/chat/Sidebar';
 
-type Tab = 'dashboard' | 'users' | 'posts' | 'pii' | 'notices';
+type Tab = 'dashboard' | 'users' | 'posts' | 'pii' | 'notices' | 'sidebar';
 
 interface Stats { totalUsers: number; todayJoined: number; totalPosts: number; piiThisMonth: number; recentUsers: AdminUser[]; recentPosts: RecentPost[]; recentPiiLogs: PiiLog[]; }
 interface AdminUser { id: number; nickname: string; role: string; is_active: number; created_at: string; }
@@ -417,6 +418,120 @@ function NoticesTab() {
   );
 }
 
+// ── 사이드바 관리 탭 ───────────────────────────────────────
+type ItemSetting = { hidden: boolean; badge: string };
+type SettingsMap = Record<string, ItemSetting>;
+
+const BADGE_OPTIONS = ['', '공사중', '개발중', '업데이트중', '신규'];
+const BADGE_COLORS: Record<string, { bg: string; color: string }> = {
+  '공사중':    { bg: '#fef3c7', color: '#92400e' },
+  '개발중':    { bg: '#dbeafe', color: '#1e40af' },
+  '업데이트중': { bg: '#dcfce7', color: '#15803d' },
+  '신규':      { bg: '#f3e8ff', color: '#7c3aed' },
+};
+
+const SIDEBAR_SECTIONS = [
+  { label: '도구', items: TOOLS.map(t => ({ id: t.id, label: t.label })) },
+  { label: '바로가기', items: SHORTCUTS.map(s => ({ id: s.id, label: s.label })) },
+  { label: '회원 공간', items: MEMBER_LINKS.map(s => ({ id: s.id, label: s.label })) },
+];
+
+function SidebarTab() {
+  const [settings, setSettings] = useState<SettingsMap>({});
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/admin/sidebar-settings').then(r => r.json()).then(d => {
+      if (d.settings) setSettings(d.settings);
+    });
+  }, []);
+
+  function getSetting(id: string): ItemSetting {
+    return settings[id] ?? { hidden: false, badge: '' };
+  }
+
+  function update(id: string, patch: Partial<ItemSetting>) {
+    setSettings(prev => ({ ...prev, [id]: { ...getSetting(id), ...patch } }));
+  }
+
+  async function handleSave() {
+    setSaving(true);
+    await fetch('/api/admin/sidebar-settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ settings }),
+    });
+    setSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', alignItems: 'start' }}>
+      {SIDEBAR_SECTIONS.map(section => (
+        <div key={section.label} style={S.card}>
+          <h3 style={{ fontSize: '0.88rem', fontWeight: 700, color: '#37352f', margin: '0 0 0.75rem 0' }}>{section.label}</h3>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={S.th}>메뉴명</th>
+                <th style={{ ...S.th, width: '80px', textAlign: 'center' }}>숨김</th>
+                <th style={{ ...S.th, width: '160px' }}>배지</th>
+              </tr>
+            </thead>
+            <tbody>
+              {section.items.map(item => {
+                const cfg = getSetting(item.id);
+                return (
+                  <tr key={item.id}>
+                    <td style={{ ...S.td, fontWeight: 500 }}>
+                      {item.label}
+                      {cfg.badge && (
+                        <span style={{ marginLeft: '0.5rem', fontSize: '0.68rem', fontWeight: 700, padding: '0.1rem 0.4rem', borderRadius: '4px', background: BADGE_COLORS[cfg.badge]?.bg, color: BADGE_COLORS[cfg.badge]?.color }}>
+                          {cfg.badge}
+                        </span>
+                      )}
+                    </td>
+                    <td style={{ ...S.td, textAlign: 'center' }}>
+                      <input
+                        type="checkbox"
+                        checked={cfg.hidden}
+                        onChange={e => update(item.id, { hidden: e.target.checked })}
+                        style={{ width: '15px', height: '15px', cursor: 'pointer', accentColor: '#ef4444' }}
+                      />
+                    </td>
+                    <td style={S.td}>
+                      <select
+                        value={cfg.badge}
+                        onChange={e => update(item.id, { badge: e.target.value })}
+                        style={{ padding: '0.25rem 0.4rem', border: '1px solid #e0e0e0', borderRadius: '5px', fontSize: '0.78rem', cursor: 'pointer', background: 'white', color: '#37352f' }}
+                      >
+                        {BADGE_OPTIONS.map(opt => (
+                          <option key={opt} value={opt}>{opt || '(없음)'}</option>
+                        ))}
+                      </select>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ))}
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <button style={S.btn()} onClick={handleSave} disabled={saving}>
+          {saving ? '저장 중...' : '변경사항 저장'}
+        </button>
+        {saved && <span style={{ fontSize: '0.82rem', color: '#16a34a', fontWeight: 600 }}>저장되었습니다.</span>}
+      </div>
+    </div>
+  );
+}
+
 // ── 메인 관리자 페이지 ─────────────────────────────────────
 export default function AdminPage() {
   const router = useRouter();
@@ -439,6 +554,7 @@ export default function AdminPage() {
     { id: 'posts',     label: '📋 게시판 관리' },
     { id: 'pii',       label: '🛡️ PII 필터' },
     { id: 'notices',   label: '📢 공지사항' },
+    { id: 'sidebar',   label: '🗂️ 사이드바 관리' },
   ];
 
   return (
@@ -467,6 +583,7 @@ export default function AdminPage() {
           {tab === 'posts'     && <PostsTab />}
           {tab === 'pii'       && <PiiTab />}
           {tab === 'notices'   && <NoticesTab />}
+          {tab === 'sidebar'   && <SidebarTab />}
         </div>
       </div>
     </div>

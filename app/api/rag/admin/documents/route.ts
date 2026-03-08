@@ -6,16 +6,30 @@ import { verifySession, COOKIE_NAME } from '@/lib/auth/session';
 
 // GET /api/rag/admin/documents?categoryId=xxx
 export async function GET(request: NextRequest) {
-  const token = request.cookies.get(COOKIE_NAME)?.value;
-  const session = token ? await verifySession(token) : null;
-  if (!session) return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 });
-
   const categoryId = request.nextUrl.searchParams.get('categoryId');
   if (!categoryId) return NextResponse.json({ error: 'categoryId 필요' }, { status: 400 });
 
+  const token = request.cookies.get(COOKIE_NAME)?.value;
+  const session = token ? await verifySession(token) : null;
+
+  const cat = ragDb.getCategoryById(categoryId);
+
+  // 공용 카테고리는 비로그인 포함 누구나 문서 목록 조회 가능
+  if (cat?.is_public === 1) {
+    try {
+      const documents = ragDb.getDocuments(categoryId);
+      return NextResponse.json({ documents });
+    } catch (error) {
+      console.error('[rag/documents GET]', error);
+      return NextResponse.json({ error: '문서 조회 실패' }, { status: 500 });
+    }
+  }
+
+  // 비공개 카테고리: 로그인 필요
+  if (!session) return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 });
+
   if (session.role !== 'admin') {
-    const cat = ragDb.getCategoryById(categoryId);
-    if (!cat || cat.created_by !== session.userId || cat.is_public !== 0) {
+    if (!cat || cat.created_by !== session.userId) {
       return NextResponse.json({ error: '권한이 없습니다.' }, { status: 403 });
     }
   }
