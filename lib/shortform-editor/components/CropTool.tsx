@@ -14,7 +14,7 @@ interface Props {
 }
 
 const DISPLAY_MAX_W = 700;
-const DISPLAY_MAX_H = Math.round(window?.innerHeight * 0.6 || 500);
+const DISPLAY_MAX_H = typeof window !== 'undefined' ? Math.round(window.innerHeight * 0.6) : 500;
 
 export default function CropTool({ imageDataUrl, imageWidth, imageHeight, initialCrop, onApply, onApplyAll, onClose }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
