@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     // instructions는 gpt-4o-mini-tts에서만 지원
     if (model === 'gpt-4o-mini-tts' && instructions?.trim()) {
-      (params as Record<string, unknown>).instructions = instructions.trim();
+      (params as unknown as Record<string, unknown>).instructions = instructions.trim();
     }
 
     const audio = await openai.audio.speech.create(params);
