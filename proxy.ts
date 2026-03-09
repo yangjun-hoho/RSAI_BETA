@@ -17,6 +17,11 @@ export async function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // /api/admin/sidebar-settings GET은 누구나 허용 (사이드바 렌더링용)
+  if (isAdmin && pathname === '/api/admin/sidebar-settings' && req.method === 'GET') {
+    return NextResponse.next();
+  }
+
   const token = req.cookies.get(COOKIE_NAME)?.value;
   const session = token ? await verifySession(token) : null;
 

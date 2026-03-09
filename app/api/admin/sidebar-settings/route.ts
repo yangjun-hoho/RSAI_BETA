@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAppDb } from '@/lib/app-db/db';
 import { verifySession, COOKIE_NAME } from '@/lib/auth/session';
 
+export const dynamic = 'force-dynamic';
+
 // GET - 비로그인 포함 누구나 조회 가능 (사이드바 렌더링용)
 export async function GET() {
   const row = getAppDb()

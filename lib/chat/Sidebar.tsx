@@ -86,7 +86,7 @@ export default function Sidebar({ activeMode, onToolClick }: SidebarProps) {
     fetch('/api/auth/me').then(r => r.json()).then(d => {
       if (d.user?.role === 'admin') setIsAdmin(true);
     });
-    fetch('/api/admin/sidebar-settings').then(r => r.json()).then(d => {
+    fetch('/api/admin/sidebar-settings', { cache: 'no-store' }).then(r => r.json()).then(d => {
       if (d.settings) setSidebarSettings(d.settings);
     }).catch(() => {});
   }, []);
