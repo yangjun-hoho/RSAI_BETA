@@ -31,7 +31,7 @@ export default function ReportPage() {
     try {
       const result = await generateReportContent(params);
       setGeneratedReport({
-        ...result,
+        ...(result as object),
         ...(formValues.managerInfo && { managerInfo: String(formValues.managerInfo) }),
         ...(formValues.teamLeaderInfo && { teamLeaderInfo: String(formValues.teamLeaderInfo) }),
       });
