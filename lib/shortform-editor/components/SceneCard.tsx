@@ -126,6 +126,7 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
             title="이미지 업로드"
           >
             {thumb ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={thumb} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
             ) : (
               <>

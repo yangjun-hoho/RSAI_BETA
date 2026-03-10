@@ -84,9 +84,9 @@ export async function POST(request: NextRequest) {
       finalPath = concatPath;
     }
 
-    // 배경음악 믹싱
+    // 배경음악 믹싱 (bgMusicId는 파일명 전체 ex: upbeat.mp3)
     if (bgMusicId !== 'none') {
-      const bgmPath = join(process.cwd(), 'public', 'bgm', `${bgMusicId}.mp3`);
+      const bgmPath = join(process.cwd(), 'public', 'bgm', bgMusicId);
       const withBgmPath = join(tmpDir, 'with_bgm.mp4');
       try {
         await execAsync(

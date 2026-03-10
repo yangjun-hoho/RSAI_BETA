@@ -1,77 +1,99 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
-import { Scene, ProjectSettings, BGM_OPTIONS, FONT_OPTIONS, DEFAULT_SUBTITLE } from '../types';
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import { Scene, ProjectSettings, FONT_OPTIONS, DEFAULT_SUBTITLE } from '../types';
+
+interface BgmItem { id: string; label: string; file: string }
+
+const CANVAS_W = 297;
+const CANVAS_H = 528;
 
 interface Props {
   scene: Scene | null;
   settings: ProjectSettings;
   onUpdateScene: (updates: Partial<Scene>) => void;
   onUpdateSettings: (updates: Partial<ProjectSettings>) => void;
-  part?: 'preview' | 'settings'; // 기본값: 'preview'
+  part?: 'preview' | 'settings';
 }
 
-// 크롭 데이터를 기반으로 canvas에 9:16 이미지 그리기
-function drawCroppedImage(canvas: HTMLCanvasElement, scene: Scene) {
+interface DragPos { x: number; y: number }
+
+function getSubtitleBaseY(position: 'top' | 'center' | 'bottom', fontSize: number, totalH: number, canvasH: number): number {
+  if (position === 'top') return fontSize * 2;
+  if (position === 'center') return (canvasH - totalH) / 2 + fontSize;
+  return canvasH - totalH - fontSize * 1.5;
+}
+
+// 이미지 캐시: src → HTMLImageElement (로드 완료된 것만 저장)
+const imageCache = new Map<string, HTMLImageElement>();
+
+function loadImage(src: string): Promise<HTMLImageElement> {
+  const cached = imageCache.get(src);
+  if (cached) return Promise.resolve(cached);
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => { imageCache.set(src, img); resolve(img); };
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function drawSubtitleOnCtx(ctx: CanvasRenderingContext2D, scene: Scene, canvasW: number, canvasH: number, drag?: DragPos | null) {
+  if (!scene.subtitle.enabled || !scene.script.trim()) return;
+  const sub = scene.subtitle;
+  const fontSize = Math.round(sub.size * (canvasW / 1080));
+  ctx.font = `bold ${fontSize}px "${sub.font}", sans-serif`;
+
+  const maxWidth = canvasW * 0.9;
+  const lines = wrapText(ctx, scene.script, maxWidth);
+  const lineH = fontSize * 1.3;
+  const totalH = lines.length * lineH;
+
+  const centerX = drag?.x !== undefined
+    ? drag.x
+    : (sub.customX !== null && sub.customX !== undefined ? (sub.customX / 100) * canvasW : canvasW / 2);
+
+  const baseY = drag?.y !== undefined
+    ? drag.y
+    : (sub.customY !== null && sub.customY !== undefined
+        ? (sub.customY / 100) * canvasH
+        : getSubtitleBaseY(sub.position, fontSize, totalH, canvasH));
+
+  ctx.textAlign = 'center';
+  lines.forEach((line, i) => {
+    const y = baseY + i * lineH;
+    if (sub.borderWidth > 0) {
+      ctx.strokeStyle = sub.borderColor;
+      ctx.lineWidth = sub.borderWidth * 2;
+      ctx.lineJoin = 'round';
+      ctx.strokeText(line, centerX, y);
+    }
+    ctx.fillStyle = sub.color;
+    ctx.fillText(line, centerX, y);
+  });
+}
+
+function drawScene(canvas: HTMLCanvasElement, scene: Scene, cachedImg: HTMLImageElement | null, drag?: DragPos | null) {
   const ctx = canvas.getContext('2d');
-  if (!ctx || !scene.imageDataUrl) return;
+  if (!ctx) return;
 
-  const img = new Image();
-  img.onload = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
-
+  if (cachedImg) {
+    let sx = 0, sy = 0, sw = cachedImg.naturalWidth, sh = cachedImg.naturalHeight;
     if (scene.crop) {
       sx = scene.crop.x; sy = scene.crop.y;
       sw = scene.crop.width; sh = scene.crop.height;
     } else {
-      // 기본 중앙 9:16 크롭
-      const targetRatio = 9 / 16;
+      const ratio = 9 / 16;
       const imgRatio = sw / sh;
-      if (imgRatio > targetRatio) {
-        sw = sh * targetRatio;
-        sx = (img.naturalWidth - sw) / 2;
-      } else {
-        sh = sw / targetRatio;
-        sy = (img.naturalHeight - sh) / 2;
-      }
+      if (imgRatio > ratio) { sw = sh * ratio; sx = (cachedImg.naturalWidth - sw) / 2; }
+      else { sh = sw / ratio; sy = (cachedImg.naturalHeight - sh) / 2; }
     }
+    ctx.drawImage(cachedImg, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+  }
 
-    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
-
-    // 자막 렌더링
-    if (scene.subtitle.enabled && scene.script.trim()) {
-      const sub = scene.subtitle;
-      const fontSize = Math.round(sub.size * (canvas.width / 1080));
-      ctx.font = `bold ${fontSize}px "${sub.font}", sans-serif`;
-      ctx.textAlign = 'center';
-
-      const text = scene.script;
-      const maxWidth = canvas.width * 0.9;
-      const lines = wrapText(ctx, text, maxWidth);
-
-      const lineH = fontSize * 1.3;
-      const totalH = lines.length * lineH;
-      let baseY = 0;
-      if (sub.position === 'top') baseY = fontSize * 2;
-      else if (sub.position === 'center') baseY = (canvas.height - totalH) / 2 + fontSize;
-      else baseY = canvas.height - totalH - fontSize * 1.5;
-
-      lines.forEach((line, i) => {
-        const y = baseY + i * lineH;
-        if (sub.borderWidth > 0) {
-          ctx.strokeStyle = sub.borderColor;
-          ctx.lineWidth = sub.borderWidth * 2;
-          ctx.lineJoin = 'round';
-          ctx.strokeText(line, canvas.width / 2, y);
-        }
-        ctx.fillStyle = sub.color;
-        ctx.fillText(line, canvas.width / 2, y);
-      });
-    }
-  };
-  img.src = scene.imageDataUrl;
+  drawSubtitleOnCtx(ctx, scene, canvas.width, canvas.height, drag);
 }
 
 function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
@@ -80,12 +102,8 @@ function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number)
   let current = '';
   for (const word of words) {
     const test = current ? `${current} ${word}` : word;
-    if (ctx.measureText(test).width > maxWidth && current) {
-      lines.push(current);
-      current = word;
-    } else {
-      current = test;
-    }
+    if (ctx.measureText(test).width > maxWidth && current) { lines.push(current); current = word; }
+    else current = test;
   }
   if (current) lines.push(current);
   return lines;
@@ -95,49 +113,150 @@ export default function PreviewPanel({ scene, settings, onUpdateScene, onUpdateS
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [activeTab, setActiveTab] = useState<'subtitle' | 'bgm'>('subtitle');
+  const [bgmList, setBgmList] = useState<BgmItem[]>([]);
+  const bgmAudioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
+    fetch('/api/shortform-editor/bgm')
+      .then(r => r.json())
+      .then((list: BgmItem[]) => setBgmList(list))
+      .catch(() => setBgmList([]));
+  }, []);
+
+  // 자막 드래그 상태 (캔버스 픽셀 좌표)
+  const draggingRef = useRef(false);
+  const [drag, setDrag] = useState<DragPos | null>(null);
+
+  // 이미지 캐시 ref (imageDataUrl 변경 시에만 재로드)
+  const cachedImgRef = useRef<HTMLImageElement | null>(null);
+
+  const sub = useMemo(() => scene?.subtitle ?? { ...DEFAULT_SUBTITLE }, [scene?.subtitle]);
+
+  // imageDataUrl 변경 시 이미지 로드 후 저장
+  useEffect(() => {
+    if (!scene?.imageDataUrl) {
+      cachedImgRef.current = null;
+      if (canvasRef.current) drawScene(canvasRef.current, scene!, null, null);
+      return;
+    }
+    loadImage(scene.imageDataUrl).then(img => {
+      cachedImgRef.current = img;
+      if (canvasRef.current && scene) drawScene(canvasRef.current, scene, img, null);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scene?.imageDataUrl, scene?.crop]);
+
+  // 자막/드래그 변경 시 캐싱된 이미지로 즉시 재그리기
+  useEffect(() => {
     if (!canvasRef.current || !scene) return;
-    drawCroppedImage(canvasRef.current, scene);
-  }, [scene?.imageDataUrl, scene?.crop, scene?.script, scene?.subtitle]);
+    drawScene(canvasRef.current, scene, cachedImgRef.current, drag);
+  }, [scene, drag]);
 
-  const sub = scene?.subtitle ?? { ...DEFAULT_SUBTITLE };
+  const toCanvasPos = (e: React.MouseEvent<HTMLCanvasElement>): DragPos => {
+    const rect = (e.target as HTMLCanvasElement).getBoundingClientRect();
+    const scaleX = CANVAS_W / rect.width;
+    const scaleY = CANVAS_H / rect.height;
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY,
+    };
+  };
 
-  // 중앙: 미리보기 캔버스
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!scene?.subtitle.enabled || !scene?.script.trim()) return;
+    draggingRef.current = true;
+    setDrag(toCanvasPos(e));
+  }, [scene]);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!draggingRef.current) return;
+    setDrag(toCanvasPos(e));
+  }, []);
+
+  const handleMouseUp = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!draggingRef.current || !scene) return;
+    draggingRef.current = false;
+    const pos = toCanvasPos(e);
+    const pctX = Math.min(Math.max((pos.x / CANVAS_W) * 100, 0), 100);
+    const pctY = Math.min(Math.max((pos.y / CANVAS_H) * 100, 0), 100);
+    onUpdateScene({ subtitle: { ...sub, customX: pctX, customY: pctY } });
+    setDrag(null);
+  }, [scene, sub, onUpdateScene]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (draggingRef.current && scene) {
+      draggingRef.current = false;
+      setDrag(null);
+    }
+  }, [scene]);
+
+  // 미리보기 파트
   if (part === 'preview') {
+    const hasDraggable = !!(scene?.subtitle.enabled && scene?.script.trim());
+    const hasCustomPos = (sub.customX !== null && sub.customX !== undefined) ||
+                         (sub.customY !== null && sub.customY !== undefined);
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', background: '#080d1a', gap: '0.75rem', padding: '1.25rem 0' }}>
-        <div style={{ position: 'relative' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', background: '#111827', gap: '0.5rem', padding: '0.75rem 0' }}>
+        {/* 상단 레이블 */}
+        <div style={{ fontSize: '0.72rem', color: '#4b5563', letterSpacing: '0.05em' }}>9 : 16 미리보기</div>
+
+        {/* 캔버스 */}
+        <div style={{ position: 'relative', flexShrink: 0 }}>
           <canvas
             ref={canvasRef}
-            width={270}
-            height={480}
-            style={{ display: 'block', borderRadius: '12px', background: '#000', boxShadow: '0 8px 32px rgba(0,0,0,0.7)' }}
+            width={CANVAS_W}
+            height={CANVAS_H}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+            style={{
+              display: 'block', borderRadius: '12px', background: '#1a1a2e',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
+              cursor: hasDraggable ? 'move' : 'default',
+            }}
           />
           {!scene?.imageDataUrl && (
-            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#334155', fontSize: '0.8rem', textAlign: 'center', padding: '1rem' }}>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#374151', fontSize: '0.8rem', textAlign: 'center', padding: '1rem', pointerEvents: 'none' }}>
               장면을 선택하고<br />이미지를 업로드하세요
             </div>
           )}
-          {scene?.audioDataUrl && (
+          {hasDraggable && (
+            <div style={{ position: 'absolute', top: '0.3rem', right: '0.3rem', background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.3)', borderRadius: '4px', padding: '0.15rem 0.4rem', fontSize: '0.62rem', color: '#60a5fa', pointerEvents: 'none' }}>
+              드래그로 자막 이동
+            </div>
+          )}
+        </div>
+
+        {/* 나레이션 버튼 */}
+        {scene?.audioDataUrl && (
+          <>
             <button
               onClick={() => audioRef.current?.paused ? audioRef.current?.play() : audioRef.current?.pause()}
-              style={{ position: 'absolute', bottom: '0.6rem', left: '50%', transform: 'translateX(-50%)', background: 'rgba(59,130,246,0.9)', border: 'none', borderRadius: '20px', color: 'white', padding: '0.3rem 1rem', cursor: 'pointer', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
+              style={{ background: 'rgba(59,130,246,0.85)', border: 'none', borderRadius: '20px', color: 'white', padding: '0.35rem 1.2rem', cursor: 'pointer', fontSize: '0.78rem', whiteSpace: 'nowrap' }}
             >
               나레이션 미리듣기
             </button>
-          )}
-        </div>
-        {scene?.audioDataUrl && <audio ref={audioRef} src={scene.audioDataUrl} />}
-        <div style={{ fontSize: '0.72rem', color: '#334155' }}>9 : 16 미리보기</div>
+            <audio ref={audioRef} src={scene.audioDataUrl} />
+          </>
+        )}
+
+        {/* 자막 위치 리셋 */}
+        {hasCustomPos && (
+          <button
+            onClick={() => onUpdateScene({ subtitle: { ...sub, customX: null, customY: null } })}
+            style={{ background: 'transparent', border: '1px solid #374151', borderRadius: '4px', color: '#6b7280', padding: '0.2rem 0.6rem', cursor: 'pointer', fontSize: '0.7rem' }}
+          >
+            자막 위치 초기화
+          </button>
+        )}
       </div>
     );
   }
 
-  // 우측: 설정 패널
+  // 설정 파트 (우측)
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#0d1526', borderLeft: '1px solid #1e293b' }}>
-      {/* 탭 헤더 */}
       <div style={{ display: 'flex', gap: '0.5rem', padding: '0.75rem 1rem', borderBottom: '1px solid #1e293b', flexShrink: 0 }}>
         {(['subtitle', 'bgm'] as const).map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)} style={{
@@ -155,7 +274,6 @@ export default function PreviewPanel({ scene, settings, onUpdateScene, onUpdateS
         ))}
       </div>
 
-      {/* 탭 내용 */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
         {activeTab === 'subtitle' && (
           <div style={{ border: '1px solid #1e293b', borderRadius: '8px', padding: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
@@ -176,7 +294,7 @@ export default function PreviewPanel({ scene, settings, onUpdateScene, onUpdateS
                     </Row>
                     <Row label="글자색">
                       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                        <input type="color" value={sub.color} onChange={e => onUpdateScene({ subtitle: { ...sub, color: e.target.value } })} style={{ width: 34, height: 30, border: 'none', background: 'none', cursor: 'pointer', padding: 0 }} title="글자 색" />
+                        <input type="color" value={sub.color} onChange={e => onUpdateScene({ subtitle: { ...sub, color: e.target.value } })} style={{ width: 34, height: 30, border: 'none', borderRadius: '40px', background: 'none', cursor: 'pointer', padding: 0 }} title="글자 색" />
                         <input type="color" value={sub.borderColor} onChange={e => onUpdateScene({ subtitle: { ...sub, borderColor: e.target.value } })} style={{ width: 34, height: 30, border: 'none', background: 'none', cursor: 'pointer', padding: 0 }} title="테두리 색" />
                         <span style={{ color: '#64748b', fontSize: '0.72rem' }}>글자 / 테두리</span>
                       </div>
@@ -188,7 +306,7 @@ export default function PreviewPanel({ scene, settings, onUpdateScene, onUpdateS
                       <input type="range" min={0} max={8} value={sub.borderWidth} onChange={e => onUpdateScene({ subtitle: { ...sub, borderWidth: Number(e.target.value) } })} style={{ flex: 1, accentColor: '#3b82f6' }} />
                     </Row>
                     <Row label="위치">
-                      <select value={sub.position} onChange={e => onUpdateScene({ subtitle: { ...sub, position: e.target.value as 'top' | 'center' | 'bottom' } })} style={selectStyle}>
+                      <select value={sub.position} onChange={e => onUpdateScene({ subtitle: { ...sub, position: e.target.value as 'top' | 'center' | 'bottom', customX: null, customY: null } })} style={selectStyle}>
                         <option value="top">상단</option>
                         <option value="center">중앙</option>
                         <option value="bottom">하단</option>
@@ -203,15 +321,52 @@ export default function PreviewPanel({ scene, settings, onUpdateScene, onUpdateS
 
         {activeTab === 'bgm' && (
           <div style={{ border: '1px solid #1e293b', borderRadius: '8px', padding: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
-            <Row label="배경음악">
-              <select value={settings.bgMusicId} onChange={e => onUpdateSettings({ bgMusicId: e.target.value })} style={selectStyle}>
-                {BGM_OPTIONS.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
-              </select>
-            </Row>
-            {settings.bgMusicId !== 'none' && (
-              <Row label={`볼륨 ${Math.round(settings.bgMusicVolume * 100)}%`}>
-                <input type="range" min={0} max={100} value={Math.round(settings.bgMusicVolume * 100)} onChange={e => onUpdateSettings({ bgMusicVolume: Number(e.target.value) / 100 })} style={{ flex: 1, accentColor: '#3b82f6' }} />
-              </Row>
+            {bgmList.length === 0 ? (
+              <p style={{ color: '#475569', fontSize: '0.8rem', margin: 0 }}>
+                public/bgm/ 폴더에 mp3 파일을 넣으면 자동으로 표시됩니다.
+              </p>
+            ) : (
+              <>
+                <Row label="음악">
+                  <div style={{ flex: 1, display: 'flex', gap: '0.4rem' }}>
+                    <select
+                      value={settings.bgMusicId}
+                      onChange={e => {
+                        onUpdateSettings({ bgMusicId: e.target.value });
+                        if (bgmAudioRef.current) { bgmAudioRef.current.pause(); bgmAudioRef.current = null; }
+                      }}
+                      style={{ ...selectStyle, flex: 1 }}
+                    >
+                      <option value="none">없음</option>
+                      {bgmList.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
+                    </select>
+                    {settings.bgMusicId !== 'none' && (
+                      <button
+                        onClick={() => {
+                          const item = bgmList.find(o => o.id === settings.bgMusicId);
+                          if (!item) return;
+                          if (bgmAudioRef.current && !bgmAudioRef.current.paused) {
+                            bgmAudioRef.current.pause();
+                            bgmAudioRef.current = null;
+                          } else {
+                            bgmAudioRef.current = new Audio(item.file);
+                            bgmAudioRef.current.volume = settings.bgMusicVolume;
+                            bgmAudioRef.current.play();
+                          }
+                        }}
+                        style={{ padding: '0.2rem 0.5rem', background: '#1e293b', border: '1px solid #334155', borderRadius: '4px', color: '#94a3b8', cursor: 'pointer', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
+                      >
+                        미리듣기
+                      </button>
+                    )}
+                  </div>
+                </Row>
+                {settings.bgMusicId !== 'none' && (
+                  <Row label={`볼륨 ${Math.round(settings.bgMusicVolume * 100)}%`}>
+                    <input type="range" min={0} max={100} value={Math.round(settings.bgMusicVolume * 100)} onChange={e => onUpdateSettings({ bgMusicVolume: Number(e.target.value) / 100 })} style={{ flex: 1, accentColor: '#3b82f6' }} />
+                  </Row>
+                )}
+              </>
             )}
           </div>
         )}

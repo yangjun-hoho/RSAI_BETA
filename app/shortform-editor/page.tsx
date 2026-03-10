@@ -37,7 +37,9 @@ async function buildCompositeBlob(scene: Scene): Promise<Blob> {
         const lineH = sub.size * 1.3;
         const totalH = lines.length * lineH;
         let baseY = 0;
-        if (sub.position === 'top') baseY = sub.size * 2;
+        if (sub.customY !== null && sub.customY !== undefined) {
+          baseY = (sub.customY / 100) * 1920;
+        } else if (sub.position === 'top') baseY = sub.size * 2;
         else if (sub.position === 'center') baseY = (1920 - totalH) / 2 + sub.size;
         else baseY = 1920 - totalH - sub.size * 1.5;
         lines.forEach((line, i) => {

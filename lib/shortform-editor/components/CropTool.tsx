@@ -14,7 +14,7 @@ interface Props {
 }
 
 const DISPLAY_MAX_W = 700;
-const DISPLAY_MAX_H = typeof window !== 'undefined' ? Math.round(window.innerHeight * 0.6) : 500;
+const DISPLAY_MAX_H = 500;
 
 export default function CropTool({ imageDataUrl, imageWidth, imageHeight, initialCrop, onApply, onApplyAll, onClose }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -115,6 +115,7 @@ export default function CropTool({ imageDataUrl, imageWidth, imageHeight, initia
         {/* 이미지 + 크롭 박스 */}
         <div ref={containerRef} style={{ position: 'relative', width: dw, height: dh, background: '#000', userSelect: 'none', overflow: 'hidden', borderRadius: '6px' }}>
           {/* 어두운 전체 이미지 */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={imageDataUrl} style={{ position: 'absolute', width: dw, height: dh, objectFit: 'fill', opacity: 0.35 }} alt="" draggable={false} />
 
           {/* 밝은 크롭 영역 */}
@@ -123,6 +124,7 @@ export default function CropTool({ imageDataUrl, imageWidth, imageHeight, initia
             onMouseDown={handleMouseDown}
           >
             {/* 원본 밝기로 보이는 이미지 조각 */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={imageDataUrl}
               style={{ position: 'absolute', width: dw, height: dh, objectFit: 'fill', left: -bx, top: -by, pointerEvents: 'none' }}

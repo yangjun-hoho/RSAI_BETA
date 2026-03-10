@@ -14,6 +14,8 @@ export interface SubtitleStyle {
   borderWidth: number;
   borderColor: string;
   position: 'top' | 'center' | 'bottom';
+  customY: number | null;  // 0~100 (캔버스 높이 %) - null이면 position 사용
+  customX: number | null;  // 0~100 (캔버스 너비 %) - null이면 중앙(50)
 }
 
 export const DEFAULT_SUBTITLE: SubtitleStyle = {
@@ -24,6 +26,8 @@ export const DEFAULT_SUBTITLE: SubtitleStyle = {
   borderWidth: 3,
   borderColor: '#000000',
   position: 'bottom',
+  customY: null,
+  customX: null,
 };
 
 export interface TtsSettings {
