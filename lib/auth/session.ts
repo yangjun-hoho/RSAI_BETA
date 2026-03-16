@@ -1,8 +1,10 @@
 import { SignJWT, jwtVerify } from 'jose';
 
-const SECRET = new TextEncoder().encode(
-  process.env.AUTH_SECRET || 'ares-ai-default-secret-change-in-production'
-);
+if (!process.env.AUTH_SECRET) {
+  throw new Error('[session.ts] AUTH_SECRET 환경변수가 설정되지 않았습니다. .env 파일에 AUTH_SECRET을 추가하세요.');
+}
+
+const SECRET = new TextEncoder().encode(process.env.AUTH_SECRET);
 
 const COOKIE_NAME = 'ares-session';
 const EXPIRY = '7d';

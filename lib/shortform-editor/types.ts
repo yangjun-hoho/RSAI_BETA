@@ -1,3 +1,38 @@
+// 장면 전환 효과
+export type TransitionType =
+  'none' | 'fade' | 'fadeblack' | 'fadewhite' | 'dissolve' |
+  'wipeleft' | 'wiperight' | 'wipeup' | 'wipedown' |
+  'slideleft' | 'slideright' | 'slideup' | 'slidedown' |
+  'smoothleft' | 'smoothright' | 'zoomin' | 'radial' | 'pixelize';
+
+export interface Transition {
+  type: TransitionType;
+  duration: number; // 초 (0.2 ~ 1.5)
+}
+
+export const DEFAULT_TRANSITION: Transition = { type: 'none', duration: 0.5 };
+
+export const TRANSITION_OPTIONS: { id: TransitionType; label: string }[] = [
+  { id: 'none',        label: '없음 (컷)' },
+  { id: 'fade',        label: '페이드' },
+  { id: 'fadeblack',   label: '검정 페이드' },
+  { id: 'fadewhite',   label: '흰색 페이드' },
+  { id: 'dissolve',    label: '디졸브' },
+  { id: 'wipeleft',    label: '와이프 ←' },
+  { id: 'wiperight',   label: '와이프 →' },
+  { id: 'wipeup',      label: '와이프 ↑' },
+  { id: 'wipedown',    label: '와이프 ↓' },
+  { id: 'slideleft',   label: '슬라이드 ←' },
+  { id: 'slideright',  label: '슬라이드 →' },
+  { id: 'slideup',     label: '슬라이드 ↑' },
+  { id: 'slidedown',   label: '슬라이드 ↓' },
+  { id: 'smoothleft',  label: '부드러운 ←' },
+  { id: 'smoothright', label: '부드러운 →' },
+  { id: 'zoomin',      label: '줌인' },
+  { id: 'radial',      label: '방사형' },
+  { id: 'pixelize',    label: '픽셀화' },
+];
+
 // 9:16 크롭 영역 (원본 이미지 픽셀 기준)
 export interface CropData {
   x: number;      // 크롭 시작 X (픽셀)
@@ -46,6 +81,24 @@ export const DEFAULT_TTS: TtsSettings = {
   instructions: '',
 };
 
+// 장면 내 동작 효과 (줌/패닝)
+export type MotionEffectType =
+  'none' | 'zoomin' | 'zoomout' | 'panleft' | 'panright' | 'kenburns' |
+  'zoomin-fast' | 'zoomout-fast' | 'panleft-fast' | 'panright-fast';
+
+export const MOTION_EFFECT_OPTIONS: { id: MotionEffectType; label: string }[] = [
+  { id: 'none',          label: '없음' },
+  { id: 'zoomin',        label: '줌인 (중앙 기준 1.0→1.3배 서서히 확대)' },
+  { id: 'zoomout',       label: '줌아웃 (중앙 기준 1.3→1.0배 서서히 축소)' },
+  { id: 'panleft',       label: '좌→우 패닝 (1.2배 고정, 왼쪽에서 오른쪽으로 이동)' },
+  { id: 'panright',      label: '우→좌 패닝 (1.2배 고정, 오른쪽에서 왼쪽으로 이동)' },
+  { id: 'kenburns',      label: '켄번즈 (1.0→1.25배 확대 + 좌→우 패닝 동시)' },
+  { id: 'zoomin-fast',   label: '빠른 줌인 (중앙 기준 1.0→1.6배 빠르게 확대)' },
+  { id: 'zoomout-fast',  label: '빠른 줌아웃 (중앙 기준 1.6→1.0배 빠르게 축소)' },
+  { id: 'panleft-fast',  label: '빠른 좌→우 패닝 (1.5배 고정, 빠르게 이동)' },
+  { id: 'panright-fast', label: '빠른 우→좌 패닝 (1.5배 고정, 빠르게 이동)' },
+];
+
 export interface Scene {
   id: string;
   imageDataUrl: string | null;  // 원본 이미지 (data URL)
@@ -57,16 +110,22 @@ export interface Scene {
   audioDuration: number;        // 초 (기본 5초)
   subtitle: SubtitleStyle;
   tts: TtsSettings;
+  transition: Transition;       // 다음 장면으로 넘어갈 때 효과 (마지막 장면은 무시됨)
+  motionEffect: MotionEffectType; // 장면 내 동작 효과
 }
 
 export interface ProjectSettings {
-  bgMusicId: string;      // 'none' | 'upbeat' | 'calm' | 'dramatic'
-  bgMusicVolume: number;  // 0~1
+  bgMusicId: string;              // 'none' | 'upbeat' | 'calm' | 'dramatic'
+  bgMusicVolume: number;          // 0~1
+  bgMusicFadeOut: boolean;        // 영상 끝에 BGM 페이드아웃
+  bgMusicFadeOutDuration: number; // 페이드아웃 시간(초, 1~5)
 }
 
 export const DEFAULT_SETTINGS: ProjectSettings = {
   bgMusicId: 'none',
   bgMusicVolume: 0.3,
+  bgMusicFadeOut: true,
+  bgMusicFadeOutDuration: 3,
 };
 
 export const BGM_OPTIONS = [

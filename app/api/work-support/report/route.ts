@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rejectIfPii } from '@/lib/security/piiFilter';
+import { logAudit } from '@/lib/security/auditLog';
+import { rejectIfTooLong } from '@/lib/security/inputValidation';
 
 // ─── 타입 매핑 (영문 ID → 한글 레이블) ───────────────────────────────────────
 const reportTypeMap: Record<string, string> = {
@@ -272,6 +274,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '보고서 유형과 제목을 입력해주세요.' }, { status: 400 });
     }
 
+    const lenBlock = rejectIfTooLong([
+      { value: title, label: '제목', max: 200 },
+      { value: keyContent, label: '핵심내용', max: 2000 },
+    ]);
+    if (lenBlock) return lenBlock;
+
     const piiBlock = rejectIfPii([title], '/api/work-support/report');
     if (piiBlock) return piiBlock;
 
@@ -340,6 +348,7 @@ export async function POST(request: NextRequest) {
       reportData = parseJsonResponse(text, title, koreanType, koreanDetail, model);
     }
 
+    void logAudit(request, { statusCode: 200 });
     return NextResponse.json({ report: reportData });
   } catch (error) {
     console.error('[report API error]', error);

@@ -42,3 +42,6 @@ next-env.d.ts
 
 # RAG data (DB + uploaded files)
 /data/
+
+# docs (서버 정보·보안 분석 등 민감 문서)
+/docs/

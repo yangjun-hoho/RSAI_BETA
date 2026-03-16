@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Scene, ProjectSettings, DEFAULT_SUBTITLE, DEFAULT_SETTINGS, DEFAULT_TTS } from '../types';
+import { Scene, ProjectSettings, DEFAULT_SUBTITLE, DEFAULT_SETTINGS, DEFAULT_TTS, DEFAULT_TRANSITION } from '../types';
 
 function newId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2);
@@ -19,6 +19,8 @@ export function makeDefaultScene(): Scene {
     audioDuration: 5,
     subtitle: { ...DEFAULT_SUBTITLE },
     tts: { ...DEFAULT_TTS },
+    transition: { ...DEFAULT_TRANSITION },
+    motionEffect: 'none',
   };
 }
 

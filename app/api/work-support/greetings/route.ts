@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { speechCategoryData, getSpeechLength } from '@/lib/work-support/greetings/templates';
 import { rejectIfPii } from '@/lib/security/piiFilter';
+import { logAudit } from '@/lib/security/auditLog';
+import { rejectIfTooLong } from '@/lib/security/inputValidation';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -24,6 +26,13 @@ export async function POST(request: NextRequest) {
     if (!speechCategory || !specificSituation) {
       return NextResponse.json({ error: '행사 유형과 구체적인 상황을 입력해주세요.' }, { status: 400 });
     }
+
+    const lenBlock = rejectIfTooLong([
+      { value: specificSituation, label: '구체적인 상황', max: 1000 },
+      { value: coreContent, label: '핵심 내용', max: 1000 },
+      { value: speaker, label: '발화자', max: 100 },
+    ]);
+    if (lenBlock) return lenBlock;
 
     const piiBlock = rejectIfPii([specificSituation, speaker, coreContent].filter(Boolean) as string[], '/api/work-support/greetings');
     if (piiBlock) return piiBlock;
@@ -83,6 +92,7 @@ ${coreContent ? `핵심 내용: ${coreContent}` : ''}
       return NextResponse.json({ error: '인사말씀 생성에 실패했습니다.' }, { status: 500 });
     }
 
+    void logAudit(request, { statusCode: 200 });
     return NextResponse.json({ greeting });
   } catch (error) {
     console.error('[greetings API error]', error);

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rejectIfPii } from '@/lib/security/piiFilter';
+import { logAudit } from '@/lib/security/auditLog';
+import { rejectIfTooLong } from '@/lib/security/inputValidation';
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,6 +10,11 @@ export async function POST(request: NextRequest) {
     if (!options.meritField || !options.majorAchievements) {
       return NextResponse.json({ error: '필수 정보가 누락되었습니다.' }, { status: 400 });
     }
+
+    const lenBlock = rejectIfTooLong([
+      { value: options.majorAchievements, label: '주요 공적', max: 2000 },
+    ]);
+    if (lenBlock) return lenBlock;
 
     const piiBlock = rejectIfPii([options.majorAchievements], '/api/work-support/merit-citation');
     if (piiBlock) return piiBlock;
@@ -114,6 +121,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '공적조서 생성에 실패했습니다.' }, { status: 500 });
     }
 
+    void logAudit(request, { statusCode: 200 });
     return NextResponse.json({
       citation,
       title: `${options.targetType} 공적조서 - ${options.meritField} 분야`,

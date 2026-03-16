@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Scene, DEFAULT_TTS, VOICE_OPTIONS_TTS1, VOICE_OPTIONS_MINI_TTS, FORMAT_OPTIONS } from '../types';
+import { Scene, DEFAULT_TTS, VOICE_OPTIONS_TTS1, VOICE_OPTIONS_MINI_TTS, FORMAT_OPTIONS, DEFAULT_TRANSITION, TRANSITION_OPTIONS, TransitionType, MOTION_EFFECT_OPTIONS, MotionEffectType } from '../types';
 import CropTool from './CropTool';
 
 interface Props {
@@ -26,6 +26,7 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const tts = scene.tts ?? { ...DEFAULT_TTS };
+  const trans = scene.transition ?? { ...DEFAULT_TRANSITION };
   const voiceOptions = tts.model === 'gpt-4o-mini-tts' ? VOICE_OPTIONS_MINI_TTS : VOICE_OPTIONS_TTS1;
 
   function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -175,16 +176,61 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
               >
                 {ttsLoading ? '생성 중...' : scene.audioDataUrl ? '음성 재생성' : '음성 생성'}
               </button>
+              {!isLast && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }} onClick={e => e.stopPropagation()}>
+                  <select
+                    value={trans.type}
+                    onChange={e => onUpdate({ transition: { ...trans, type: e.target.value as TransitionType } })}
+                    style={{ width: '86px', padding: '0.2rem 0.25rem', background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155', borderRadius: '4px', fontSize: '0.72rem', flexShrink: 0 }}
+                  >
+                    {TRANSITION_OPTIONS.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
+                  </select>
+                  {trans.type !== 'none' && (
+                    <>
+                      <input
+                        type="range" min={2} max={15} step={1}
+                        value={Math.round(trans.duration * 10)}
+                        onChange={e => onUpdate({ transition: { ...trans, duration: Number(e.target.value) / 10 } })}
+                        style={{ width: '44px', accentColor: '#3b82f6', flexShrink: 0 }}
+                      />
+                      <span style={{ color: '#94a3b8', fontSize: '0.68rem', flexShrink: 0 }}>{trans.duration.toFixed(1)}s</span>
+                    </>
+                  )}
+                </div>
+              )}
               {scene.audioDataUrl && (
-                <button
-                  onClick={e => { e.stopPropagation(); handleDownloadAudio(); }}
-                  style={actionBtn('#065f46')}
-                  title="음성 파일 다운로드"
-                >
-                  다운로드
-                </button>
+                <>
+                  <button
+                    onClick={e => { e.stopPropagation(); handleDownloadAudio(); }}
+                    style={actionBtn('#065f46')}
+                    title="음성 파일 다운로드"
+                  >
+                    다운로드
+                  </button>
+                  <button
+                    onClick={e => { e.stopPropagation(); onUpdate({ audioDataUrl: null, audioDuration: 5 }); }}
+                    style={actionBtn('#7f1d1d')}
+                    title="음성 제거"
+                  >
+                    음성 제거
+                  </button>
+                </>
               )}
             </div>
+
+            {/* 동작 효과 */}
+            {scene.imageDataUrl && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }} onClick={e => e.stopPropagation()}>
+                <span style={{ color: '#64748b', fontSize: '0.7rem', flexShrink: 0 }}>동작 효과</span>
+                <select
+                  value={scene.motionEffect ?? 'none'}
+                  onChange={e => onUpdate({ motionEffect: e.target.value as MotionEffectType })}
+                  style={{ flex: 1, padding: '0.2rem 0.25rem', background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155', borderRadius: '4px', fontSize: '0.72rem' }}
+                >
+                  {MOTION_EFFECT_OPTIONS.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
+                </select>
+              </div>
+            )}
 
             {/* TTS 설정 패널 */}
             {showTtsSettings && (
@@ -276,6 +322,7 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
                 {scene.audioDataUrl ? `음성 ✓ ${scene.audioDuration}초` : '음성 없음'}
               </span>
             </div>
+
           </div>
         </div>
       </div>

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { rejectIfPii } from '@/lib/security/piiFilter';
+import { logAudit } from '@/lib/security/auditLog';
+import { rejectIfTooLong } from '@/lib/security/inputValidation';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -103,6 +105,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'action과 핵심 내용을 입력해주세요.' }, { status: 400 });
     }
 
+    const lenBlock = rejectIfTooLong([
+      { value: coreContent, label: '핵심 내용', max: 2000 },
+      { value: title, label: '제목', max: 200 },
+    ]);
+    if (lenBlock) return lenBlock;
+
     const piiBlock = rejectIfPii([coreContent, title].filter(Boolean) as string[], '/api/work-support/press-release');
     if (piiBlock) return piiBlock;
 
@@ -110,6 +118,7 @@ export async function POST(request: NextRequest) {
 
     if (action === 'generateTitles') {
       const titles = await generateTitles(coreContent, cleanedKeywords);
+      void logAudit(request, { statusCode: 200 });
       return NextResponse.json({ titles });
     }
 
@@ -118,6 +127,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: '제목을 선택해주세요.' }, { status: 400 });
       }
       const pressRelease = await generatePressRelease(title, coreContent, cleanedKeywords);
+      void logAudit(request, { statusCode: 200 });
       return NextResponse.json({ pressRelease });
     }
 

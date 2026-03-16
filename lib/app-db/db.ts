@@ -83,6 +83,18 @@ function initTables(db: Database.Database) {
       key   TEXT PRIMARY KEY,
       value TEXT NOT NULL DEFAULT ''
     );
+
+    CREATE TABLE IF NOT EXISTS audit_logs (
+      id           INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id      INTEGER,
+      nickname     TEXT,
+      ip           TEXT    NOT NULL DEFAULT '',
+      method       TEXT    NOT NULL DEFAULT '',
+      path         TEXT    NOT NULL,
+      status_code  INTEGER,
+      user_agent   TEXT,
+      created_at   TEXT    NOT NULL DEFAULT (datetime('now', 'localtime'))
+    );
   `);
 
   // 기존 테이블에 컬럼 추가 (이미 있으면 무시)

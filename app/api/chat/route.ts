@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server';
 import OpenAI from 'openai';
 import { rejectIfPii } from '@/lib/security/piiFilter';
+import { logAudit } from '@/lib/security/auditLog';
+import { rejectIfTooLong } from '@/lib/security/inputValidation';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -19,13 +21,16 @@ export async function POST(req: NextRequest) {
     model: string;
   };
 
-  // 마지막 user 메시지에 PII 검사
+  // 마지막 user 메시지 검사
   const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
   if (lastUserMsg) {
+    const lenBlock = rejectIfTooLong([{ value: lastUserMsg.content, label: '메시지', max: 3000 }]);
+    if (lenBlock) return lenBlock;
     const piiBlock = rejectIfPii([lastUserMsg.content], '/api/chat');
     if (piiBlock) return piiBlock;
   }
 
+  void logAudit(req, { statusCode: 200 });
   const encoder = new TextEncoder();
 
   if (model === 'gemini-2.5-flash-lite' || model.startsWith('gemini')) {

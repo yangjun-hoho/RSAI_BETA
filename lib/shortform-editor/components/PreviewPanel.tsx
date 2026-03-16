@@ -115,6 +115,7 @@ export default function PreviewPanel({ scene, settings, onUpdateScene, onUpdateS
   const [activeTab, setActiveTab] = useState<'subtitle' | 'bgm'>('subtitle');
   const [bgmList, setBgmList] = useState<BgmItem[]>([]);
   const bgmAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [bgmPlaying, setBgmPlaying] = useState(false);
 
   useEffect(() => {
     fetch('/api/shortform-editor/bgm')
@@ -136,7 +137,7 @@ export default function PreviewPanel({ scene, settings, onUpdateScene, onUpdateS
   useEffect(() => {
     if (!scene?.imageDataUrl) {
       cachedImgRef.current = null;
-      if (canvasRef.current) drawScene(canvasRef.current, scene!, null, null);
+      if (canvasRef.current && scene) drawScene(canvasRef.current, scene, null, null);
       return;
     }
     loadImage(scene.imageDataUrl).then(img => {
@@ -198,7 +199,7 @@ export default function PreviewPanel({ scene, settings, onUpdateScene, onUpdateS
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', background: '#111827', gap: '0.5rem', padding: '0.75rem 0' }}>
         {/* 상단 레이블 */}
-        <div style={{ fontSize: '0.72rem', color: '#4b5563', letterSpacing: '0.05em' }}>9 : 16 미리보기</div>
+        <div style={{ fontSize: '1rem', color: '#b6babeff', letterSpacing: '0.05em' }}>9:16 미리보기</div>
 
         {/* 캔버스 */}
         <div style={{ position: 'relative', flexShrink: 0 }}>
@@ -348,23 +349,49 @@ export default function PreviewPanel({ scene, settings, onUpdateScene, onUpdateS
                           if (bgmAudioRef.current && !bgmAudioRef.current.paused) {
                             bgmAudioRef.current.pause();
                             bgmAudioRef.current = null;
+                            setBgmPlaying(false);
                           } else {
                             bgmAudioRef.current = new Audio(item.file);
                             bgmAudioRef.current.volume = settings.bgMusicVolume;
                             bgmAudioRef.current.play();
+                            bgmAudioRef.current.onended = () => setBgmPlaying(false);
+                            setBgmPlaying(true);
                           }
                         }}
-                        style={{ padding: '0.2rem 0.5rem', background: '#1e293b', border: '1px solid #334155', borderRadius: '4px', color: '#94a3b8', cursor: 'pointer', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
+                        style={{ padding: '0.2rem 0.5rem', background: bgmPlaying ? '#374151' : '#1e293b', border: `1px solid ${bgmPlaying ? '#6b7280' : '#334155'}`, borderRadius: '4px', color: bgmPlaying ? '#f87171' : '#94a3b8', cursor: 'pointer', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
                       >
-                        미리듣기
+                        {bgmPlaying ? '■ 취소' : '▶ 미리듣기'}
                       </button>
                     )}
                   </div>
                 </Row>
                 {settings.bgMusicId !== 'none' && (
-                  <Row label={`볼륨 ${Math.round(settings.bgMusicVolume * 100)}%`}>
-                    <input type="range" min={0} max={100} value={Math.round(settings.bgMusicVolume * 100)} onChange={e => onUpdateSettings({ bgMusicVolume: Number(e.target.value) / 100 })} style={{ flex: 1, accentColor: '#3b82f6' }} />
-                  </Row>
+                  <>
+                    <Row label={`볼륨 ${Math.round(settings.bgMusicVolume * 100)}%`}>
+                      <input type="range" min={0} max={100} value={Math.round(settings.bgMusicVolume * 100)} onChange={e => onUpdateSettings({ bgMusicVolume: Number(e.target.value) / 100 })} style={{ flex: 1, accentColor: '#3b82f6' }} />
+                    </Row>
+                    <Row label="페이드아웃">
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', cursor: 'pointer' }}>
+                        <input
+                          type="checkbox"
+                          checked={settings.bgMusicFadeOut ?? true}
+                          onChange={e => onUpdateSettings({ bgMusicFadeOut: e.target.checked })}
+                          style={{ accentColor: '#3b82f6', width: 14, height: 14 }}
+                        />
+                        <span style={{ color: '#94a3b8', fontSize: '0.78rem' }}>영상 끝에 자연스럽게 페이드아웃</span>
+                      </label>
+                    </Row>
+                    {(settings.bgMusicFadeOut ?? true) && (
+                      <Row label={`시간 ${settings.bgMusicFadeOutDuration ?? 3}s`}>
+                        <input
+                          type="range" min={1} max={5} step={1}
+                          value={settings.bgMusicFadeOutDuration ?? 3}
+                          onChange={e => onUpdateSettings({ bgMusicFadeOutDuration: Number(e.target.value) })}
+                          style={{ flex: 1, accentColor: '#3b82f6' }}
+                        />
+                      </Row>
+                    )}
+                  </>
                 )}
               </>
             )}

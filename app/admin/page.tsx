@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { TOOLS, SHORTCUTS, MEMBER_LINKS } from '@/lib/chat/Sidebar';
 
-type Tab = 'dashboard' | 'users' | 'posts' | 'pii' | 'notices' | 'sidebar';
+type Tab = 'dashboard' | 'users' | 'posts' | 'pii' | 'notices' | 'sidebar' | 'audit';
 
 interface Stats { totalUsers: number; todayJoined: number; totalPosts: number; piiThisMonth: number; recentUsers: AdminUser[]; recentPosts: RecentPost[]; recentPiiLogs: PiiLog[]; }
 interface AdminUser { id: number; nickname: string; role: string; is_active: number; created_at: string; }
@@ -418,6 +418,199 @@ function NoticesTab() {
   );
 }
 
+// ── 감사 로그 탭 ────────────────────────────────────────────
+interface AuditLog {
+  id: number; user_id: number | null; nickname: string | null;
+  ip: string; method: string; path: string; status_code: number;
+  user_agent: string | null; created_at: string;
+}
+interface AuditData { logs: AuditLog[]; total: number; page: number; limit: number; topPaths: { path: string; cnt: number }[]; }
+
+const PATH_LABELS: Record<string, string> = {
+  '/api/chat':                          'AI 채팅',
+  '/api/work-support/report':           '보고서 작성',
+  '/api/work-support/greetings':        '인사말씀',
+  '/api/work-support/merit-citation':   '공적조서',
+  '/api/work-support/press-release':    '보도자료',
+  '/api/rag/query':                     'RAG 질의',
+};
+
+function AuditTab() {
+  const [data, setData]         = useState<AuditData | null>(null);
+  const [page, setPage]         = useState(1);
+  const [filterPath, setFPath]  = useState('');
+  const [filterNick, setFNick]  = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo]     = useState('');
+  const [delConfirm, setDel]    = useState(false);
+  const [delBefore, setDelBefore] = useState('');
+
+  const load = useCallback((p = page) => {
+    const q = new URLSearchParams({ page: String(p), limit: '50' });
+    if (filterPath) q.set('path', filterPath);
+    if (filterNick) q.set('nickname', filterNick);
+    if (dateFrom)   q.set('dateFrom', dateFrom);
+    if (dateTo)     q.set('dateTo', dateTo);
+    fetch(`/api/admin/audit-logs?${q}`).then(r => r.json()).then(setData);
+  }, [page, filterPath, filterNick, dateFrom, dateTo]);
+
+  useEffect(() => { load(); }, [load]);
+
+  async function handleDelete() {
+    const q = delBefore ? `?before=${delBefore}` : '';
+    await fetch(`/api/admin/audit-logs${q}`, { method: 'DELETE' });
+    setDel(false); setDelBefore(''); setPage(1); load(1);
+  }
+
+  const totalPages = data ? Math.ceil(data.total / data.limit) : 1;
+
+  const statusColor = (code: number) =>
+    code >= 500 ? '#dc2626' : code >= 400 ? '#f59e0b' : '#16a34a';
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      {/* 경로별 집계 */}
+      {data && data.topPaths.length > 0 && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.75rem' }}>
+          {data.topPaths.map(p => (
+            <div key={p.path} style={{ ...S.card, textAlign: 'center' }}>
+              <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#37352f' }}>{p.cnt}</div>
+              <div style={{ fontSize: '0.72rem', color: '#9b9a97', marginTop: '0.2rem', wordBreak: 'break-all' }}>
+                {PATH_LABELS[p.path] ?? p.path}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 필터 */}
+      <div style={{ ...S.card, display: 'flex', gap: '0.6rem', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+        <div>
+          <div style={{ fontSize: '0.72rem', color: '#6b7280', marginBottom: '0.25rem', fontWeight: 600 }}>API 경로</div>
+          <select
+            value={filterPath}
+            onChange={e => { setFPath(e.target.value); setPage(1); }}
+            style={{ padding: '0.45rem 0.6rem', border: '1px solid #e0e0e0', borderRadius: '6px', fontSize: '0.82rem', background: 'white', color: '#37352f', cursor: 'pointer', minWidth: '140px' }}
+          >
+            <option value="">전체</option>
+            {Object.entries(PATH_LABELS).map(([val, label]) => (
+              <option key={val} value={val}>{label}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <div style={{ fontSize: '0.72rem', color: '#6b7280', marginBottom: '0.25rem', fontWeight: 600 }}>사용자</div>
+          <input style={{ ...S.input, width: '130px' }} placeholder="별칭 검색" value={filterNick}
+            onChange={e => { setFNick(e.target.value); setPage(1); }} />
+        </div>
+        <div>
+          <div style={{ fontSize: '0.72rem', color: '#6b7280', marginBottom: '0.25rem', fontWeight: 600 }}>시작일</div>
+          <input type="date" style={{ ...S.input, width: '140px' }} value={dateFrom}
+            onChange={e => { setDateFrom(e.target.value); setPage(1); }} />
+        </div>
+        <div>
+          <div style={{ fontSize: '0.72rem', color: '#6b7280', marginBottom: '0.25rem', fontWeight: 600 }}>종료일</div>
+          <input type="date" style={{ ...S.input, width: '140px' }} value={dateTo}
+            onChange={e => { setDateTo(e.target.value); setPage(1); }} />
+        </div>
+        <button style={S.btn()} onClick={() => load(1)}>조회</button>
+        <div style={{ marginLeft: 'auto' }}>
+          <button style={S.btn('#ef4444')} onClick={() => setDel(true)}>로그 삭제</button>
+        </div>
+      </div>
+
+      {/* 삭제 확인 패널 */}
+      {delConfirm && (
+        <div style={{ ...S.card, background: '#fff7ed', border: '1px solid #fed7aa' }}>
+          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#9a3412', marginBottom: '0.6rem' }}>감사 로그 삭제</div>
+          <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '0.82rem', color: '#7c2d12' }}>특정 날짜 이전 삭제:</span>
+            <input type="date" style={{ ...S.input, width: '150px' }} value={delBefore}
+              onChange={e => setDelBefore(e.target.value)} />
+            <span style={{ fontSize: '0.78rem', color: '#9b9a97' }}>(비워두면 전체 삭제)</span>
+            <button style={S.btn('#dc2626')} onClick={handleDelete}>삭제 실행</button>
+            <button style={S.outBtn} onClick={() => setDel(false)}>취소</button>
+          </div>
+        </div>
+      )}
+
+      {/* 로그 테이블 */}
+      <div style={S.card}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+          <h3 style={{ margin: 0, fontSize: '0.88rem', fontWeight: 700 }}>
+            AI API 요청 이력
+            {data && <span style={{ fontSize: '0.78rem', fontWeight: 400, color: '#9b9a97', marginLeft: '0.5rem' }}>총 {data.total.toLocaleString()}건</span>}
+          </h3>
+        </div>
+
+        {!data ? (
+          <div style={{ color: '#9b9a97', fontSize: '0.82rem' }}>불러오는 중...</div>
+        ) : data.logs.length === 0 ? (
+          <div style={{ color: '#9b9a97', fontSize: '0.82rem' }}>조건에 맞는 로그가 없습니다.</div>
+        ) : (
+          <>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr>
+                    <th style={S.th}>시각</th>
+                    <th style={S.th}>사용자</th>
+                    <th style={S.th}>IP</th>
+                    <th style={S.th}>기능</th>
+                    <th style={S.th}>경로</th>
+                    <th style={S.th}>상태</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.logs.map(log => (
+                    <tr key={log.id}>
+                      <td style={{ ...S.td, whiteSpace: 'nowrap', color: '#9b9a97' }}>{log.created_at.slice(0, 16)}</td>
+                      <td style={S.td}>
+                        {log.nickname
+                          ? <span style={{ fontSize: '0.78rem', background: '#f3f4f6', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>{log.nickname}</span>
+                          : <span style={{ color: '#d1d5db', fontSize: '0.75rem' }}>비로그인</span>}
+                      </td>
+                      <td style={{ ...S.td, fontFamily: 'monospace', fontSize: '0.78rem', color: '#6b7280' }}>{log.ip || '-'}</td>
+                      <td style={S.td}>
+                        <span style={{ fontSize: '0.78rem', background: '#eff6ff', color: '#1d4ed8', padding: '0.1rem 0.45rem', borderRadius: '4px', fontWeight: 600 }}>
+                          {PATH_LABELS[log.path] ?? log.path.split('/').pop()}
+                        </span>
+                      </td>
+                      <td style={{ ...S.td, fontFamily: 'monospace', fontSize: '0.72rem', color: '#9b9a97', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{log.path}</td>
+                      <td style={S.td}>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: statusColor(log.status_code) }}>
+                          {log.status_code}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* 페이지네이션 */}
+            {totalPages > 1 && (
+              <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'center', marginTop: '1rem', flexWrap: 'wrap' }}>
+                <button style={S.outBtn} disabled={page <= 1} onClick={() => { setPage(p => p - 1); }}>← 이전</button>
+                {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
+                  const p = Math.max(1, Math.min(totalPages - 6, page - 3)) + i;
+                  return (
+                    <button key={p} onClick={() => setPage(p)}
+                      style={{ ...S.outBtn, background: p === page ? '#37352f' : 'none', color: p === page ? 'white' : '#6b7280', border: p === page ? 'none' : '1px solid #e0e0e0' }}>
+                      {p}
+                    </button>
+                  );
+                })}
+                <button style={S.outBtn} disabled={page >= totalPages} onClick={() => { setPage(p => p + 1); }}>다음 →</button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── 사이드바 관리 탭 ───────────────────────────────────────
 type ItemSetting = { hidden: boolean; badge: string };
 type SettingsMap = Record<string, ItemSetting>;
@@ -555,6 +748,7 @@ export default function AdminPage() {
     { id: 'pii',       label: '🛡️ PII 필터' },
     { id: 'notices',   label: '📢 공지사항' },
     { id: 'sidebar',   label: '🗂️ 사이드바 관리' },
+    { id: 'audit',     label: '🔍 감사 로그' },
   ];
 
   return (
@@ -584,6 +778,7 @@ export default function AdminPage() {
           {tab === 'pii'       && <PiiTab />}
           {tab === 'notices'   && <NoticesTab />}
           {tab === 'sidebar'   && <SidebarTab />}
+          {tab === 'audit'     && <AuditTab />}
         </div>
       </div>
     </div>

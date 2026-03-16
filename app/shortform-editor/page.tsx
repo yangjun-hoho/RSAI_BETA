@@ -154,10 +154,20 @@ export default function ShortformEditorPage() {
           formData.append(`audio_${i}`, audioBlob, `scene_${i}.mp3`);
         }
         formData.append(`duration_${i}`, String(scene.audioDuration));
+        formData.append(`motion_effect_${i}`, scene.motionEffect ?? 'none');
       }
       formData.append('sceneCount', String(valid.length));
       formData.append('bgMusicId', settings.bgMusicId);
       formData.append('bgMusicVolume', String(settings.bgMusicVolume));
+      formData.append('bgMusicFadeOut', String(settings.bgMusicFadeOut ?? true));
+      formData.append('bgMusicFadeOutDuration', String(settings.bgMusicFadeOutDuration ?? 3));
+
+      // 전환 효과 데이터 (장면 i → i+1 사이)
+      for (let i = 0; i < valid.length - 1; i++) {
+        const trans = valid[i].transition ?? { type: 'none', duration: 0.5 };
+        formData.append(`transition_type_${i}`, trans.type);
+        formData.append(`transition_duration_${i}`, String(trans.duration));
+      }
 
       setRenderStatus('rendering');
       setRenderProgress('서버에서 영상 렌더링 중...');

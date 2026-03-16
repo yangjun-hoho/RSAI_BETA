@@ -114,27 +114,24 @@ export default function CropTool({ imageDataUrl, imageWidth, imageHeight, initia
 
         {/* 이미지 + 크롭 박스 */}
         <div ref={containerRef} style={{ position: 'relative', width: dw, height: dh, background: '#000', userSelect: 'none', overflow: 'hidden', borderRadius: '6px' }}>
-          {/* 어두운 전체 이미지 */}
+          {/* 원본 이미지 (단일 레이어) */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={imageDataUrl} style={{ position: 'absolute', width: dw, height: dh, objectFit: 'fill', opacity: 0.35 }} alt="" draggable={false} />
+          <img src={imageDataUrl} style={{ position: 'absolute', width: dw, height: dh, objectFit: 'fill' }} alt="" draggable={false} />
 
-          {/* 밝은 크롭 영역 */}
+          {/* 크롭 박스 바깥을 어둡게: box-shadow 트릭 */}
           <div
-            style={{ position: 'absolute', left: bx, top: by, width: bw, height: bh, cursor: 'move', overflow: 'hidden', border: '2px dashed #3b82f6', boxSizing: 'border-box' }}
+            style={{
+              position: 'absolute', left: bx, top: by, width: bw, height: bh,
+              cursor: 'move', boxSizing: 'border-box',
+              border: '2px dashed #3b82f6',
+              boxShadow: '0 0 0 9999px rgba(0,0,0,0.55)',
+            }}
             onMouseDown={handleMouseDown}
           >
-            {/* 원본 밝기로 보이는 이미지 조각 */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imageDataUrl}
-              style={{ position: 'absolute', width: dw, height: dh, objectFit: 'fill', left: -bx, top: -by, pointerEvents: 'none' }}
-              alt=""
-              draggable={false}
-            />
             {/* 3×3 그리드 */}
             <div style={{ position: 'absolute', inset: 0, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridTemplateRows: '1fr 1fr 1fr', pointerEvents: 'none' }}>
               {Array.from({ length: 9 }).map((_, i) => (
-                <div key={i} style={{ border: '0.5px solid rgba(255,255,255,0.25)' }} />
+                <div key={i} style={{ border: '0.5px solid rgba(255,255,255,0.3)' }} />
               ))}
             </div>
           </div>
