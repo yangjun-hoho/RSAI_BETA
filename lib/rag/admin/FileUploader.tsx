@@ -70,6 +70,9 @@ export default function FileUploader({ categoryId, onUploaded }: Props) {
           onChange={e => { const f = e.target.files?.[0]; if (f) upload(f); }}
         />
       </div>
+      <div style={{ marginTop: '8px', fontSize: '11px', color: '#92400e', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '6px', padding: '6px 10px' }}>
+        ⚠️ <strong>공개 데이터만 등록 가능합니다.</strong> 기밀·민감 정보가 포함된 문서는 업로드하지 마세요. 부적절한 문서는 관리자가 즉시 삭제 조치합니다.
+      </div>
       {message && (
         <div style={{ marginTop: '8px', fontSize: '12px', color: message.startsWith('✅') ? '#10b981' : '#ef4444', padding: '6px 10px', background: message.startsWith('✅') ? '#ecfdf5' : '#fef2f2', borderRadius: '6px' }}>
           {message}

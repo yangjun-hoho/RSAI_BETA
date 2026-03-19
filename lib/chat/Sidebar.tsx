@@ -46,6 +46,7 @@ export const SHORTCUTS = [
   { id: 'latest-tools',      label: '최신 AI 도구',   icon: '🌐', path: '/work-support/latest-tools' },
   { id: 'cadastral-map',     label: '연속지적도',      icon: '🗺️', path: '/work-support/cadastral-map' },
   { id: 'fun',               label: 'FuN fUn',         icon: '🎮', path: '/fun' },
+  { id: 'security-guide',   label: '보안수칙 안내',    icon: '🔒', path: '/work-support/security-guide' },
 ];
 
 export const MEMBER_LINKS = [

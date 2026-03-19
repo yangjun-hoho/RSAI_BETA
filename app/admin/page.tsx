@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { TOOLS, SHORTCUTS, MEMBER_LINKS } from '@/lib/chat/Sidebar';
 
-type Tab = 'dashboard' | 'users' | 'posts' | 'pii' | 'notices' | 'sidebar' | 'audit';
+type Tab = 'dashboard' | 'users' | 'posts' | 'pii' | 'notices' | 'sidebar' | 'audit' | 'disposal';
 
 interface Stats { totalUsers: number; todayJoined: number; totalPosts: number; piiThisMonth: number; recentUsers: AdminUser[]; recentPosts: RecentPost[]; recentPiiLogs: PiiLog[]; }
 interface AdminUser { id: number; nickname: string; role: string; is_active: number; created_at: string; }
@@ -725,6 +725,67 @@ function SidebarTab() {
   );
 }
 
+// ── 폐기절차 탭 ─────────────────────────────────────────────
+function DisposalTab() {
+  const steps = [
+    { step: '1단계', title: '사전 준비', items: ['서비스 종료 공지 (최소 7일 전)', '최종 DB 백업 수행', '사용자 데이터 목록 파악', '폐기 담당자 지정 및 일정 수립'] },
+    { step: '2단계', title: 'API 키 및 환경변수 무효화', items: ['OpenAI API 키 무효화', 'Gemini API 키 무효화', 'V-World API 키 무효화', 'AUTH_SECRET 및 .env 파일 삭제'] },
+    { step: '3단계', title: '사용자 데이터 삭제', items: ['전체 계정 삭제 (사용자 관리)', '전체 게시글 삭제 (게시판 관리)', 'RAG 문서 전체 삭제', '감사 로그 전체 삭제', 'DB 파일 직접 삭제 (app.db, rag.db)', '백업 파일 삭제 (/backup/)', '업로드 파일 삭제 (/data/uploads/)'] },
+    { step: '4단계', title: '소스코드 및 접근 권한 처리', items: ['GitHub 저장소 접근 권한 회수 또는 Private 전환', 'SSH 접근 계정 비밀번호 변경 또는 삭제', 'PM2 프로세스 중지 (pm2 delete rsai-ver1)', '소스코드 디렉토리 삭제'] },
+    { step: '5단계', title: '서버 하드웨어 반납 (해당 시)', items: ['OS 초기화 또는 디스크 완전 삭제', '서버 반납 및 반납 확인서 수령', '네트워크 포트 회수 (방화벽 정책 삭제)'] },
+  ];
+
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+        <div>
+          <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#37352f', margin: '0 0 0.25rem 0' }}>AI 시스템 구성요소 폐기 절차</h2>
+          <p style={{ fontSize: '0.82rem', color: '#9b9a97', margin: 0 }}>시스템 폐기·교체 시 개인정보 및 민감정보가 유출되지 않도록 아래 절차를 순서대로 이행하세요.</p>
+        </div>
+        <a
+          href="/docs/AI시스템_폐기절차서.hwpx"
+          download
+          style={{ ...S.btn('#2563eb'), padding: '0.5rem 1rem', fontSize: '0.83rem', display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0, textDecoration: 'none' }}
+        >
+          📄 폐기절차서 다운로드 (.hwpx)
+        </a>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {steps.map((s) => (
+          <div key={s.step} style={{ ...S.card, display: 'flex', gap: '1rem' }}>
+            <div style={{ background: '#2563eb', color: 'white', borderRadius: '8px', padding: '0.4rem 0.75rem', fontSize: '0.75rem', fontWeight: 700, height: 'fit-content', flexShrink: 0, whiteSpace: 'nowrap' }}>
+              {s.step}
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#37352f', marginBottom: '0.5rem' }}>{s.title}</div>
+              <ul style={{ margin: 0, paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                {s.items.map((item, i) => (
+                  <li key={i} style={{ fontSize: '0.82rem', color: '#37352f' }}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ ...S.card, marginTop: '1rem', background: '#fef9ec', border: '1px solid #fde68a' }}>
+        <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#92400e', marginBottom: '0.5rem' }}>⚠️ 주의사항</div>
+        <ul style={{ margin: 0, paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+          {[
+            '폐기 전 반드시 최종 백업을 완료하고 이상 없음을 확인하세요.',
+            'DB 파일 삭제는 복구 불가 — 신중하게 진행하세요.',
+            '폐기 완료 후 폐기확인서(docx)를 출력하여 담당자 서명 후 보관하세요.',
+            'API 키는 무효화 후 새 키를 발급받아 다른 용도로 재사용하지 마세요.',
+          ].map((item, i) => (
+            <li key={i} style={{ fontSize: '0.82rem', color: '#92400e' }}>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 // ── 메인 관리자 페이지 ─────────────────────────────────────
 export default function AdminPage() {
   const router = useRouter();
@@ -749,6 +810,7 @@ export default function AdminPage() {
     { id: 'notices',   label: '📢 공지사항' },
     { id: 'sidebar',   label: '🗂️ 사이드바 관리' },
     { id: 'audit',     label: '🔍 감사 로그' },
+    { id: 'disposal',  label: '🗑️ 폐기 절차' },
   ];
 
   return (
@@ -779,6 +841,7 @@ export default function AdminPage() {
           {tab === 'notices'   && <NoticesTab />}
           {tab === 'sidebar'   && <SidebarTab />}
           {tab === 'audit'     && <AuditTab />}
+          {tab === 'disposal'  && <DisposalTab />}
         </div>
       </div>
     </div>

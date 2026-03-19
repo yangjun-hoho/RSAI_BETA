@@ -150,6 +150,24 @@ export async function POST(request: NextRequest) {
     // 파일 저장
     const arrayBuffer = await file.arrayBuffer();
     const buffer      = Buffer.from(arrayBuffer);
+
+    // Magic Bytes 검사 — 파일 실제 내용이 확장자와 일치하는지 확인
+    const isPdf  = buffer[0] === 0x25 && buffer[1] === 0x50 && buffer[2] === 0x44 && buffer[3] === 0x46; // %PDF
+    const isDocx = buffer[0] === 0x50 && buffer[1] === 0x4B && buffer[2] === 0x03 && buffer[3] === 0x04; // PK (ZIP)
+    const isTxt  = (() => {
+      // BOM 없는 UTF-8 또는 BOM 있는 UTF-8 허용, 제어문자(NULL 등) 없으면 텍스트로 판정
+      const sample = buffer.slice(0, 512);
+      return !sample.includes(0x00);
+    })();
+
+    const magicOk =
+      (ext === '.pdf'  && isPdf)  ||
+      (ext === '.docx' && isDocx) ||
+      (ext === '.txt'  && isTxt);
+
+    if (!magicOk) {
+      return NextResponse.json({ error: '파일 내용이 확장자와 일치하지 않습니다.' }, { status: 400 });
+    }
     const docId       = crypto.randomUUID();
     const savedName   = `${docId}${ext}`;
     const filePath    = path.join(getUploadDir(categoryId), savedName);
