@@ -1,0 +1,26 @@
+{
+  "id": "report_basic",
+  "name": "기본 업무보고서",
+  "description": "일반적인 업무 보고에 사용하는 양식",
+  "version": "1.0.0",
+  "allowed_node_types": ["TITLE", "BACKGROUND", "SECTION", "SUBSECTION", "SUB_DETAIL", "BULLET", "TABLE"],
+  "node_rules": {
+    "TITLE":      { "required": true,  "min": 1, "max": 1  },
+    "BACKGROUND": { "required": false, "min": 0, "max": 1  },
+    "SECTION":    { "required": true,  "min": 1, "max": 10 },
+    "SUBSECTION": { "required": false, "min": 0, "max": 20 },
+    "SUB_DETAIL": { "required": false, "min": 0, "max": 30 },
+    "BULLET":     { "required": false, "min": 0, "max": 50 },
+    "TABLE":      { "required": false, "min": 0, "max": 10 }
+  },
+  "style_map": {
+    "TITLE":      { "charPrIDRef": "20", "paraPrIDRef": "2",  "styleIDRef": "0"  },
+    "BACKGROUND": { "charPrIDRef": "22", "paraPrIDRef": "20", "styleIDRef": "0"  },
+    "SECTION":    "section_table",
+    "SUBSECTION": { "charPrIDRef": "23", "paraPrIDRef": "31", "styleIDRef": "31" },
+    "SUB_DETAIL": { "charPrIDRef": "24", "paraPrIDRef": "32", "styleIDRef": "32" },
+    "BULLET":     { "charPrIDRef": "24", "paraPrIDRef": "32", "styleIDRef": "32" }
+  },
+  "anchor_id": "CONTENT_ANCHOR",
+  "ai_instructions": "공식 업무보고서 형식으로 작성하세요. 배경은 2~3문장으로 간결하게, 섹션은 3~5개를 권장합니다. 번호 체계(1., 1-1., 1-1-1.)를 일관되게 사용하세요. 개조식 문체를 사용하세요."
+}

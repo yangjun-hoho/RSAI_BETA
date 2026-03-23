@@ -11,7 +11,7 @@ async function generateAiComment(postId: number, title: string, content: string)
     if (hasAiComment(postId)) return; // 이미 댓글 달린 경우 중복 방지
 
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-5.4-mini',
       messages: [
         {
           role: 'system',

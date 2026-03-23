@@ -1,0 +1,32 @@
+{
+  "fields": [
+    {
+      "id": "subject_type",
+      "label": "구분",
+      "type": "select",
+      "options": ["공무원", "일반인"],
+      "default": "공무원",
+      "required": true
+    },
+    {
+      "id": "field",
+      "label": "분야",
+      "type": "text",
+      "required": true,
+      "placeholder": "예: 교통행정, 사회복지, 환경, 문화체육"
+    },
+    {
+      "id": "core_content",
+      "label": "핵심 사항",
+      "type": "textarea",
+      "required": true,
+      "placeholder": "주요 실적, 기여 내용, 수치 등을 자유롭게 입력하세요.\n예: 교통봉상 500회 처리, 민원 해소율 30% 향상"
+    },
+    {
+      "id": "period",
+      "label": "기간",
+      "type": "text",
+      "placeholder": "예: 2023. 1. ~ 2025. 12."
+    }
+  ]
+}

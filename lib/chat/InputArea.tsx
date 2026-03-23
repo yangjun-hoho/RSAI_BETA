@@ -21,10 +21,12 @@ interface InputAreaProps {
   selectedModel: string;
   models: Model[];
   isLoading: boolean;
+  webSearch: boolean;
   onSend: (text: string) => void;
   onModelChange: (model: string) => void;
   onCloseMode: () => void;
   onToolSubmit: (toolId: ToolId, data: Record<string, unknown>) => void;
+  onWebSearchChange: (enabled: boolean) => void;
   onLoadingChange?: (loading: boolean) => void;
 }
 
@@ -45,10 +47,12 @@ export default function InputArea({
   selectedModel,
   models,
   isLoading,
+  webSearch,
   onSend,
   onModelChange,
   onCloseMode,
   onToolSubmit,
+  onWebSearchChange,
   onLoadingChange,
 }: InputAreaProps) {
   const [input, setInput] = useState('');
@@ -168,7 +172,29 @@ export default function InputArea({
           }}
         />
 
-        {/* 활성 모드 배지 (좌측 하단) */}
+        {/* 웹검색 토글 + 활성 모드 배지 (좌측 하단) */}
+        <div style={{ position: 'absolute', bottom: '0.75rem', left: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <button
+            onClick={() => onWebSearchChange(!webSearch)}
+            disabled={isLoading}
+            title={webSearch ? '웹 검색 켜짐' : '웹 검색 꺼짐'}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '0.3rem',
+              padding: '0.2rem 0.55rem',
+              border: `1px solid ${webSearch ? '#2383e2' : '#e0e0e0'}`,
+              borderRadius: '10px',
+              background: webSearch ? '#eef5fd' : 'transparent',
+              color: webSearch ? '#2383e2' : '#9b9a97',
+              fontSize: '0.72rem', fontWeight: 500,
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              transition: 'all 0.15s',
+            }}
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            웹 검색
+          </button>
         {activeMode && (
           <div style={{ position: 'absolute', bottom: '0.75rem', left: '0.75rem' }}>
             <div style={{
@@ -187,6 +213,7 @@ export default function InputArea({
             </div>
           </div>
         )}
+        </div>
 
         {/* 모델 선택 + 전송 버튼 (우측 하단) */}
         <div style={{ position: 'absolute', bottom: '0.75rem', right: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

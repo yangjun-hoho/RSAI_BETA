@@ -1,0 +1,31 @@
+{
+  "fields": [
+    {
+      "id": "title",
+      "label": "보도자료 제목",
+      "type": "text",
+      "required": true,
+      "placeholder": "예: 남양주시, 스마트도시 구축 본격 추진"
+    },
+    {
+      "id": "core_content",
+      "label": "핵심 내용",
+      "type": "textarea",
+      "required": true,
+      "placeholder": "보도할 핵심 내용을 자유롭게 입력하세요.\n예: 총 50억원 투입, 2025년 하반기 착공, 주민 편의 증진 목적"
+    },
+    {
+      "id": "include_quote",
+      "label": "담당자 인용구 포함",
+      "type": "toggle",
+      "default": true
+    },
+    {
+      "id": "paragraph_count",
+      "label": "단락 수",
+      "type": "select",
+      "options": ["AI 자동", "3단락", "5단락", "7단락"],
+      "default": "AI 자동"
+    }
+  ]
+}

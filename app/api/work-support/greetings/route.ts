@@ -78,13 +78,13 @@ ${coreContent ? `핵심 내용: ${coreContent}` : ''}
 말씀 본문만 작성하고, 별도 설명이나 제목은 포함하지 마세요.`;
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4.1-nano',
+      model: 'gpt-5.4-mini',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
       temperature: 0.8,
-      max_tokens: 2000,
+      max_completion_tokens: 2000,
     });
 
     const greeting = completion.choices[0]?.message?.content?.trim();

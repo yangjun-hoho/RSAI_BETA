@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { TOOLS, SHORTCUTS, MEMBER_LINKS } from '@/lib/chat/Sidebar';
 
-type Tab = 'dashboard' | 'users' | 'posts' | 'pii' | 'notices' | 'sidebar' | 'audit' | 'disposal';
+type Tab = 'dashboard' | 'users' | 'posts' | 'pii' | 'notices' | 'sidebar' | 'audit' | 'disposal' | 'ai-model';
 
 interface Stats { totalUsers: number; todayJoined: number; totalPosts: number; piiThisMonth: number; recentUsers: AdminUser[]; recentPosts: RecentPost[]; recentPiiLogs: PiiLog[]; }
 interface AdminUser { id: number; nickname: string; role: string; is_active: number; created_at: string; }
@@ -786,6 +786,95 @@ function DisposalTab() {
   );
 }
 
+// ── AI 모델 탭 ─────────────────────────────────────────────
+type ValidStatus = 'idle' | 'checking' | 'ok' | 'error';
+interface ModelField { value: string; status: ValidStatus; message: string; }
+
+function AiModelTab() {
+  const [openai, setOpenai] = useState<ModelField>({ value: '', status: 'idle', message: '' });
+  const [google, setGoogle] = useState<ModelField>({ value: '', status: 'idle', message: '' });
+  const [saved, setSaved] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/admin/ai-model-config').then(r => r.json()).then(d => {
+      setOpenai(s => ({ ...s, value: d.openai || 'gpt-5.4-mini' }));
+      setGoogle(s => ({ ...s, value: d.google || 'gemini-2.5-flash-lite' }));
+      setLoading(false);
+    });
+  }, []);
+
+  async function validate(provider: 'openai' | 'google') {
+    const current = provider === 'openai' ? openai : google;
+    const set = provider === 'openai' ? setOpenai : setGoogle;
+    if (!current.value.trim()) { set(s => ({ ...s, status: 'error', message: '모델명을 입력해주세요.' })); return; }
+    set(s => ({ ...s, status: 'checking', message: '' }));
+    try {
+      const res = await fetch('/api/admin/validate-model', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ provider, model: current.value.trim() }),
+      });
+      const data = await res.json();
+      if (data.valid) set(s => ({ ...s, status: 'ok', message: '사용 가능한 모델입니다.' }));
+      else set(s => ({ ...s, status: 'error', message: data.error || '유효하지 않은 모델입니다.' }));
+    } catch { set(s => ({ ...s, status: 'error', message: '검증 중 오류가 발생했습니다.' })); }
+  }
+
+  async function handleSave() {
+    await fetch('/api/admin/ai-model-config', {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ openai: openai.value.trim(), google: google.value.trim() }),
+    });
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  }
+
+  const canSave = openai.status === 'ok' && google.status === 'ok';
+  const borderColor = (s: ValidStatus) => s === 'ok' ? '#16a34a' : s === 'error' ? '#dc2626' : '#e0e0e0';
+
+  if (loading) return <div style={{ color: '#9b9a97' }}>불러오는 중...</div>;
+
+  return (
+    <div style={{ maxWidth: '500px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div>
+        <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#37352f', margin: '0 0 0.4rem' }}>AI 모델 설정</h2>
+        <p style={{ fontSize: '0.82rem', color: '#9b9a97', margin: 0 }}>메인 채팅에서 사용할 OpenAI, Google 모델을 지정합니다. 모델 확인 후 저장하면 즉시 반영됩니다.</p>
+      </div>
+
+      {([['openai', 'OpenAI 모델', 'gpt-5.4-mini, gpt-4.1-mini', openai, setOpenai], ['google', 'Google 모델', 'gemini-2.5-flash-lite, gemini-2.0-flash', google, setGoogle]] as const).map(([provider, label, placeholder, field, set]) => (
+        <div key={provider} style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+          <label style={{ fontSize: '0.82rem', fontWeight: 600, color: '#374151' }}>{label}</label>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', border: `1px solid ${borderColor(field.status)}`, borderRadius: '7px', padding: '0 0.75rem', gap: '0.4rem', background: '#fff' }}>
+              <input
+                type="text" value={field.value}
+                onChange={e => set(s => ({ ...s, value: e.target.value, status: 'idle', message: '' }))}
+                onKeyDown={e => { if (e.key === 'Enter') validate(provider); }}
+                placeholder={`예: ${placeholder}`}
+                style={{ flex: 1, border: 'none', outline: 'none', fontSize: '0.82rem', padding: '0.45rem 0', background: 'transparent' }}
+              />
+              {field.status === 'ok' && <span style={{ color: '#16a34a' }}>✓</span>}
+              {field.status === 'error' && <span style={{ color: '#dc2626' }}>✗</span>}
+            </div>
+            <button onClick={() => validate(provider)} disabled={field.status === 'checking'} style={S.btn('#374151')}>
+              {field.status === 'checking' ? '확인 중...' : '확인'}
+            </button>
+          </div>
+          {field.message && <span style={{ fontSize: '0.75rem', color: field.status === 'ok' ? '#16a34a' : '#dc2626' }}>{field.message}</span>}
+        </div>
+      ))}
+
+      <div style={{ padding: '0.875rem 1rem', background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: '8px', fontSize: '0.78rem', color: '#0369a1', lineHeight: 1.6 }}>
+        두 모델 모두 <strong>확인</strong> 완료 후 저장 버튼이 활성화됩니다.
+      </div>
+
+      <button onClick={handleSave} disabled={!canSave} style={{ ...S.btn(saved ? '#16a34a' : canSave ? '#4f46e5' : '#e5e7eb'), color: canSave ? '#fff' : '#9ca3af', cursor: canSave ? 'pointer' : 'not-allowed', padding: '0.6rem 1.5rem', alignSelf: 'flex-start' }}>
+        {saved ? '✓ 저장 완료' : '저장'}
+      </button>
+    </div>
+  );
+}
+
 // ── 메인 관리자 페이지 ─────────────────────────────────────
 export default function AdminPage() {
   const router = useRouter();
@@ -811,6 +900,7 @@ export default function AdminPage() {
     { id: 'sidebar',   label: '🗂️ 사이드바 관리' },
     { id: 'audit',     label: '🔍 감사 로그' },
     { id: 'disposal',  label: '🗑️ 폐기 절차' },
+    { id: 'ai-model',  label: '🤖 AI 모델 설정' },
   ];
 
   return (
@@ -842,6 +932,7 @@ export default function AdminPage() {
           {tab === 'sidebar'   && <SidebarTab />}
           {tab === 'audit'     && <AuditTab />}
           {tab === 'disposal'  && <DisposalTab />}
+          {tab === 'ai-model'  && <AiModelTab />}
         </div>
       </div>
     </div>

@@ -56,13 +56,13 @@ ${content}
 각 섹션을 명확히 구분하여 작성해주세요.`;
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4.1-nano',
+      model: 'gpt-5.4-mini',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
       temperature: 0.8,
-      max_tokens: 3000,
+      max_completion_tokens: 3000,
     });
 
     const scenario = completion.choices[0]?.message?.content?.trim();

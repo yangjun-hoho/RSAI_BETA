@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-export type ToolId = 'report' | 'ppt' | 'scenario' | 'merit-citation' | 'greetings' | 'press-release' | 'templates' | 'rag' | 'board' | 'text-transform';
+export type ToolId = 'report' | 'ppt' | 'scenario' | 'merit-citation' | 'greetings' | 'press-release' | 'templates' | 'rag' | 'board' | 'text-transform' | 'work-support2';
 
 export interface Tool {
   id: ToolId;
@@ -20,6 +20,7 @@ export const TOOLS: Tool[] = [
   { id: 'templates',     label: '업무 템플릿',     tooltip: '공무원 업무 특화 AI 템플릿' },
   { id: 'rag',           label: 'RAG (NotebookLM)', tooltip: '문서 기반 AI 지식 검색' },
   { id: 'text-transform', label: '텍스트 변환',     tooltip: '문체·맞춤법·표현 변환 도구' },
+  { id: 'work-support2',  label: '업무 지원 2',     tooltip: '새롭게 설계된 AI 업무 도구 모음' },
 ];
 
 const ICON_MAP: Record<string, string> = {
@@ -35,6 +36,7 @@ const ICON_MAP: Record<string, string> = {
   rag: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
   'text-transform': `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
   chart: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`,
+  'work-support2': `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
 };
 
 export const SHORTCUTS = [

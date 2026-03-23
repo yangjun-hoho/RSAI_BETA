@@ -7,6 +7,7 @@ export interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
+  isSearching?: boolean;
 }
 
 interface MessageBubbleProps {
@@ -16,7 +17,7 @@ interface MessageBubbleProps {
 marked.setOptions({ breaks: true });
 
 export default function MessageBubble({ message }: MessageBubbleProps) {
-  const { role, content } = message;
+  const { role, content, isSearching } = message;
   const isUser = role === 'user';
   const htmlRef = useRef<HTMLDivElement>(null);
 
@@ -75,7 +76,16 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
         color: '#37352f',
         wordBreak: 'break-word',
       }}>
-        {content === '' ? (
+        {isSearching && content === '' ? (
+          /* 웹 검색 중 인디케이터 */
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '4px 0' }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2383e2" strokeWidth="2" style={{ animation: 'spin 1.2s linear infinite', flexShrink: 0 }}>
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <span style={{ fontSize: '0.82rem', color: '#6b7280' }}>웹 검색 중...</span>
+            <style>{`@keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }`}</style>
+          </div>
+        ) : content === '' ? (
           /* 타이핑 인디케이터 */
           <div style={{ display: 'flex', gap: '4px', padding: '4px 0' }}>
             {[0, 1, 2].map((i) => (

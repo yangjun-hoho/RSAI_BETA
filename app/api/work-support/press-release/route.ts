@@ -10,7 +10,7 @@ async function generateTitles(coreContent: string, keywords: string[]): Promise<
   const keywordText = keywords.filter(Boolean).join(', ');
 
   const completion = await openai.chat.completions.create({
-    model: 'gpt-4.1-nano',
+    model: 'gpt-5.4-mini',
     messages: [
       {
         role: 'system',
@@ -32,7 +32,7 @@ async function generateTitles(coreContent: string, keywords: string[]): Promise<
       },
     ],
     temperature: 0.8,
-    max_tokens: 600,
+    max_completion_tokens: 600,
   });
 
   const raw = completion.choices[0]?.message?.content?.trim() || '';
@@ -44,7 +44,7 @@ async function generatePressRelease(title: string, coreContent: string, keywords
   const keywordText = keywords.filter(Boolean).join(', ');
 
   const completion = await openai.chat.completions.create({
-    model: 'gpt-4.1-nano',
+    model: 'gpt-5.4-mini',
     messages: [
       {
         role: 'system',
@@ -84,7 +84,7 @@ JSON 외 다른 텍스트 절대 포함 금지.`,
       },
     ],
     temperature: 0.7,
-    max_tokens: 2000,
+    max_completion_tokens: 2000,
     response_format: { type: 'json_object' },
   });
 

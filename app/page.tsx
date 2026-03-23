@@ -11,12 +11,12 @@ import PreviewPanel from '@/lib/chat/PreviewPanel';
 import TemplateView from '@/lib/work-templates/TemplateView';
 import RagView from '@/lib/rag/RagView';
 import BoardPanel from '@/lib/board/BoardPanel';
+import WorkSupport2View from '@/lib/work-support2/WorkSupport2View';
+import ReportPanel from '@/lib/work-support2/report/ReportPanel';
+import PressReleasePanel from '@/lib/work-support2/press-release/PressReleasePanel';
+import GreetingPanel from '@/lib/work-support2/greeting/GreetingPanel';
+import MeritCitationPanel from '@/lib/work-support2/merit-citation/MeritCitationPanel';
 import type { Message } from '@/lib/chat/MessageBubble';
-
-const AVAILABLE_MODELS = [
-  { id: 'gpt-4.1-nano',      name: 'OpenAI',    size: 'API', badge: 'API' },
-  { id: 'gemini-2.5-flash-lite', name: 'GoogleAI',  size: 'API', badge: 'API' },
-];
 
 const LS_KEY = 'ares-ai-messages';
 
@@ -31,10 +31,18 @@ function newId() {
 export default function Home() {
   const [messages, setMessages]       = useState<Message[]>([]);
   const [activeMode, setActiveMode]   = useState<ToolId | null>(null);
-  const [selectedModel, setSelectedModel] = useState('gpt-4.1-nano');
+  const [ws2Service, setWs2Service]   = useState<string | null>(null);
+  const [selectedModel, setSelectedModel] = useState('gpt-5.4-mini');
   const selectedModelRef = useRef(selectedModel);
   useEffect(() => { selectedModelRef.current = selectedModel; }, [selectedModel]);
+  const [availableModels, setAvailableModels] = useState([
+    { id: 'gpt-5.4-mini',          name: 'OpenAI',   size: 'API', badge: 'API' },
+    { id: 'gemini-2.5-flash-lite', name: 'GoogleAI', size: 'API', badge: 'API' },
+  ]);
   const [isLoading, setIsLoading]     = useState(false);
+  const [webSearch, setWebSearch]     = useState(false);
+  const webSearchRef = useRef(webSearch);
+  useEffect(() => { webSearchRef.current = webSearch; }, [webSearch]);
   const [error, setError]             = useState('');
   const [nickname, setNickname]       = useState<string | undefined>(undefined);
 
@@ -55,11 +63,35 @@ export default function Home() {
 
   useEffect(() => {
     document.title = '남양주 AI';
+
+    // 뒤로가기 등으로 패널 자동 열기 (?panel=work-support2)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('panel') === 'work-support2') {
+      setActiveMode('work-support2');
+      window.history.replaceState({}, '', '/');
+    }
+
     fetch('/api/auth/me').then(r => r.json()).then(d => { if (d.user?.nickname) setNickname(d.user.nickname); });
     fetch('/api/notices').then(r => r.json()).then(d => { if (d.notice) setNotice(d.notice); });
+    fetch('/api/admin/ai-model-config').then(r => r.json()).then(d => {
+      if (d.openai && d.google) {
+        setAvailableModels([
+          { id: d.openai, name: 'OpenAI', size: 'API', badge: 'API' },
+          { id: d.google, name: 'GoogleAI', size: 'API', badge: 'API' },
+        ]);
+        setSelectedModel(d.openai);
+      }
+    }).catch(() => {});
     try {
       const saved = localStorage.getItem(LS_KEY);
-      if (saved) setMessages(JSON.parse(saved));
+      if (saved) {
+        const parsed: Message[] = JSON.parse(saved);
+        // 빈 assistant 메시지(스트리밍 미완료 잔재) 제거
+        const cleaned = parsed.filter((m, i) =>
+          !(m.role === 'assistant' && !m.content && i === parsed.length - 1)
+        );
+        setMessages(cleaned);
+      }
 
       // 도구별 저장된 미리보기 데이터 로드
       const store: Partial<Record<ToolId, Record<string, unknown>>> = {};
@@ -73,8 +105,11 @@ export default function Home() {
     } catch { /* ignore */ }
   }, []);
 
+  const MAX_MESSAGES = 20;
+
   function saveMessages(msgs: Message[]) {
-    try { localStorage.setItem(LS_KEY, JSON.stringify(msgs)); } catch { /* ignore */ }
+    const trimmed = msgs.length > MAX_MESSAGES ? msgs.slice(-MAX_MESSAGES) : msgs;
+    try { localStorage.setItem(LS_KEY, JSON.stringify(trimmed)); } catch { /* ignore */ }
   }
 
   // 도구별 미리보기 저장 (store + localStorage)
@@ -108,6 +143,7 @@ export default function Home() {
       return;
     }
     setActiveMode(prev => prev === toolId ? null : toolId);
+    setWs2Service(null);
   }
 
   // 탭 × 닫기: 해당 도구의 저장 데이터 삭제, 남은 탭으로 전환
@@ -146,7 +182,7 @@ export default function Home() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: historyForApi, model: selectedModelRef.current }),
+        body: JSON.stringify({ messages: historyForApi, model: selectedModelRef.current, webSearch: webSearchRef.current }),
       });
 
       if (!response.ok) throw new Error('API 응답 오류');
@@ -163,15 +199,33 @@ export default function Home() {
           if (!line.startsWith('data:')) continue;
           const data = line.slice(5).trim();
           if (data === '[DONE]') continue;
-          let parsed: { error?: string; content?: string };
+          let parsed: { error?: string; content?: string; status?: string };
           try { parsed = JSON.parse(data); } catch { continue; }
           if (parsed.error) throw new Error(parsed.error);
+          if (parsed.status === 'searching') {
+            setMessages(prev => {
+              const next = [...prev];
+              const last = next[next.length - 1];
+              if (last?.role === 'assistant') next[next.length - 1] = { ...last, isSearching: true };
+              return next;
+            });
+          }
           if (parsed.content) {
             accumulated += parsed.content;
-            updateLastAssistant(accumulated);
+            setMessages(prev => {
+              const next = [...prev];
+              const last = next[next.length - 1];
+              if (last?.role === 'assistant') next[next.length - 1] = { ...last, content: accumulated, isSearching: false };
+              return next;
+            });
           }
         }
       }
+      // 스트리밍 완료 후 최종 내용을 localStorage에 저장
+      setMessages(prev => {
+        saveMessages(prev);
+        return prev;
+      });
     } catch (err) {
       const msg = err instanceof Error ? err.message : '오류가 발생했습니다.';
       updateLastAssistant(`❌ ${msg}`);
@@ -365,6 +419,19 @@ export default function Home() {
           <RagView onClose={() => setActiveMode(null)} />
         ) : activeMode === 'templates' ? (
           <TemplateView onClose={() => setActiveMode(null)} />
+        ) : activeMode === 'work-support2' && ws2Service === 'report' ? (
+          <ReportPanel onBack={() => setWs2Service(null)} />
+        ) : activeMode === 'work-support2' && ws2Service === 'press-release' ? (
+          <PressReleasePanel onBack={() => setWs2Service(null)} />
+        ) : activeMode === 'work-support2' && ws2Service === 'greeting' ? (
+          <GreetingPanel onBack={() => setWs2Service(null)} />
+        ) : activeMode === 'work-support2' && ws2Service === 'merit-citation' ? (
+          <MeritCitationPanel onBack={() => setWs2Service(null)} />
+        ) : activeMode === 'work-support2' ? (
+          <WorkSupport2View
+            onClose={() => setActiveMode(null)}
+            onOpenService={(id) => setWs2Service(id)}
+          />
         ) : activeMode === 'board' ? (
           <div style={{ flex: 1, display: 'flex', overflow: 'hidden', height: '100%' }}>
             <BoardPanel onBack={() => setActiveMode(null)} />
@@ -374,7 +441,7 @@ export default function Home() {
             {/* 채팅 영역 */}
             <div style={{ flex: 4, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0, position: 'relative' }}>
               <ChatHeader
-                models={AVAILABLE_MODELS}
+                models={availableModels}
                 selectedModel={selectedModel}
                 onClear={handleClear}
                 onExport={handleExport}
@@ -392,12 +459,14 @@ export default function Home() {
               <InputArea
                 activeMode={activeMode}
                 selectedModel={selectedModel}
-                models={AVAILABLE_MODELS}
+                models={availableModels}
                 isLoading={isLoading}
+                webSearch={webSearch}
                 onSend={handleSend}
                 onModelChange={setSelectedModel}
                 onCloseMode={() => setActiveMode(null)}
                 onToolSubmit={handleToolSubmit}
+                onWebSearchChange={setWebSearch}
                 onLoadingChange={(loading) => {
                   setIsLoading(loading);
                   setToolLoading(loading);

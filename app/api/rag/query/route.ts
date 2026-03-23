@@ -97,7 +97,7 @@ ${context}
       async start(controller) {
         try {
           const completion = await openai.chat.completions.create({
-            model: 'gpt-4.1-2025-04-14',
+            model: 'gpt-5.4-mini',
             stream: true,
             temperature: 0,    // 일관된 답변을 위해 0 고정
             top_p: 1,

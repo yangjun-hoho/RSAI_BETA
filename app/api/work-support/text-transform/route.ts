@@ -55,12 +55,12 @@ export async function POST(req: NextRequest) {
       if (!prompt) return NextResponse.json({ error: '유효하지 않은 비율입니다.' }, { status: 400 });
 
       const completion = await openai.chat.completions.create({
-        model: 'gpt-4.1-nano',
+        model: 'gpt-5.4-mini',
         messages: [
           { role: 'system', content: `당신은 한국 공무원을 위한 텍스트 확장 도우미입니다. ${prompt}\n\n확장된 텍스트만 출력하고 설명이나 부연설명은 절대 하지 마세요.` },
           { role: 'user', content: text.trim() },
         ],
-        max_tokens: 2000,
+        max_completion_tokens: 2000,
       });
       return NextResponse.json({ result: completion.choices[0]?.message?.content ?? '' });
     }
@@ -70,12 +70,12 @@ export async function POST(req: NextRequest) {
       const count = typeof keywordCount === 'number' ? keywordCount : 5;
 
       const completion = await openai.chat.completions.create({
-        model: 'gpt-4.1-nano',
+        model: 'gpt-5.4-mini',
         messages: [
           { role: 'system', content: `다음 텍스트에서 핵심 키워드를 ${count}개 추출하세요. JSON 배열 형태로만 응답하세요: ["키워드1", "키워드2", ...]` },
           { role: 'user', content: text.trim() },
         ],
-        max_tokens: 200,
+        max_completion_tokens: 200,
       });
       const keywords = parseJsonArray(completion.choices[0]?.message?.content ?? '[]');
       return NextResponse.json({ keywords });
@@ -86,12 +86,12 @@ export async function POST(req: NextRequest) {
       if (!keyword) return NextResponse.json({ error: '키워드를 입력해주세요.' }, { status: 400 });
 
       const completion = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: 'gpt-5.4-mini',
         messages: [
           { role: 'system', content: `'${keyword}'의 유사어 또는 대체 가능한 표현을 5개 제안하세요. 주어진 텍스트 맥락에서 자연스럽게 사용할 수 있는 단어/표현으로 JSON 배열 형태로만 응답하세요: ["대체어1", "대체어2", ...]` },
           { role: 'user', content: text.trim() },
         ],
-        max_tokens: 200,
+        max_completion_tokens: 200,
       });
       const synonyms = parseJsonArray(completion.choices[0]?.message?.content ?? '[]');
       return NextResponse.json({ synonyms });
@@ -124,12 +124,12 @@ export async function POST(req: NextRequest) {
       : `다음 순서로 변환을 적용하세요:\n${steps.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-5.4-mini',
       messages: [
         { role: 'system', content: `당신은 한국 공무원을 위한 텍스트 변환 도우미입니다. ${instructions}\n\n변환된 텍스트만 출력하고 설명이나 부연설명은 절대 하지 마세요.` },
         { role: 'user', content: text.trim() },
       ],
-      max_tokens: 1500,
+      max_completion_tokens: 1500,
     });
 
     return NextResponse.json({ result: completion.choices[0]?.message?.content ?? '' });

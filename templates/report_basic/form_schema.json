@@ -1,0 +1,37 @@
+{
+  "fields": [
+    {
+      "id": "title",
+      "label": "문서 제목",
+      "type": "text",
+      "required": true,
+      "placeholder": "예: 2025년 상반기 업무보고"
+    },
+    {
+      "id": "core_content",
+      "label": "핵심 내용",
+      "type": "textarea",
+      "required": true,
+      "placeholder": "보고할 핵심 내용을 자유롭게 입력하세요.\n예: 예산 집행률 82%, 주요 성과 3건, 미진행 과제 2건, 하반기 계획"
+    },
+    {
+      "id": "include_background",
+      "label": "배경 섹션 포함",
+      "type": "toggle",
+      "default": true
+    },
+    {
+      "id": "include_table",
+      "label": "테이블 포함",
+      "type": "toggle",
+      "default": true
+    },
+    {
+      "id": "section_depth",
+      "label": "문서 깊이",
+      "type": "select",
+      "options": ["AI 자동", "섹션만", "섹션+소제목", "섹션+소제목+세부항목"],
+      "default": "AI 자동"
+    }
+  ]
+}

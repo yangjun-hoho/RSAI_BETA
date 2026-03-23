@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['pdf-parse', 'pptxgenjs', 'better-sqlite3'],
-  turbopack: {},  // dev 모드 Turbopack 명시적 활성화
   experimental: {
     serverActions: {
       bodySizeLimit: '500mb',
@@ -29,6 +29,11 @@ const nextConfig: NextConfig = {
     ];
   },
   webpack: (config, { isServer }) => {
+    // tailwindcss를 프로젝트 node_modules에서 명시적으로 resolve
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      tailwindcss: path.resolve('./node_modules/tailwindcss'),
+    };
     if (isServer) {
       // leaflet은 브라우저 전용 라이브러리 - 서버 번들에서 제외 (production build용)
       config.externals = [...(config.externals ?? []), 'leaflet'];
