@@ -40,7 +40,7 @@ export default function Home() {
     { id: 'gemini-2.5-flash-lite', name: 'GoogleAI', size: 'API', badge: 'API' },
   ]);
   const [isLoading, setIsLoading]     = useState(false);
-  const [webSearch, setWebSearch]     = useState(false);
+  const [webSearch, setWebSearch]     = useState(true);
   const webSearchRef = useRef(webSearch);
   useEffect(() => { webSearchRef.current = webSearch; }, [webSearch]);
   const [error, setError]             = useState('');
