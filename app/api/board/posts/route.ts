@@ -3,8 +3,10 @@ import { verifySession, COOKIE_NAME } from '@/lib/auth/session';
 import { getPosts, createPost, createComment, markAiCommented, hasAiComment } from '@/lib/app-db/board';
 import { rejectIfPii } from '@/lib/security/piiFilter';
 import OpenAI from 'openai';
+import { loadPrompt } from '@/lib/ai/loadPrompt';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const BOARD_COMMENT_PROMPT = loadPrompt('board-comment');
 
 async function generateAiComment(postId: number, title: string, content: string) {
   try {
@@ -15,10 +17,7 @@ async function generateAiComment(postId: number, title: string, content: string)
       messages: [
         {
           role: 'system',
-          content: `당신은 친근하고 유익한 AI 커뮤니티 멤버입니다. 게시글을 읽고 다음 기준으로 자연스러운 한국어 댓글을 3~4문장으로 작성하세요.
-- 게시글이 질문이거나 정보·도움을 구하는 내용이면: 핵심을 파악하여 성실하고 구체적으로 답변하세요. 단순 공감에 그치지 말고 실질적인 정보나 의견을 제공하세요.
-- 게시글이 일상 이야기, 감정 공유, 경험 나눔이면: 진심 어린 공감과 따뜻한 격려로 반응하세요.
-광고성 표현, 과도한 칭찬, 형식적인 인사말은 피하고 대화하듯 자연스럽게 작성하세요.`,
+          content: BOARD_COMMENT_PROMPT,
         },
         {
           role: 'user',
