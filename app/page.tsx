@@ -241,32 +241,15 @@ export default function Home() {
     setToolLoading(true);
     setError('');
 
-    const toolLabels: Record<string, string> = {
-      report: '📝 보고서',
-      ppt: '🖥️ PPT',
-      scenario: '🎭 시나리오',
-      'merit-citation': '🏆 공적조서',
-      greetings: '💬 인사말씀',
-      'press-release': '📰 보도자료',
-    };
-    const label = toolLabels[toolId] || toolId;
-
     // 보도자료: 폼이 자체적으로 API 호출을 처리함 - 완성된 데이터를 받아 미리보기에 표시
     if (toolId === 'press-release') {
       const pr = (data.pressRelease as Record<string, unknown>) || {};
       setPreviewTool('press-release');
       saveToolPreview('press-release', pr);
-      const userMsg: Message = { id: newId(), role: 'user', content: `${label} 생성 요청` };
-      const assistantMsg: Message = { id: newId(), role: 'assistant', content: `✅ **${label} 생성 완료**` };
-      setMessages(prev => { const n = [...prev, userMsg, assistantMsg]; saveMessages(n); return n; });
       setIsLoading(false);
       setToolLoading(false);
       return;
     }
-
-    const userMsg: Message = { id: newId(), role: 'user', content: `${label} 생성 요청` };
-    const assistantMsg: Message = { id: newId(), role: 'assistant', content: `${label}을(를) 생성하고 있습니다...` };
-    setMessages(prev => { const n = [...prev, userMsg, assistantMsg]; saveMessages(n); return n; });
 
     // 미리보기 패널: 해당 도구로 전환 (로딩 표시)
     setPreviewTool(toolId);
@@ -349,10 +332,8 @@ export default function Home() {
       }
 
       saveToolPreview(toolId, previewPayload);
-      updateLastAssistant(`✅ **${label} 생성 완료**`);
     } catch (err) {
       const msg = err instanceof Error ? err.message : '생성 중 오류가 발생했습니다.';
-      updateLastAssistant(`❌ ${label} 생성 실패: ${msg}`);
       setError(msg);
       setPreviewTool(null);
     } finally {
