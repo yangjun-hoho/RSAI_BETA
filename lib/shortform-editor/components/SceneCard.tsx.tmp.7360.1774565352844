@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Scene, DEFAULT_TTS, VOICE_OPTIONS_GEMINI, DEFAULT_TRANSITION, TRANSITION_OPTIONS, TransitionType, MOTION_EFFECT_OPTIONS, MotionEffectType } from '../types';
+import { Scene, DEFAULT_TTS, VOICE_OPTIONS_TTS1, VOICE_OPTIONS_MINI_TTS, VOICE_OPTIONS_GEMINI, FORMAT_OPTIONS, DEFAULT_TRANSITION, TRANSITION_OPTIONS, TransitionType, MOTION_EFFECT_OPTIONS, MotionEffectType } from '../types';
 import CropTool from './CropTool';
 
 interface Props {
@@ -16,10 +16,9 @@ interface Props {
   onApplyCropAll: (crop: Scene['crop']) => void;
   isFirst: boolean;
   isLast: boolean;
-  aspectRatio?: '9:16' | '16:9';
 }
 
-export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate, onDelete, onMoveUp, onMoveDown, onApplyCropAll, isFirst, isLast, aspectRatio = '9:16' }: Props) {
+export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate, onDelete, onMoveUp, onMoveDown, onApplyCropAll, isFirst, isLast }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showCrop, setShowCrop] = useState(false);
   const [showTtsSettings, setShowTtsSettings] = useState(false);
@@ -29,6 +28,8 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
 
   const tts = scene.tts ?? { ...DEFAULT_TTS };
   const trans = scene.transition ?? { ...DEFAULT_TRANSITION };
+  const isGemini = tts.model === 'gemini-2.5-flash-preview-tts';
+  const voiceOptions = isGemini ? VOICE_OPTIONS_GEMINI : tts.model === 'gpt-4o-mini-tts' ? VOICE_OPTIONS_MINI_TTS : VOICE_OPTIONS_TTS1;
 
   const ttsVolume = scene.ttsVolume ?? 1.0;
   const sceneBgmVolume = scene.sceneBgmVolume ?? 1.0;
@@ -36,6 +37,9 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
   const colorContrast = scene.colorContrast ?? 0;
   const colorSaturation = scene.colorSaturation ?? 0;
   const hasColorCorrection = colorBrightness !== 0 || colorContrast !== 0 || colorSaturation !== 0;
+
+  const subtitleAnimation = scene.subtitle.animation ?? 'none';
+  const subtitleAnimDur = scene.subtitle.animationDuration ?? 0.5;
 
   function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -62,8 +66,10 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text: scene.script,
-          model: 'gemini-2.5-flash-preview-tts',
+          model: tts.model,
           voice: tts.voice,
+          speed: tts.speed,
+          format: tts.format,
           instructions: tts.instructions,
         }),
       });
@@ -104,8 +110,8 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
       <div
         onClick={onSelect}
         style={{
-          background: isSelected ? '#2e2e2e' : '#252525',
-          border: `2px solid ${isSelected ? '#fff' : 'transparent'}`,
+          background: isSelected ? '#1e293b' : '#16213e',
+          border: `2px solid ${isSelected ? '#3b82f6' : 'transparent'}`,
           borderRadius: '10px',
           padding: '0.75rem',
           cursor: 'pointer',
@@ -114,7 +120,7 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
       >
         {/* 헤더 */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
-          <span style={{ color: '#ccc', fontWeight: 700, fontSize: '0.88rem' }}>#{index + 1}</span>
+          <span style={{ color: '#3b82f6', fontWeight: 700, fontSize: '0.88rem' }}>#{index + 1}</span>
           <div style={{ display: 'flex', gap: '0.3rem' }}>
             <button onClick={e => { e.stopPropagation(); onMoveUp(); }} disabled={isFirst} style={arrowBtn} title="위로">▲</button>
             <button onClick={e => { e.stopPropagation(); onMoveDown(); }} disabled={isLast} style={arrowBtn} title="아래로">▼</button>
@@ -127,9 +133,9 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
           <div
             onClick={e => { e.stopPropagation(); fileInputRef.current?.click(); }}
             style={{
-              width: aspectRatio === '16:9' ? 128 : 72, height: aspectRatio === '16:9' ? 72 : 128, flexShrink: 0,
-              background: '#111', borderRadius: '6px',
-              border: '2px dashed #444',
+              width: 72, height: 128, flexShrink: 0,
+              background: '#0f172a', borderRadius: '6px',
+              border: '2px dashed #334155',
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', overflow: 'hidden', position: 'relative',
             }}
@@ -141,7 +147,7 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
             ) : (
               <>
                 <span style={{ fontSize: '1.4rem', marginBottom: '0.2rem' }}>+</span>
-                <span style={{ fontSize: '0.65rem', color: '#888', textAlign: 'center' }}>이미지<br />업로드</span>
+                <span style={{ fontSize: '0.65rem', color: '#64748b', textAlign: 'center' }}>이미지<br />업로드</span>
               </>
             )}
             <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
@@ -157,7 +163,7 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
               rows={2}
               style={{
                 width: '100%', resize: 'none', padding: '0.4rem 0.5rem',
-                background: '#111', color: '#ccc', border: '1px solid #444',
+                background: '#0f172a', color: '#f1f5f9', border: '1px solid #334155',
                 borderRadius: '5px', fontSize: '0.82rem', lineHeight: '1.5',
                 outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit',
               }}
@@ -167,21 +173,21 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
               {scene.imageDataUrl && (
                 <button
                   onClick={e => { e.stopPropagation(); setShowCrop(true); }}
-                  style={actionBtn('#666')}
+                  style={actionBtn('#475569')}
                 >
                   크롭 조정
                 </button>
               )}
               <button
                 onClick={e => { e.stopPropagation(); setShowTtsSettings(v => !v); }}
-                style={actionBtn(showTtsSettings ? '#333' : '#444')}
+                style={actionBtn(showTtsSettings ? '#1e3a5f' : '#334155')}
               >
                 TTS 설정
               </button>
               <button
                 onClick={e => { e.stopPropagation(); handleGenerateTTS(); }}
                 disabled={ttsLoading || !scene.script.trim()}
-                style={actionBtn(ttsLoading ? '#444' : '#1d4ed8', ttsLoading || !scene.script.trim())}
+                style={actionBtn(ttsLoading ? '#334155' : '#1d4ed8', ttsLoading || !scene.script.trim())}
               >
                 {ttsLoading ? '생성 중...' : scene.audioDataUrl ? '음성 재생성' : '음성 생성'}
               </button>
@@ -190,7 +196,7 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
                   <select
                     value={trans.type}
                     onChange={e => onUpdate({ transition: { ...trans, type: e.target.value as TransitionType } })}
-                    style={{ width: '86px', padding: '0.2rem 0.25rem', background: '#2a2a2a', color: '#ccc', border: '1px solid #444', borderRadius: '4px', fontSize: '0.72rem', flexShrink: 0 }}
+                    style={{ width: '86px', padding: '0.2rem 0.25rem', background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155', borderRadius: '4px', fontSize: '0.72rem', flexShrink: 0 }}
                   >
                     {TRANSITION_OPTIONS.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
                   </select>
@@ -202,7 +208,7 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
                         onChange={e => onUpdate({ transition: { ...trans, duration: Number(e.target.value) / 10 } })}
                         style={{ width: '44px', accentColor: '#3b82f6', flexShrink: 0 }}
                       />
-                      <span style={{ color: '#aaa', fontSize: '0.68rem', flexShrink: 0 }}>{trans.duration.toFixed(1)}s</span>
+                      <span style={{ color: '#94a3b8', fontSize: '0.68rem', flexShrink: 0 }}>{trans.duration.toFixed(1)}s</span>
                     </>
                   )}
                 </div>
@@ -230,64 +236,134 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
             {/* 동작 효과 */}
             {scene.imageDataUrl && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }} onClick={e => e.stopPropagation()}>
-                <span style={{ color: '#888', fontSize: '0.7rem', flexShrink: 0, minWidth: '48px' }}>동작 효과</span>
+                <span style={{ color: '#64748b', fontSize: '0.7rem', flexShrink: 0, minWidth: '48px' }}>동작 효과</span>
                 <select
                   value={scene.motionEffect ?? 'none'}
                   onChange={e => onUpdate({ motionEffect: e.target.value as MotionEffectType })}
-                  style={{ flex: 1, padding: '0.2rem 0.25rem', background: '#2a2a2a', color: '#ccc', border: '1px solid #444', borderRadius: '4px', fontSize: '0.72rem' }}
+                  style={{ flex: 1, padding: '0.2rem 0.25rem', background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155', borderRadius: '4px', fontSize: '0.72rem' }}
                 >
                   {MOTION_EFFECT_OPTIONS.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
                 </select>
               </div>
             )}
 
-
+            {/* 자막 애니메이션 */}
+            {scene.subtitle.enabled && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }} onClick={e => e.stopPropagation()}>
+                <span style={{ color: '#64748b', fontSize: '0.7rem', flexShrink: 0, minWidth: '48px' }}>자막 효과</span>
+                <select
+                  value={subtitleAnimation}
+                  onChange={e => onUpdate({ subtitle: { ...scene.subtitle, animation: e.target.value as SubtitleAnimationType } })}
+                  style={{ flex: 1, padding: '0.2rem 0.25rem', background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155', borderRadius: '4px', fontSize: '0.72rem' }}
+                >
+                  {SUBTITLE_ANIMATION_OPTIONS.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
+                </select>
+                {subtitleAnimation !== 'none' && (
+                  <>
+                    <input
+                      type="range" min={1} max={20} step={1}
+                      value={Math.round(subtitleAnimDur * 10)}
+                      onChange={e => onUpdate({ subtitle: { ...scene.subtitle, animationDuration: Number(e.target.value) / 10 } })}
+                      style={{ width: '44px', accentColor: '#3b82f6', flexShrink: 0 }}
+                    />
+                    <span style={{ color: '#94a3b8', fontSize: '0.68rem', flexShrink: 0 }}>{subtitleAnimDur.toFixed(1)}s</span>
+                  </>
+                )}
+              </div>
+            )}
 
             {/* TTS 설정 패널 */}
             {showTtsSettings && (
               <div
                 onClick={e => e.stopPropagation()}
-                style={{ background: '#111', border: '1px solid #333', borderRadius: '6px', padding: '0.6rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}
+                style={{ background: '#0f172a', border: '1px solid #1e3a5f', borderRadius: '6px', padding: '0.6rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}
               >
+                {/* 모델 선택 */}
+                <TtsRow label="모델">
+                  <select
+                    value={tts.model}
+                    onChange={e => {
+                      const newModel = e.target.value as 'tts-1' | 'gpt-4o-mini-tts' | 'gemini-2.5-flash-preview-tts';
+                      const defaultVoice = newModel === 'gemini-2.5-flash-preview-tts' ? 'Aoede' : 'nova';
+                      onUpdate({ tts: { ...tts, model: newModel, voice: defaultVoice } });
+                    }}
+                    style={ttsSelect}
+                  >
+                    <option value="gpt-4o-mini-tts">gpt-4o-mini-tts (OpenAI)</option>
+                    <option value="tts-1">tts-1 (OpenAI, 빠름)</option>
+                    <option value="gemini-2.5-flash-preview-tts">gemini-2.5-flash (Google)</option>
+                  </select>
+                </TtsRow>
+
+                {/* 보이스 선택 */}
                 <TtsRow label="보이스">
                   <select
                     value={tts.voice}
                     onChange={e => onUpdate({ tts: { ...tts, voice: e.target.value } })}
                     style={ttsSelect}
                   >
-                    {VOICE_OPTIONS_GEMINI.map(v => <option key={v.id} value={v.id}>{v.label}</option>)}
+                    {voiceOptions.map(v => <option key={v.id} value={v.id}>{v.label}</option>)}
                   </select>
                 </TtsRow>
-                <TtsRow label="지시">
-                  <input
-                    type="text"
-                    value={tts.instructions}
-                    onChange={e => onUpdate({ tts: { ...tts, instructions: e.target.value } })}
-                    placeholder="예: 차분하고 따뜻하게, 활기차게..."
-                    style={{ ...ttsSelect, flex: 1 }}
-                  />
-                </TtsRow>
+
+                {/* 감정/스타일 지시 */}
+                {(tts.model === 'gpt-4o-mini-tts' || isGemini) && (
+                  <TtsRow label="지시">
+                    <input
+                      type="text"
+                      value={tts.instructions}
+                      onChange={e => onUpdate({ tts: { ...tts, instructions: e.target.value } })}
+                      placeholder="예: 깜짝 놀란 톤으로, 차분하고 따뜻하게..."
+                      style={{ ...ttsSelect, flex: 1 }}
+                    />
+                  </TtsRow>
+                )}
+
+                {/* 속도 (OpenAI 전용) */}
+                {!isGemini && (
+                  <TtsRow label={`속도 ${tts.speed.toFixed(1)}x`}>
+                    <input
+                      type="range" min={25} max={200} step={5}
+                      value={Math.round(tts.speed * 100)}
+                      onChange={e => onUpdate({ tts: { ...tts, speed: Number(e.target.value) / 100 } })}
+                      style={{ flex: 1, accentColor: '#3b82f6' }}
+                    />
+                  </TtsRow>
+                )}
+
+                {/* 포맷 (OpenAI 전용) */}
+                {!isGemini && (
+                  <TtsRow label="포맷">
+                    <select
+                      value={tts.format}
+                      onChange={e => onUpdate({ tts: { ...tts, format: e.target.value as 'mp3' | 'wav' | 'opus' | 'aac' } })}
+                      style={ttsSelect}
+                    >
+                      {FORMAT_OPTIONS.map(f => <option key={f.id} value={f.id}>{f.label}</option>)}
+                    </select>
+                  </TtsRow>
+                )}
               </div>
             )}
 
             {/* 볼륨 믹싱 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }} onClick={e => e.stopPropagation()}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <span style={{ color: '#888', fontSize: '0.68rem', flexShrink: 0, minWidth: '72px' }}>🎙 나레이션 {Math.round(ttsVolume * 100)}%</span>
+                <span style={{ color: '#64748b', fontSize: '0.68rem', flexShrink: 0, minWidth: '72px' }}>🎙 나레이션 {Math.round(ttsVolume * 100)}%</span>
                 <input type="range" min={0} max={200} step={5} value={Math.round(ttsVolume * 100)}
                   onChange={e => onUpdate({ ttsVolume: Number(e.target.value) / 100 })}
                   style={{ flex: 1, accentColor: '#3b82f6' }} />
                 {ttsVolume !== 1.0 && (
-                  <button onClick={() => onUpdate({ ttsVolume: 1.0 })} style={{ ...actionBtn('#444'), padding: '0.1rem 0.35rem', fontSize: '0.62rem' }}>초기화</button>
+                  <button onClick={() => onUpdate({ ttsVolume: 1.0 })} style={{ ...actionBtn('#334155'), padding: '0.1rem 0.35rem', fontSize: '0.62rem' }}>초기화</button>
                 )}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <span style={{ color: '#888', fontSize: '0.68rem', flexShrink: 0, minWidth: '72px' }}>🎵 BGM {Math.round(sceneBgmVolume * 100)}%</span>
+                <span style={{ color: '#64748b', fontSize: '0.68rem', flexShrink: 0, minWidth: '72px' }}>🎵 BGM {Math.round(sceneBgmVolume * 100)}%</span>
                 <input type="range" min={0} max={200} step={5} value={Math.round(sceneBgmVolume * 100)}
                   onChange={e => onUpdate({ sceneBgmVolume: Number(e.target.value) / 100 })}
                   style={{ flex: 1, accentColor: '#3b82f6' }} />
                 {sceneBgmVolume !== 1.0 && (
-                  <button onClick={() => onUpdate({ sceneBgmVolume: 1.0 })} style={{ ...actionBtn('#444'), padding: '0.1rem 0.35rem', fontSize: '0.62rem' }}>초기화</button>
+                  <button onClick={() => onUpdate({ sceneBgmVolume: 1.0 })} style={{ ...actionBtn('#334155'), padding: '0.1rem 0.35rem', fontSize: '0.62rem' }}>초기화</button>
                 )}
               </div>
             </div>
@@ -296,26 +372,26 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
             <div onClick={e => e.stopPropagation()}>
               <button
                 onClick={() => setShowColorCorrection(v => !v)}
-                style={{ ...actionBtn(hasColorCorrection ? '#1a3a2a' : '#444'), width: '100%', textAlign: 'left' }}
+                style={{ ...actionBtn(hasColorCorrection ? '#1a3a2a' : '#334155'), width: '100%', textAlign: 'left' }}
               >
                 🎨 색보정{hasColorCorrection ? ` (밝기${colorBrightness > 0 ? '+' : ''}${colorBrightness} 대비${colorContrast > 0 ? '+' : ''}${colorContrast} 채도${colorSaturation > 0 ? '+' : ''}${colorSaturation})` : ''}
               </button>
               {showColorCorrection && (
-                <div style={{ background: '#111', border: '1px solid #333', borderRadius: '6px', padding: '0.5rem 0.6rem', marginTop: '0.3rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                <div style={{ background: '#0f172a', border: '1px solid #1e3a5f', borderRadius: '6px', padding: '0.5rem 0.6rem', marginTop: '0.3rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <span style={{ color: '#888', fontSize: '0.68rem', minWidth: '60px' }}>밝기 {colorBrightness > 0 ? '+' : ''}{colorBrightness}</span>
+                    <span style={{ color: '#64748b', fontSize: '0.68rem', minWidth: '60px' }}>밝기 {colorBrightness > 0 ? '+' : ''}{colorBrightness}</span>
                     <input type="range" min={-100} max={100} step={5} value={colorBrightness}
                       onChange={e => onUpdate({ colorBrightness: Number(e.target.value) })}
                       style={{ flex: 1, accentColor: '#3b82f6' }} />
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <span style={{ color: '#888', fontSize: '0.68rem', minWidth: '60px' }}>대비 {colorContrast > 0 ? '+' : ''}{colorContrast}</span>
+                    <span style={{ color: '#64748b', fontSize: '0.68rem', minWidth: '60px' }}>대비 {colorContrast > 0 ? '+' : ''}{colorContrast}</span>
                     <input type="range" min={-100} max={100} step={5} value={colorContrast}
                       onChange={e => onUpdate({ colorContrast: Number(e.target.value) })}
                       style={{ flex: 1, accentColor: '#3b82f6' }} />
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <span style={{ color: '#888', fontSize: '0.68rem', minWidth: '60px' }}>채도 {colorSaturation > 0 ? '+' : ''}{colorSaturation}</span>
+                    <span style={{ color: '#64748b', fontSize: '0.68rem', minWidth: '60px' }}>채도 {colorSaturation > 0 ? '+' : ''}{colorSaturation}</span>
                     <input type="range" min={-100} max={100} step={5} value={colorSaturation}
                       onChange={e => onUpdate({ colorSaturation: Number(e.target.value) })}
                       style={{ flex: 1, accentColor: '#3b82f6' }} />
@@ -323,7 +399,7 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
                   {hasColorCorrection && (
                     <button
                       onClick={() => onUpdate({ colorBrightness: 0, colorContrast: 0, colorSaturation: 0 })}
-                      style={{ ...actionBtn('#444'), fontSize: '0.68rem', marginTop: '0.1rem' }}
+                      style={{ ...actionBtn('#334155'), fontSize: '0.68rem', marginTop: '0.1rem' }}
                     >
                       초기화
                     </button>
@@ -348,7 +424,7 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
               <span style={{ color: scene.imageDataUrl ? '#22c55e' : '#ef4444' }}>
                 {scene.imageDataUrl ? '이미지 ✓' : '이미지 없음'}
               </span>
-              <span style={{ color: '#666' }}>|</span>
+              <span style={{ color: '#475569' }}>|</span>
               <span style={{ color: scene.audioDataUrl ? '#22c55e' : '#ef4444' }}>
                 {scene.audioDataUrl ? `음성 ✓ ${scene.audioDuration}초` : '음성 없음'}
               </span>
@@ -377,14 +453,14 @@ export default function SceneCard({ scene, index, isSelected, onSelect, onUpdate
 function TtsRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-      <span style={{ color: '#888', fontSize: '0.72rem', minWidth: '44px', flexShrink: 0 }}>{label}</span>
+      <span style={{ color: '#64748b', fontSize: '0.72rem', minWidth: '44px', flexShrink: 0 }}>{label}</span>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>{children}</div>
     </div>
   );
 }
 
 const arrowBtn: React.CSSProperties = {
-  background: '#2a2a2a', border: '1px solid #444', color: '#aaa',
+  background: '#1e293b', border: '1px solid #334155', color: '#94a3b8',
   width: 22, height: 22, cursor: 'pointer', borderRadius: '3px', fontSize: '0.65rem',
   display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0,
 };
@@ -397,14 +473,14 @@ const deleteBtn: React.CSSProperties = {
 
 function actionBtn(bg: string, disabled = false): React.CSSProperties {
   return {
-    padding: '0.25rem 0.6rem', background: disabled ? '#2a2a2a' : bg,
-    color: disabled ? '#666' : '#ccc', border: 'none',
+    padding: '0.25rem 0.6rem', background: disabled ? '#1e293b' : bg,
+    color: disabled ? '#475569' : '#f1f5f9', border: 'none',
     borderRadius: '4px', cursor: disabled ? 'not-allowed' : 'pointer',
     fontSize: '0.75rem', fontWeight: 500,
   };
 }
 
 const ttsSelect: React.CSSProperties = {
-  flex: 1, padding: '0.2rem 0.3rem', background: '#2a2a2a', color: '#ccc',
-  border: '1px solid #444', borderRadius: '4px', fontSize: '0.75rem',
+  flex: 1, padding: '0.2rem 0.3rem', background: '#1e293b', color: '#f1f5f9',
+  border: '1px solid #334155', borderRadius: '4px', fontSize: '0.75rem',
 };

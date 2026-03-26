@@ -16,6 +16,7 @@ import ReportPanel from '@/lib/work-support2/report/ReportPanel';
 import PressReleasePanel from '@/lib/work-support2/press-release/PressReleasePanel';
 import GreetingPanel from '@/lib/work-support2/greeting/GreetingPanel';
 import MeritCitationPanel from '@/lib/work-support2/merit-citation/MeritCitationPanel';
+import MeetingPanel from '@/lib/work-support2/meeting/MeetingPanel';
 import type { Message } from '@/lib/chat/MessageBubble';
 
 const LS_KEY = 'ares-ai-messages';
@@ -408,6 +409,8 @@ export default function Home() {
           <GreetingPanel onBack={() => setWs2Service(null)} />
         ) : activeMode === 'work-support2' && ws2Service === 'merit-citation' ? (
           <MeritCitationPanel onBack={() => setWs2Service(null)} />
+        ) : activeMode === 'work-support2' && ws2Service === 'meeting' ? (
+          <MeetingPanel onBack={() => setWs2Service(null)} />
         ) : activeMode === 'work-support2' ? (
           <WorkSupport2View
             onClose={() => setActiveMode(null)}

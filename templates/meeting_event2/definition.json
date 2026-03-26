@@ -1,0 +1,142 @@
+{
+  "id": "meeting_event2",
+  "name": "행사2형",
+  "description": "협조사항 포함 행사·의식 확대간부회의 자료",
+  "version": "1.0",
+  "allowed_node_types": [
+    "TITLE",
+    "SUBTITLE",
+    "SECTION",
+    "BULLET",
+    "SUBBULLET",
+    "COOPERATION"
+  ],
+  "node_rules": {
+    "TITLE": {
+      "required": true,
+      "min": 1,
+      "max": 1
+    },
+    "SUBTITLE": {
+      "required": false,
+      "min": 0,
+      "max": 1
+    },
+    "SECTION": {
+      "required": true,
+      "min": 1,
+      "max": 5
+    },
+    "BULLET": {
+      "required": true,
+      "min": 1,
+      "max": 25
+    },
+    "SUBBULLET": {
+      "required": false,
+      "min": 0,
+      "max": 25
+    },
+    "COOPERATION": {
+      "required": false,
+      "min": 0,
+      "max": 1
+    }
+  },
+  "style_map": {
+    "SECTION": {
+      "paraPrIDRef": "20",
+      "charPrIDRef": "12",
+      "charPrIDRef2": "10",
+      "horzsize": "75684",
+      "vertsize": "2100",
+      "spacing": "1260"
+    },
+    "BULLET": {
+      "paraPrIDRef": "21",
+      "charPrIDRef": "7",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1080"
+    },
+    "SUBBULLET": {
+      "paraPrIDRef": "21",
+      "charPrIDRef": "7",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1080"
+    },
+    "COOPERATION": {
+      "paraPrIDRef": "22",
+      "charPrIDRef": "12",
+      "charPrIDRef2": "10",
+      "charPrIDRef3": "7",
+      "horzsize": "75684",
+      "vertsize": "2100",
+      "spacing": "1260"
+    }
+  },
+  "header_dept_charPr": "9",
+  "header_docnum_charPr": "11",
+  "header_title_paraPr": "15",
+  "header_title_charPr": "20",
+  "header_subtitle_present": true,
+  "header_subtitle_charPr": "21",
+  "anchor_id": "",
+  "anchor_strategy": "meeting_preserve",
+  "ai_instructions": "행사2형: 공식 행사(의식·기념식·수여식), 타 부서 협조 필요.\n- SUBTITLE: 15자 이내 핵심 요약\n- SECTION 2~3개 (예: 행사개요 / 세부운영계획 / 역할분담)\n- 행사개요 섹션: BULLET 2~3개 (간략)\n- 세부운영계획·역할분담 섹션: BULLET 4~5개 (충실)\n- COOPERATION: 마지막에 1개 (COOPERATION 앞 SECTION 노드 생성 금지)",
+  "example_output": [
+    {
+      "type": "TITLE",
+      "content": "2025년 남양주시 사회복지의날 기념식 추진 계획"
+    },
+    {
+      "type": "SUBTITLE",
+      "content": "복지 종사자 사기 진작 및 시민 공감 형성"
+    },
+    {
+      "type": "SECTION",
+      "content": "행사개요"
+    },
+    {
+      "type": "BULLET",
+      "content": "일시: 2025. 9. 7.(일) 14:00~16:00"
+    },
+    {
+      "type": "BULLET",
+      "content": "장소: 남양주시청 대강당 (수용 300명)"
+    },
+    {
+      "type": "BULLET",
+      "content": "참석: 수상자·복지 종사자·내빈 약 250명"
+    },
+    {
+      "type": "SECTION",
+      "content": "세부운영계획"
+    },
+    {
+      "type": "BULLET",
+      "content": "13:30 등록·로비 전시 운영"
+    },
+    {
+      "type": "BULLET",
+      "content": "14:00 개식·국민의례 (사회: 홍보담당관)"
+    },
+    {
+      "type": "BULLET",
+      "content": "표창 수여: 시장 표창 30점·도지사 표창 5점"
+    },
+    {
+      "type": "BULLET",
+      "content": "기념공연: 사물놀이·합창단 (30분)"
+    },
+    {
+      "type": "BULLET",
+      "content": "16:00 다과 교류회"
+    },
+    {
+      "type": "COOPERATION",
+      "content": "(복지정책과·홍보담당관) 수상자 명단 및 홍보자료 8월 말까지 제출"
+    }
+  ]
+}

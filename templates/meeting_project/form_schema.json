@@ -1,0 +1,32 @@
+{
+  "fields": [
+    {
+      "id": "title",
+      "label": "보고 제목",
+      "type": "text",
+      "required": true,
+      "placeholder": "예: 2025년 도시재생 뉴딜사업 추진 현황"
+    },
+    {
+      "id": "subtitle",
+      "label": "핵심 요약 (한 줄)",
+      "type": "text",
+      "required": false,
+      "placeholder": "예: 총 500억원 규모 사업, 현재 집행률 65% 달성"
+    },
+    {
+      "id": "project_budget",
+      "label": "사업 예산",
+      "type": "text",
+      "required": false,
+      "placeholder": "예: 총 500백만원 (국비 300, 도비 100, 시비 100)"
+    },
+    {
+      "id": "core_content",
+      "label": "핵심 내용",
+      "type": "textarea",
+      "required": true,
+      "placeholder": "사업 목적, 규모, 추진 현황, 주요 실적, 향후 계획 등을 자유롭게 입력하세요."
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "id": "meeting_event1",
+  "name": "행사1형",
+  "description": "행사·축제·기념식 준비 확대간부회의 자료",
+  "version": "1.0",
+  "allowed_node_types": [
+    "TITLE",
+    "SECTION",
+    "BULLET",
+    "SUBBULLET",
+    "NOTE"
+  ],
+  "node_rules": {
+    "TITLE": {
+      "required": true,
+      "min": 1,
+      "max": 1
+    },
+    "SECTION": {
+      "required": true,
+      "min": 1,
+      "max": 5
+    },
+    "BULLET": {
+      "required": true,
+      "min": 1,
+      "max": 25
+    },
+    "SUBBULLET": {
+      "required": false,
+      "min": 0,
+      "max": 25
+    },
+    "NOTE": {
+      "required": false,
+      "min": 0,
+      "max": 5
+    }
+  },
+  "style_map": {
+    "SECTION": {
+      "paraPrIDRef": "19",
+      "charPrIDRef": "12",
+      "charPrIDRef2": "10",
+      "horzsize": "75684",
+      "vertsize": "2100",
+      "spacing": "1260"
+    },
+    "BULLET": {
+      "paraPrIDRef": "20",
+      "charPrIDRef": "7",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1080"
+    },
+    "SUBBULLET": {
+      "paraPrIDRef": "20",
+      "charPrIDRef": "7",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1080"
+    },
+    "NOTE": {
+      "paraPrIDRef": "15",
+      "charPrIDRef": "38",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1260"
+    }
+  },
+  "header_dept_charPr": "9",
+  "header_docnum_charPr": "11",
+  "header_title_paraPr": "16",
+  "header_title_charPr": "17",
+  "header_subtitle_present": false,
+  "header_section1_charPr": "10",
+  "anchor_id": "",
+  "anchor_strategy": "meeting_preserve",
+  "ai_instructions": "행사1형: 행사·축제·기념식 준비 또는 결과 보고.\n- 첫 번째 SECTION이 행사 개요 역할을 하므로 핵심 정보만 간략히\n- SECTION 2~3개 (예: 행사개요 / 세부운영계획 / 준비사항)\n- 행사개요 섹션: BULLET 2~3개 (일시·장소·주최 등 기본 정보)\n- 세부운영계획·준비사항 섹션: BULLET 4~5개 (충실)",
+  "example_output": [
+    {
+      "type": "TITLE",
+      "content": "제7회 남양주 시민의날 행사 추진 계획"
+    },
+    {
+      "type": "SECTION",
+      "content": "행사개요"
+    },
+    {
+      "type": "BULLET",
+      "content": "일시: 2025. 10. 18.(토) 10:00~18:00"
+    },
+    {
+      "type": "BULLET",
+      "content": "장소: 남양주체육문화센터 및 야외광장"
+    },
+    {
+      "type": "BULLET",
+      "content": "주최: 남양주시 / 주관: 문화예술과"
+    },
+    {
+      "type": "SECTION",
+      "content": "세부운영계획"
+    },
+    {
+      "type": "BULLET",
+      "content": "개막식: 10:00 시장 인사말·기념공연 (주무대)"
+    },
+    {
+      "type": "BULLET",
+      "content": "체험존: 전통문화·공예·포토존 (12개 부스)"
+    },
+    {
+      "type": "BULLET",
+      "content": "공연: 지역 예술단 6팀 무대공연 (10:30~17:00)"
+    },
+    {
+      "type": "BULLET",
+      "content": "홍보부스: 시 주요 사업 홍보관 (20개 부서)"
+    },
+    {
+      "type": "BULLET",
+      "content": "안전관리: 의료진 2팀·경찰 협조·주차 셔틀 운영"
+    },
+    {
+      "type": "SECTION",
+      "content": "준비사항"
+    },
+    {
+      "type": "BULLET",
+      "content": "8월: 세부 프로그램·업체 선정 완료"
+    },
+    {
+      "type": "BULLET",
+      "content": "9월: 홍보물 제작·배포 및 부서별 역할 확정"
+    },
+    {
+      "type": "BULLET",
+      "content": "10월 초: 현장 사전 점검 및 리허설"
+    }
+  ]
+}

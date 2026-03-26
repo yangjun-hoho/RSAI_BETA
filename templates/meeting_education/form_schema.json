@@ -1,0 +1,33 @@
+{
+  "fields": [
+    {
+      "id": "title",
+      "label": "보고 제목",
+      "type": "text",
+      "required": true,
+      "placeholder": "예: 2025년 상반기 직원 역량강화 교육 계획"
+    },
+    {
+      "id": "education_type",
+      "label": "교육 유형",
+      "type": "select",
+      "required": false,
+      "options": [
+        "직무교육",
+        "역량강화",
+        "법정교육",
+        "외부연수",
+        "온라인교육",
+        "기타"
+      ],
+      "default": "직무교육"
+    },
+    {
+      "id": "core_content",
+      "label": "핵심 내용",
+      "type": "textarea",
+      "required": true,
+      "placeholder": "교육 목적, 대상, 일정, 내용, 강사 등 주요 정보를 자유롭게 입력하세요."
+    }
+  ]
+}

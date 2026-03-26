@@ -1,0 +1,152 @@
+{
+  "id": "meeting_project",
+  "name": "사업형",
+  "description": "사업·예산·성과 중심의 확대간부회의 자료",
+  "version": "1.0",
+  "allowed_node_types": [
+    "TITLE",
+    "SUBTITLE",
+    "SECTION",
+    "BULLET",
+    "SUBBULLET",
+    "NOTE"
+  ],
+  "node_rules": {
+    "TITLE": {
+      "required": true,
+      "min": 1,
+      "max": 1
+    },
+    "SUBTITLE": {
+      "required": false,
+      "min": 0,
+      "max": 1
+    },
+    "SECTION": {
+      "required": true,
+      "min": 1,
+      "max": 5
+    },
+    "BULLET": {
+      "required": true,
+      "min": 1,
+      "max": 25
+    },
+    "SUBBULLET": {
+      "required": false,
+      "min": 0,
+      "max": 25
+    },
+    "NOTE": {
+      "required": false,
+      "min": 0,
+      "max": 5
+    }
+  },
+  "style_map": {
+    "SECTION": {
+      "paraPrIDRef": "22",
+      "charPrIDRef": "13",
+      "charPrIDRef2": "11",
+      "horzsize": "75684",
+      "vertsize": "2100",
+      "spacing": "1260"
+    },
+    "BULLET": {
+      "paraPrIDRef": "20",
+      "charPrIDRef": "7",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1080"
+    },
+    "SUBBULLET": {
+      "paraPrIDRef": "20",
+      "charPrIDRef": "7",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1080"
+    },
+    "NOTE": {
+      "paraPrIDRef": "20",
+      "charPrIDRef": "18",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1260"
+    }
+  },
+  "header_dept_charPr": "10",
+  "header_docnum_charPr": "12",
+  "header_title_paraPr": "15",
+  "header_title_charPr": "19",
+  "header_subtitle_present": true,
+  "header_subtitle_charPr": "14",
+  "anchor_id": "",
+  "anchor_strategy": "meeting_preserve",
+  "ai_instructions": "사업형: 사업 추진 현황·예산·성과 보고.\n- SUBTITLE: 15자 이내 핵심 요약\n- SECTION 2~3개 (예: 사업개요 / 추진현황 / 향후계획)\n- 사업개요 섹션: BULLET 2~3개 (간략)\n- 추진현황·향후계획 섹션: BULLET 4~5개 (사업비·기간·실적 등 충실)",
+  "example_output": [
+    {
+      "type": "TITLE",
+      "content": "도심 노후 공원 재정비 사업 추진 현황"
+    },
+    {
+      "type": "SUBTITLE",
+      "content": "생활밀착형 공원 환경 개선"
+    },
+    {
+      "type": "SECTION",
+      "content": "사업개요"
+    },
+    {
+      "type": "BULLET",
+      "content": "사업기간: 2024. 1. ~ 2025. 12. (2개년)"
+    },
+    {
+      "type": "BULLET",
+      "content": "총사업비: 1,500백만원 (국비 750, 시비 750)"
+    },
+    {
+      "type": "BULLET",
+      "content": "대상: 시내 노후 공원 15개소"
+    },
+    {
+      "type": "SECTION",
+      "content": "추진현황"
+    },
+    {
+      "type": "BULLET",
+      "content": "설계 완료: 15개소 중 12개소 (80%)"
+    },
+    {
+      "type": "BULLET",
+      "content": "공사 착공: 8개소 착공, 4개소 완공"
+    },
+    {
+      "type": "BULLET",
+      "content": "예산 집행: 680백만원 (집행률 45.3%)"
+    },
+    {
+      "type": "BULLET",
+      "content": "주민 의견수렴: 12개소 주민설명회 완료"
+    },
+    {
+      "type": "SECTION",
+      "content": "향후계획"
+    },
+    {
+      "type": "BULLET",
+      "content": "6월: 미착공 3개소 공사 발주"
+    },
+    {
+      "type": "BULLET",
+      "content": "9월: 전체 공사 완료 목표"
+    },
+    {
+      "type": "BULLET",
+      "content": "12월: 완료 보고 및 유지관리 계획 수립"
+    },
+    {
+      "type": "NOTE",
+      "content": "일부 구간 주민 민원으로 공정 지연 가능 → 사전 주민 소통 강화"
+    }
+  ]
+}

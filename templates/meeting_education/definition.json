@@ -1,0 +1,141 @@
+{
+  "id": "meeting_education",
+  "name": "교육형",
+  "description": "교육·연수·강의 관련 확대간부회의 자료",
+  "version": "1.0",
+  "allowed_node_types": [
+    "TITLE",
+    "SECTION",
+    "BULLET",
+    "SUBBULLET",
+    "NOTE"
+  ],
+  "node_rules": {
+    "TITLE": {
+      "required": true,
+      "min": 1,
+      "max": 1
+    },
+    "SECTION": {
+      "required": true,
+      "min": 1,
+      "max": 5
+    },
+    "BULLET": {
+      "required": true,
+      "min": 1,
+      "max": 25
+    },
+    "SUBBULLET": {
+      "required": false,
+      "min": 0,
+      "max": 25
+    },
+    "NOTE": {
+      "required": false,
+      "min": 0,
+      "max": 5
+    }
+  },
+  "style_map": {
+    "SECTION": {
+      "paraPrIDRef": "15",
+      "charPrIDRef": "12",
+      "charPrIDRef2": "10",
+      "horzsize": "75684",
+      "vertsize": "2100",
+      "spacing": "1260"
+    },
+    "BULLET": {
+      "paraPrIDRef": "15",
+      "charPrIDRef": "7",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1080"
+    },
+    "SUBBULLET": {
+      "paraPrIDRef": "20",
+      "charPrIDRef": "7",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1080"
+    },
+    "NOTE": {
+      "paraPrIDRef": "20",
+      "charPrIDRef": "7",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1260"
+    }
+  },
+  "header_dept_charPr": "9",
+  "header_docnum_charPr": "11",
+  "header_title_paraPr": "16",
+  "header_title_charPr": "14",
+  "header_subtitle_present": false,
+  "anchor_id": "",
+  "anchor_strategy": "meeting_preserve",
+  "ai_instructions": "교육형: 교육·연수·세미나 등 교육 보고.\n- SECTION 2~3개 (예: 교육개요 / 교육내용 / 향후일정)\n- 교육개요 섹션: BULLET 2~3개 (간략)\n- 교육내용·일정 섹션: BULLET 4~5개 (충실)",
+  "example_output": [
+    {
+      "type": "TITLE",
+      "content": "2025년 상반기 직원 역량강화 교육 운영 계획"
+    },
+    {
+      "type": "SECTION",
+      "content": "교육개요"
+    },
+    {
+      "type": "BULLET",
+      "content": "목적: 공직자 전문성 및 민원 대응 역량 강화"
+    },
+    {
+      "type": "BULLET",
+      "content": "기간: 2025. 4. 7.(월) ~ 4. 11.(금), 5일간"
+    },
+    {
+      "type": "BULLET",
+      "content": "대상: 전 직원 500명 (직급별 순환 교육)"
+    },
+    {
+      "type": "SECTION",
+      "content": "교육내용"
+    },
+    {
+      "type": "BULLET",
+      "content": "민원 서비스 과정: 친절 응대 실습 (1일)"
+    },
+    {
+      "type": "BULLET",
+      "content": "디지털 행정 과정: AI·정보보안 활용 (1일)"
+    },
+    {
+      "type": "BULLET",
+      "content": "법령 해석 과정: 최신 개정 법령 사례 (1일)"
+    },
+    {
+      "type": "BULLET",
+      "content": "공직 윤리 과정: 청렴·이해충돌방지법 (1일)"
+    },
+    {
+      "type": "BULLET",
+      "content": "리더십 과정: 팀장급 이상 성과관리 (1일)"
+    },
+    {
+      "type": "SECTION",
+      "content": "향후일정"
+    },
+    {
+      "type": "BULLET",
+      "content": "3월 말: 대상자 명단 확정 및 안내"
+    },
+    {
+      "type": "BULLET",
+      "content": "4월: 1차 교육 실시"
+    },
+    {
+      "type": "BULLET",
+      "content": "하반기: 결과 분석 후 2차 교육 계획 수립"
+    }
+  ]
+}

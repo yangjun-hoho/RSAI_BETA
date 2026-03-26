@@ -1,0 +1,39 @@
+{
+  "fields": [
+    {
+      "id": "title",
+      "label": "보고 제목",
+      "type": "text",
+      "required": true,
+      "placeholder": "예: 2025 남양주 봄 축제 추진 계획"
+    },
+    {
+      "id": "event_date",
+      "label": "행사 일시",
+      "type": "text",
+      "required": false,
+      "placeholder": "예: 2025. 4. 5.(토) 10:00~17:00"
+    },
+    {
+      "id": "event_location",
+      "label": "행사 장소",
+      "type": "text",
+      "required": false,
+      "placeholder": "예: 남양주시 체육문화센터 광장"
+    },
+    {
+      "id": "expected_visitors",
+      "label": "예상 참석 인원",
+      "type": "text",
+      "required": false,
+      "placeholder": "예: 약 5,000명"
+    },
+    {
+      "id": "core_content",
+      "label": "핵심 내용",
+      "type": "textarea",
+      "required": true,
+      "placeholder": "행사 목적, 프로그램 구성, 준비 현황, 협조 요청 사항 등을 자유롭게 입력하세요."
+    }
+  ]
+}

@@ -21,6 +21,11 @@ export function makeDefaultScene(): Scene {
     tts: { ...DEFAULT_TTS },
     transition: { ...DEFAULT_TRANSITION },
     motionEffect: 'none',
+    ttsVolume: 1.0,
+    sceneBgmVolume: 1.0,
+    colorBrightness: 0,
+    colorContrast: 0,
+    colorSaturation: 0,
   };
 }
 

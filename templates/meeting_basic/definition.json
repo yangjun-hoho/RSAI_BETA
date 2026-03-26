@@ -1,0 +1,175 @@
+{
+  "id": "meeting_basic",
+  "name": "기본형",
+  "description": "텍스트 중심의 기본 확대간부회의 자료",
+  "version": "1.0",
+  "allowed_node_types": [
+    "TITLE",
+    "SUBTITLE",
+    "SECTION",
+    "BULLET",
+    "SUBBULLET",
+    "NOTE",
+    "COOPERATION"
+  ],
+  "node_rules": {
+    "TITLE": {
+      "required": true,
+      "min": 1,
+      "max": 1
+    },
+    "SUBTITLE": {
+      "required": false,
+      "min": 0,
+      "max": 1
+    },
+    "SECTION": {
+      "required": true,
+      "min": 1,
+      "max": 5
+    },
+    "BULLET": {
+      "required": true,
+      "min": 1,
+      "max": 25
+    },
+    "SUBBULLET": {
+      "required": false,
+      "min": 0,
+      "max": 25
+    },
+    "NOTE": {
+      "required": false,
+      "min": 0,
+      "max": 5
+    },
+    "COOPERATION": {
+      "required": false,
+      "min": 0,
+      "max": 1
+    }
+  },
+  "style_map": {
+    "SECTION": {
+      "paraPrIDRef": "2",
+      "charPrIDRef": "13",
+      "charPrIDRef2": "11",
+      "horzsize": "75684",
+      "vertsize": "2100",
+      "spacing": "1260"
+    },
+    "BULLET": {
+      "paraPrIDRef": "20",
+      "charPrIDRef": "8",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1080"
+    },
+    "SUBBULLET": {
+      "paraPrIDRef": "18",
+      "charPrIDRef": "15",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1080"
+    },
+    "NOTE": {
+      "paraPrIDRef": "21",
+      "charPrIDRef": "8",
+      "horzsize": "75684",
+      "vertsize": "1800",
+      "spacing": "1260"
+    },
+    "COOPERATION": {
+      "paraPrIDRef": "22",
+      "charPrIDRef": "13",
+      "charPrIDRef2": "11",
+      "charPrIDRef3": "7",
+      "horzsize": "75684",
+      "vertsize": "2100",
+      "spacing": "1260"
+    }
+  },
+  "header_dept_charPr": "10",
+  "header_docnum_charPr": "12",
+  "header_title_paraPr": "16",
+  "header_title_charPr": "17",
+  "header_subtitle_present": true,
+  "header_subtitle_charPr": "14",
+  "anchor_id": "",
+  "anchor_strategy": "meeting_preserve",
+  "ai_instructions": "기본형: 이미지·표 없이 순수 텍스트만으로 구성되는 기본 업무 보고 양식.\n- A4 가로 전체가 텍스트로 채워지므로 BULLET 수를 충분히 작성 (섹션당 4~5개)\n- 공무원 개조식 문체: 명사·명사구로 끝맺음 (예: ~추진, ~운영, ~완료, ~예정)\n- 키워드만 나열하거나 '목적:' 같은 단어 하나만 쓰는 표현 금지\n- 구체적 수치·일정·부서명·방법 등을 포함한 개조식 표현\n- SUBTITLE: 15자 이내 핵심 요약\n- SECTION 3개 (예: 추진개요 / 세부추진계획 / 향후계획)\n- 추진개요: BULLET 3개\n- 세부추진계획: BULLET 4~5개\n- 향후계획: BULLET 3~4개\n- COOPERATION: 마지막에 1개 (COOPERATION 앞 SECTION 노드 생성 금지)",
+  "example_output": [
+    {
+      "type": "TITLE",
+      "content": "2025년 남양주 시민 홍보 캠페인 추진 계획"
+    },
+    {
+      "type": "SUBTITLE",
+      "content": "시민 공감 홍보 강화"
+    },
+    {
+      "type": "SECTION",
+      "content": "추진개요"
+    },
+    {
+      "type": "BULLET",
+      "content": "목적: 시정 핵심 사업 시민 인지도 제고 및 공감대 형성"
+    },
+    {
+      "type": "BULLET",
+      "content": "기간: 2025. 4. ~ 12. (9개월), 홍보담당관 주관"
+    },
+    {
+      "type": "BULLET",
+      "content": "대상: 남양주시 전체 시민, 온·오프라인 채널 병행 운영"
+    },
+    {
+      "type": "SECTION",
+      "content": "세부추진계획"
+    },
+    {
+      "type": "BULLET",
+      "content": "SNS·유튜브 시정 홍보 콘텐츠 주 3회 제작·배포"
+    },
+    {
+      "type": "BULLET",
+      "content": "시청·역사 등 유동인구 밀집지 10개소 포토존·배너 설치"
+    },
+    {
+      "type": "BULLET",
+      "content": "시민 참여형 홍보 공모전 연 2회 개최 (5월·9월)"
+    },
+    {
+      "type": "BULLET",
+      "content": "지역 언론사 보도자료 주 2회 배포 및 협업 강화"
+    },
+    {
+      "type": "BULLET",
+      "content": "부서별 우수 사업 발굴·제보 체계 운영 및 월 1회 성과 공유"
+    },
+    {
+      "type": "SECTION",
+      "content": "향후계획"
+    },
+    {
+      "type": "BULLET",
+      "content": "4월: 실행계획 확정 및 콘텐츠 제작사 계약 체결"
+    },
+    {
+      "type": "BULLET",
+      "content": "5월: 1차 캠페인 개시, SNS·현장 홍보 동시 운영"
+    },
+    {
+      "type": "BULLET",
+      "content": "9월: 상반기 성과 분석 및 하반기 전략 보완"
+    },
+    {
+      "type": "BULLET",
+      "content": "12월: 연간 성과 분석 및 차년도 계획 수립"
+    },
+    {
+      "type": "COOPERATION",
+      "content": "(전 부서) 주요 사업 홍보자료 및 성과 사진 월 1회 제출"
+    }
+  ]
+}

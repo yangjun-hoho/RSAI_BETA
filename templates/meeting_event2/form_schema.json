@@ -1,0 +1,46 @@
+{
+  "fields": [
+    {
+      "id": "title",
+      "label": "보고 제목",
+      "type": "text",
+      "required": true,
+      "placeholder": "예: 2025년 시민의 날 기념식 추진 계획"
+    },
+    {
+      "id": "subtitle",
+      "label": "핵심 요약 (한 줄)",
+      "type": "text",
+      "required": false,
+      "placeholder": "예: 시 승격 30주년 기념, 전 부서 협력 필요"
+    },
+    {
+      "id": "event_date",
+      "label": "행사 일시",
+      "type": "text",
+      "required": false,
+      "placeholder": "예: 2025. 5. 15.(목) 10:00~12:00"
+    },
+    {
+      "id": "event_location",
+      "label": "행사 장소",
+      "type": "text",
+      "required": false,
+      "placeholder": "예: 남양주시청 대강당"
+    },
+    {
+      "id": "core_content",
+      "label": "핵심 내용",
+      "type": "textarea",
+      "required": true,
+      "placeholder": "행사 목적, 세부 일정, 역할 분담, 타 부서 협조 요청 사항 등을 자유롭게 입력하세요."
+    },
+    {
+      "id": "has_cooperation",
+      "label": "협조사항 포함",
+      "type": "toggle",
+      "required": false,
+      "default": true
+    }
+  ]
+}

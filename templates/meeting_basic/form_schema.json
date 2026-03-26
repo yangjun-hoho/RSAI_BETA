@@ -1,0 +1,32 @@
+{
+  "fields": [
+    {
+      "id": "title",
+      "label": "보고 제목",
+      "type": "text",
+      "required": true,
+      "placeholder": "예: 2025년 홍보 전략 추진 현황"
+    },
+    {
+      "id": "subtitle",
+      "label": "핵심 요약 (한 줄)",
+      "type": "text",
+      "required": false,
+      "placeholder": "예: 온·오프라인 통합 홍보로 시정 신뢰도 제고"
+    },
+    {
+      "id": "core_content",
+      "label": "핵심 내용",
+      "type": "textarea",
+      "required": true,
+      "placeholder": "보고할 주요 내용을 자유롭게 입력하세요. AI가 추진개요, 그간추진사항, 향후계획 등 구조로 자동 정리합니다."
+    },
+    {
+      "id": "has_cooperation",
+      "label": "협조사항 포함",
+      "type": "toggle",
+      "required": false,
+      "default": false
+    }
+  ]
+}

@@ -15,15 +15,16 @@ interface Props {
   onApplyCropAll: (crop: Scene['crop']) => void;
   onBulkTTS: () => void;
   isBulkLoading: boolean;
+  aspectRatio?: '9:16' | '16:9';
 }
 
-export default function SceneList({ scenes, selectedId, onSelect, onAdd, onDelete, onUpdate, onMove, onApplyCropAll, onBulkTTS, isBulkLoading }: Props) {
+export default function SceneList({ scenes, selectedId, onSelect, onAdd, onDelete, onUpdate, onMove, onApplyCropAll, onBulkTTS, isBulkLoading, aspectRatio = '9:16' }: Props) {
   const readyCount = scenes.filter(s => s.imageDataUrl && s.audioDataUrl).length;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* 툴바 */}
-      <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #1e293b', display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
+      <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #333', display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0, background: '#2a2a2a' }}>
         <button onClick={onAdd} style={toolbarBtn('#1d4ed8')}>+ 장면 추가</button>
         <button
           onClick={onBulkTTS}
@@ -32,13 +33,13 @@ export default function SceneList({ scenes, selectedId, onSelect, onAdd, onDelet
         >
           {isBulkLoading ? '음성 생성 중...' : '일괄 음성 생성'}
         </button>
-        <div style={{ marginLeft: 'auto', fontSize: '0.78rem', color: '#475569' }}>
+        <div style={{ marginLeft: 'auto', fontSize: '0.78rem', color: '#888' }}>
           {readyCount}/{scenes.length} 준비완료
         </div>
       </div>
 
       {/* 장면 목록 */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.6rem', background: '#1a1a1a' }}>
         {scenes.map((scene, idx) => (
           <SceneCard
             key={scene.id}
@@ -53,6 +54,7 @@ export default function SceneList({ scenes, selectedId, onSelect, onAdd, onDelet
             onMoveUp={() => onMove(idx, idx - 1)}
             onMoveDown={() => onMove(idx, idx + 1)}
             onApplyCropAll={onApplyCropAll}
+            aspectRatio={aspectRatio}
           />
         ))}
 
@@ -61,12 +63,12 @@ export default function SceneList({ scenes, selectedId, onSelect, onAdd, onDelet
           onClick={onAdd}
           style={{
             padding: '0.6rem', background: 'transparent',
-            border: '2px dashed #334155', borderRadius: '8px',
-            color: '#475569', cursor: 'pointer', fontSize: '0.85rem',
+            border: '2px dashed #444', borderRadius: '8px',
+            color: '#666', cursor: 'pointer', fontSize: '0.85rem',
             transition: 'border-color 0.15s, color 0.15s',
           }}
-          onMouseEnter={e => { (e.target as HTMLElement).style.borderColor = '#3b82f6'; (e.target as HTMLElement).style.color = '#3b82f6'; }}
-          onMouseLeave={e => { (e.target as HTMLElement).style.borderColor = '#334155'; (e.target as HTMLElement).style.color = '#475569'; }}
+          onMouseEnter={e => { (e.target as HTMLElement).style.borderColor = '#888'; (e.target as HTMLElement).style.color = '#ccc'; }}
+          onMouseLeave={e => { (e.target as HTMLElement).style.borderColor = '#444'; (e.target as HTMLElement).style.color = '#666'; }}
         >
           + 장면 추가
         </button>
@@ -77,8 +79,8 @@ export default function SceneList({ scenes, selectedId, onSelect, onAdd, onDelet
 
 function toolbarBtn(bg: string, disabled = false): React.CSSProperties {
   return {
-    padding: '0.4rem 0.8rem', background: disabled ? '#1e293b' : bg,
-    color: disabled ? '#475569' : 'white', border: 'none',
+    padding: '0.4rem 0.8rem', background: disabled ? '#333' : bg,
+    color: disabled ? '#666' : 'white', border: 'none',
     borderRadius: '5px', cursor: disabled ? 'not-allowed' : 'pointer',
     fontSize: '0.82rem', fontWeight: 600,
   };

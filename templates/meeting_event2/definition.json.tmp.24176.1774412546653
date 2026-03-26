@@ -1,0 +1,30 @@
+{
+  "id": "meeting_event2",
+  "name": "행사2형",
+  "description": "협조사항 포함 행사·의식 확대간부회의 자료",
+  "version": "1.0",
+  "allowed_node_types": ["TITLE", "SUBTITLE", "SECTION", "BULLET", "SUBBULLET", "COOPERATION"],
+  "node_rules": {
+    "TITLE":       { "required": true,  "min": 1, "max": 1 },
+    "SUBTITLE":    { "required": false, "min": 0, "max": 1 },
+    "SECTION":     { "required": true,  "min": 1, "max": 5 },
+    "BULLET":      { "required": true,  "min": 1, "max": 25 },
+    "SUBBULLET":   { "required": false, "min": 0, "max": 25 },
+    "COOPERATION": { "required": false, "min": 0, "max": 1 }
+  },
+  "style_map": {
+    "SECTION":     { "paraPrIDRef": "20", "charPrIDRef": "12", "charPrIDRef2": "10", "horzsize": "75684", "vertsize": "2100", "spacing": "1260" },
+    "BULLET":      { "paraPrIDRef": "21", "charPrIDRef": "7",  "horzsize": "75684", "vertsize": "1800", "spacing": "1080" },
+    "SUBBULLET":   { "paraPrIDRef": "21", "charPrIDRef": "7",  "horzsize": "75684", "vertsize": "1800", "spacing": "1080" },
+    "COOPERATION": { "paraPrIDRef": "22", "charPrIDRef": "12", "charPrIDRef2": "10", "charPrIDRef3": "7", "horzsize": "75684", "vertsize": "2100", "spacing": "1260" }
+  },
+  "header_dept_charPr": "9",
+  "header_docnum_charPr": "11",
+  "header_title_paraPr": "15",
+  "header_title_charPr": "20",
+  "header_subtitle_present": true,
+  "header_subtitle_charPr": "21",
+  "anchor_id": "",
+  "anchor_strategy": "meeting_preserve",
+  "ai_instructions": "남양주시 확대간부회의 행사2형 자료입니다.\n- 의식행사·기념식·수여식 등 공식 행사로서 타 부서 협조가 필요한 경우에 적합한 구조로 작성하세요.\n- SUBTITLE: 한 줄 핵심 내용 요약 (◇ 기호 없이 내용만)\n- SECTION: 섹션명만 (예: 행사 개요, 행사 일정, 역할 분담)\n- BULLET: 항목 내용만 (예: 일시: 2025. 5. 15.(목) 10:00)\n- SUBBULLET: 세부 내용만\n- COOPERATION: 협조사항 내용만 (타 부서 협조 요청 사항)\n- COOPERATION 앞에 SECTION 노드를 생성하지 마세요."
+}
