@@ -5,22 +5,36 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 interface Me { id: number; nickname: string; role: string; }
+interface Settings { preferred_model: string; theme: string; }
 
 export default function MyPage() {
   const router = useRouter();
   const [me, setMe] = useState<Me | null>(null);
+  const [settings, setSettings] = useState<Settings>({ preferred_model: 'gpt-4o-mini', theme: 'light' });
+  const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     document.title = '나의 메뉴 | 남양주 AI';
     Promise.all([
       fetch('/api/auth/me').then(r => r.json()),
-    ]).then(([meData]) => {
+      fetch('/api/my/settings').then(r => r.json()),
+    ]).then(([meData, settingsData]) => {
       if (!meData.user) { router.push('/login?from=/my'); return; }
       setMe(meData.user);
+      if (!settingsData.error) setSettings(settingsData);
       setLoading(false);
     });
   }, [router]);
+
+  async function handleSave() {
+    const res = await fetch('/api/my/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(settings),
+    });
+    if (res.ok) { setSaved(true); setTimeout(() => setSaved(false), 2000); }
+  }
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });

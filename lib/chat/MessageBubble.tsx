@@ -16,6 +16,19 @@ interface MessageBubbleProps {
 
 marked.setOptions({ breaks: true });
 
+// 평문 URL을 마크다운 링크로 변환 (이미 마크다운 링크인 건 제외)
+function linkifyUrls(text: string): string {
+  return text.replace(
+    /(?<!\]\()https?:\/\/[^\s<>"')\]]+/g,
+    url => `[${url}](${url})`
+  );
+}
+
+// <a> 태그에 target="_blank" rel="noopener" 추가
+function addLinkTargets(html: string): string {
+  return html.replace(/<a\s+href=/g, '<a target="_blank" rel="noopener noreferrer" href=');
+}
+
 export default function MessageBubble({ message }: MessageBubbleProps) {
   const { role, content, isSearching } = message;
   const isUser = role === 'user';
@@ -23,7 +36,9 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
 
   useEffect(() => {
     if (!isUser && htmlRef.current) {
-      htmlRef.current.innerHTML = marked.parse(content) as string;
+      const linked = linkifyUrls(content);
+      const html = addLinkTargets(marked.parse(linked) as string);
+      htmlRef.current.innerHTML = html;
     }
   }, [content, isUser]);
 

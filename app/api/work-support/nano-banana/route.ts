@@ -4,7 +4,7 @@ import { GoogleGenAI } from '@google/genai';
 const MODEL = 'gemini-3.1-flash-image-preview';
 
 // ── 서버 전역 사용량 (모든 사용자 합산) ──────────────────────
-const GLOBAL_DAILY_LIMIT = 10;
+const GLOBAL_DAILY_LIMIT = 30;
 let globalUsage = { count: 0, date: new Date().toDateString() };
 
 function getUsage() {

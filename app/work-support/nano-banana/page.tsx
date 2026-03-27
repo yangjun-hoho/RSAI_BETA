@@ -6,7 +6,7 @@ import PromptComposer, { type ToolMode } from '@/lib/work-support/nano-banana/Pr
 import ImageCanvas, { type BrushStroke, brushStrokesToMask } from '@/lib/work-support/nano-banana/ImageCanvas';
 import HistoryPanel, { type Generation } from '@/lib/work-support/nano-banana/HistoryPanel';
 
-const DAILY_LIMIT = 10;
+const DAILY_LIMIT = 30;
 const THEME_KEY = 'nano-banana-theme';
 
 export default function NanaBananaPage() {

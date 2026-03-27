@@ -304,7 +304,7 @@ export default function ImageCanvas({
             textAlign: 'center', pointerEvents: 'none',
           }}>
             <div style={{ fontSize: '3rem', marginBottom: '0.75rem', animation: 'nanoBananaFloat 3s ease-in-out infinite' }}>🍌</div>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: isDarkMode ? '#f3f4f6' : '#1f2937', margin: '0 0 0.5rem 0' }}>Welcome to Nano Banana</h2>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: isDarkMode ? '#f3f4f6' : '#1f2937', margin: '0 0 0.5rem 0' }}>Welcome to Nano Banana 2</h2>
             <p style={{ fontSize: '0.875rem', color: isDarkMode ? '#9ca3af' : '#6b7280', margin: 0 }}>
               Start by describing what you want to create in the prompt box
             </p>
