@@ -77,6 +77,41 @@ export default function ChatHeader({ models, selectedModel, onClear, onExport, n
             {nickname}
           </span>
         )}
+        {/* 메신저 모드 버튼 */}
+        <style>{`
+          @keyframes messenger-glow {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+          .messenger-btn {
+            background: linear-gradient(270deg, #a8d8ea, #a8e6cf, #a8d8ea);
+            background-size: 300% 300%;
+            animation: messenger-glow 3s ease infinite;
+            border: 1px solid rgba(100,200,180,0.4) !important;
+            color: #1a6b5a !important;
+            transition: opacity 0.15s, box-shadow 0.15s !important;
+          }
+          .messenger-btn:hover {
+            opacity: 0.88;
+            box-shadow: 0 2px 10px rgba(100,200,160,0.4);
+          }
+        `}</style>
+        <button
+          className="messenger-btn"
+          onClick={() => {
+            const w = 400, h = 720;
+            const left = Math.max(0, window.screen.width - w - 20);
+            const top = Math.max(0, Math.floor((window.screen.height - h) / 2));
+            window.open('/popup-messenger', 'rsai-messenger',
+              `width=${w},height=${h},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=no,resizable=yes`);
+          }}
+          title="메신저 모드로 열기"
+          style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', padding: '0.25rem 0.6rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 500 }}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          챗봇 모드
+        </button>
         <a
           href="/my"
           style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', padding: '0.25rem 0.6rem', border: '1px solid #e9e9e7', background: 'rgba(71,71,71,0.03)', color: '#6b6b6b', borderRadius: '6px', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 500, textDecoration: 'none' }}
