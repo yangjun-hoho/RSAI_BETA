@@ -55,10 +55,10 @@ const SHORTCUT_CARDS: ShortcutCard[] = [
   },
   {
     id: 'screen-recorder',
-    title: '화면 녹화',
-    desc: '브라우저에서 바로 화면 녹화',
+    title: '숏폼 에디터',
+    desc: '브라우저에서 숏폼 생성',
     image: '/images/cards/screen-recorder.svg',
-    action: { type: 'page', path: '/work-support/screen-recorder' },
+    action: { type: 'page', path: '/shortform-editor' },
   },
 ];
 
